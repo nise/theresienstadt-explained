@@ -4,7 +4,8 @@
   "description": "NS Propaganda film about the concentration camp in Theresienstadt",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve --open"
   },
   "keywords": [
     "interactive",
