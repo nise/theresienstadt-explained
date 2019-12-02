@@ -8,6 +8,7 @@ const app = express();
 //cors und Parser in API einbinden
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //Pfad zu Students API in Konstante speichern
 const students = require('./routes/api/students');

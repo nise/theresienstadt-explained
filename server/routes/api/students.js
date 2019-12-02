@@ -1,3 +1,5 @@
+//API zum Anlegen, Auslesen und Löschen von Studenten
+
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -15,9 +17,9 @@ const studentSchema = new mongoose.Schema({
 const student = mongoose.model('student', studentSchema);
 
 //GET Requests behandeln
-router.get('/', async (req, res) => {
+router.get('/:session', async (req, res) => {
     //Studenten aus Datenbank über Funktion abfragen; session ist pro Instanz der Videoanalyse eindeutig und wird automatisch generiert nach Start durch Lehrenden
-    const studentsFromDatabase = await loadStudentsFromDatabase(req.body.session);
+    const studentsFromDatabase = await loadStudentsFromDatabase(req.params.session);
     //Ergebnis zurücksenden
     res.send(studentsFromDatabase);
 });
@@ -32,7 +34,7 @@ router.post('/', async (req, res) => {
     });
     //neuen Studenten über Post Funktion in Datenbank einfügen und _id zurückgeben
     const studentId = await postStudentToDatabase(newStudent);
-    res.send(studentId);
+        res.send(studentId);
 });
 
 //DELETE Requests behandeln
@@ -56,12 +58,14 @@ async function loadStudentsFromDatabase(sessionFilter) {
 }
 
 async function postStudentToDatabase(studentToPost) {
-    //Datenbank und Collection verbinden
-    await connectDatabase();
-    //Student über Save Funktion speichern und Fehler zurückgeben falls vorhanden
-    studentToPost.save(function (err, studentToPost) {
-        if (err) return console.error(err);
-        return studentToPost.id;
+    return new Promise(async (resolve, reject) => {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //Student über Save Funktion speichern und Fehler zurückgeben falls vorhanden
+        studentToPost.save(function (err, studentDatabase) {
+            if (err) reject (err);
+            resolve (studentDatabase.id);
+        });
     });
 }
 
