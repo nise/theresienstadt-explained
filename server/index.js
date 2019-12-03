@@ -13,8 +13,14 @@ app.use(express.urlencoded({ extended: true }));
 //Pfad zu Students API in Konstante speichern
 const students = require('./routes/api/students');
 
+//Pfad zu Sessions API in Konstante speichern
+const sessions = require('./routes/api/sessions');
+
 //URL /api/students zu internem Pfad umleiten
 app.use('/api/students', students);
+
+//URL /api/sessions zu internem Pfad umleiten
+app.use('/api/sessions', sessions);
 
 //Port Definition für Backend
 const port = process.env.PORT || 5000;

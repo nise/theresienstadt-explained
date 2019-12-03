@@ -47,13 +47,12 @@ export default {
       error: '',
       firstName: '',
       lastName: '',
-      session: '123456789', //TODO: Test Session entfernen
+      session: this.$route.query.test,
       id: ''
     }
   },
   //bei Seitenaufruf ausführen
   async created() {
-    //TODO: aktuelle Session über Middleware auslesen
     try {
       //Studenten Array zur Anzeige befüllen
       this.students = await StudentService.getStudents(this.session);
@@ -63,7 +62,6 @@ export default {
   },
   methods: {
 
-    //TODO: Funktion für Required inputs firstName und lastName; wenn leer, dann Fehlermeldung siehe unten
     validateInput: function () {
       if (this.firstName&&this.lastName) {
         this.error = '';
