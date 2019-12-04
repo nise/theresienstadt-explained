@@ -9,7 +9,8 @@ const router = express.Router();
 //Session Schema für Mongoose anlegen
 const sessionSchema = new mongoose.Schema({
     name: String,
-    date: Date
+    date: Date,
+    status: String
 });
 
 //Session Klasse initialisieren
@@ -33,6 +34,16 @@ router.post('/', async (req, res) => {
     //neue Session über Post Funktion in Datenbank einfügen und _id zurückgeben
     const sessionId = await postSessionToDatabase(newSession);
         res.send(sessionId);
+});
+
+//Requests für Statusänderungen behandeln; Anfragen mit /change
+router.post('/change', async (req, res) => {
+    //Attribute der Anfrage auslesen
+    const id = req.body.id;
+    const status = req.body.status;
+    //vorhandene Session über Change Funktion in Datenbank ändern und _id zurückgeben
+    const sessionId = await changeSessionInDatabase(id, status);
+    res.send(sessionId);
 });
 
 //DELETE Requests behandeln
@@ -63,6 +74,22 @@ async function postSessionToDatabase(sessionToPost) {
         sessionToPost.save(function (err, sessionDatabase) {
             if (err) reject (err);
             resolve (sessionDatabase.id);
+        });
+    });
+}
+
+async function changeSessionInDatabase(idToUpdate, statusToUpdate) {
+    return new Promise(async (resolve, reject) => {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //Objekt aus Übergabeparametern erstellen
+        updateObject = {
+            status: statusToUpdate
+        }
+        //Session Attribut über findbyidandupdate Funktion änderun und Fehler zurückgeben falls vorhanden
+        session.findByIdAndUpdate(idToUpdate, updateObject, function (err, res) {
+            if (err) return console.error(err);
+            resolve (idToUpdate);
         });
     });
 }

@@ -1,11 +1,17 @@
 <template>
     <div class="container">
         <h1 class="display-4">Starten einer neuen Session</h1>
-        <div v-if="this.id">
-          <p style="font-size:large;">Wenn sich alle Schüler registriert haben, dann drücken Sie bitte auf Starten. <br> Der Button ist nur sichtbar, wenn eine gerade Zahl von Schülern angemeldet ist.</p>
+        <!-- Wenn this.message befüllt ist -> Session wurde gestartet, dann nur noch message anzeigen -->
+        <div v-if="this.message">
+          <p style="font-size:x-large">{{this.message}}</p>
+        </div>
+        <div v-else>
+          <div v-if="this.id">
+          <p style="font-size:large;">Wenn sich alle Schüler registriert haben, dann drücken Sie bitte auf Starten. <br> 
+          Der Button ist nur sichtbar, wenn eine gerade Zahl von Schülern angemeldet ist.</p>
           <!-- Button nur anzeigen, wenn Array Länge modulo zwei 0 ist (gerade) und Zahl der Schüler nicht null
                Nutzung einer Hilfsfunktion, um gesicherte Daten aus dem Backend zu erhalten -->
-          <button class="btn btn-primary" v-if="students.length % 2 == 0 && students.length !== 0">Starten</button>
+          <button class="btn btn-primary" v-if="students.length % 2 == 0 && students.length !== 0" v-on:click="startSession">Starten</button>
         </div>
         <div v-else>
           <!-- Session Name wird über Input eingegeben und über anschließenden Klick auf Button "Senden" wird neue Session angelegt 
@@ -40,8 +46,10 @@
                     </ul>
                     </div>
                 </div>
-                </div>
+              </div>
+          </div>
         </div>
+        
     </div>
 </template>
 
@@ -58,7 +66,7 @@ export default {
       name: '',
       date: '',
       id: '',
-      timer: '',
+      message: '',
       students: []
     }
   },
@@ -94,6 +102,20 @@ export default {
         return this.error;
       }
       setInterval(()=>{this.writeStudentsToArray()}, 3000);
+    },
+    //Methode zum Starten einer Session
+    //prüft zuerst nochmal gegen die API, ob Schülerzahl gerade ist
+    //wenn ja, dann setzt die Funktion den Status der Session auf den ersten Schritt: "Individualanalyse"
+    async startSession() {
+          //wenn gerade und nicht null
+          if (this.students.length % 2 == 0 && this.students.length	!== 0) {
+          //rufe Middleware auf und setze Status der Session mit aktueller Session ID auf "Individualanalyse"
+          SessionService.setSessionStatus(this.id, 'Individualanalyse');
+          this.message = 'Die Session wurde gestartet. Bitte betreuen Sie jetzt die Schüler bei der Durchführung der Analyse';
+        } else { //sonst: Fehler zurückgeben
+          this.error = 'Die Anzahl der Schüler ist nicht gerade. Bitte stellen Sie sicher, dass eine gerade Anzahl an Schülern angemeldet ist.';
+          return this.error;
+        }
     },
     //Hilfsfunktion für setInterval
     async writeStudentsToArray() {

@@ -47,6 +47,24 @@ class SessionService {
             }
         });
     }
+    //Änderung des Session Status
+    static setSessionStatus(sessionId, statusName) {
+        //Promise wegen async Functions
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen; für Änderung mit erweiterter URL /change; Parameter id, status
+                const result = await axios.post(url+'/change', {
+                    id: sessionId,
+                    status: statusName
+                });
+                //ID der geänderten Session zurückgeben
+                resolve(result.data);
+            } catch (err) {
+                reject (err);
+            }
+        });
+    }
     //DELETE Aufrufe: Session-ID ist ID, die aus POST Aufruf zurückgegeben wird
     static deleteSessions(sessionId) {
         return axios.delete(url, {
