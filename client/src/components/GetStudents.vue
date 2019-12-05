@@ -145,7 +145,7 @@ export default {
     },
     //Funktion zum Navigieren zu Komponente "IndividualAnalysis"
     async navigateToIndividualAnalysis() {
-      this.$router.push('/IndividualAnalysis');
+      this.$router.push('/individualanalysis');
     }
   }
 }

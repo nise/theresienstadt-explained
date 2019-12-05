@@ -1,6 +1,7 @@
 .DS_Store
 /node_modules
 /client/node_modules
+/client/public/theresienstadt.mp4
 /dist
 
 # local env files

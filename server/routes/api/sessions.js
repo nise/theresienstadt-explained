@@ -1,4 +1,4 @@
-//API zum Anlegen, Auslesen und Löschen von Sessions
+//API zum Anlegen, Auslesen, Ändern und Löschen von Sessions
 
 const express = require('express');
 const mongoose = require('mongoose');
