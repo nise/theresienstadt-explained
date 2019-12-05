@@ -21,7 +21,8 @@ class SessionService {
                     data.map(session => ({
                         name: session.name,
                         date: session.date,
-                        id: session._id
+                        id: session._id,
+                        status: session.status
                     }))
                 );
             } catch (err) {

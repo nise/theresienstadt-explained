@@ -59,7 +59,7 @@ import SessionService from '../../SessionService';
 import StudentService from '../../StudentService';
 //Exports der Attribute, die aus den Eingabefeldern automatisch beschrieben werden
 export default {
-  name: 'GetSessions',
+  name: 'StartSession',
   data() {
     return {
       error: '',

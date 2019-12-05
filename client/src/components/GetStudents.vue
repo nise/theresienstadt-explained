@@ -3,6 +3,7 @@
     <h1 class="display-4">Teilnehmererfassung</h1>
     <div v-if="this.id">
       <p style="font-size:large;">Bitte warten Sie, bis der Lehrer die Session startet.</p>
+      <button class="btn btn-primary" v-if="this.sessionStatus==='Individualanalyse'" v-on:click="navigateToIndividualAnalysis">Starten</button>
     </div>
     <!-- Input Gruppe zur Eingabe von Vor- und Nachmame; wird über v-model jeweils mit der Variable synchronisiert -->
     <div v-else>
@@ -43,6 +44,8 @@
 <script>
 //StudentService Middleware importieren
 import StudentService from '../../StudentService';
+//SessionServie Middleware importieren
+import SessionService from '../../SessionService';
 //Vuex Import
 import { mapState } from 'vuex';
 import { mapGetters } from 'vuex';
@@ -59,18 +62,22 @@ export default {
       lastName: '',
       session: this.$route.query.session,
       students: [],
-      error: ''
+      error: '',
+      sessions: [],
+      sessionStatus: ''
     }
   },
   //Vuex Store
   computed: {
     ...mapState({
       studentId: "studentId"
-  })
+    }),
+    
   },
   //bei Seitenaufruf ausführen
   async created() {
     setInterval(()=>{this.writeStudentsToArray()}, 3000);
+    setInterval(()=>{this.getSessionStatus()}, 3000);
     try {
       //Studenten Array zur Anzeige befüllen
       this.students = await StudentService.getStudents(this.session);
@@ -90,6 +97,7 @@ export default {
     changeStudentId: function() {
       this.CHANGE_STUDENT_ID(this.id);
     },
+    //Methode zur Überprüfung der Eingabefelder, ob sie befüllt sind, und Rückgabe einer Fehlermeldung in error Variable, wenn nicht
     validateInput: function () {
       if (this.firstName&&this.lastName) {
         this.error = '';
@@ -123,7 +131,21 @@ export default {
     },
     //Hilfsfunktion für setInterval
     async writeStudentsToArray() {
+      try {
         this.students = await StudentService.getStudents(this.session);
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
+    //prüft, ob Session Status "Individualanalyse ist"; wenn ja, dann true; wenn nein, dann false
+    async getSessionStatus() {
+      this.sessions = await SessionService.getSessions();
+      const filteredSession = this.sessions.find(element => element.id === this.session);
+      this.sessionStatus = filteredSession.status;
+    },
+    //Funktion zum Navigieren zu Komponente "IndividualAnalysis"
+    async navigateToIndividualAnalysis() {
+      this.$router.push('/IndividualAnalysis');
     }
   }
 }
