@@ -19,6 +19,9 @@ const sessions = require('./routes/api/sessions');
 //Pfad zu tasks API in Konstante speichern
 const tasks = require('./routes/api/tasks');
 
+//Pfad zu annotations API in Konstante speichern
+const annotations = require('./routes/api/annotations');
+
 //URL /api/students zu internem Pfad umleiten
 app.use('/api/students', students);
 
@@ -27,6 +30,9 @@ app.use('/api/sessions', sessions);
 
 //URL /api/tasks zu internem Pfad umleiten
 app.use('/api/tasks', tasks);
+
+//URL /api/annotations zu internem Pfad umleiten
+app.use('/api/annotations', annotations);
 
 //Port Definition für Backend
 const port = process.env.PORT || 5000;

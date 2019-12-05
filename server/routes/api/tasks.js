@@ -11,8 +11,8 @@ const taskSchema = new mongoose.Schema({
     session: String,
     text: String,
     videoPath: String,
-    videoStartTime: String,
-    videoEndTime: String
+    videoStartTime: Number,
+    videoEndTime: Number
 });
 
 //Task Klasse initialisieren
@@ -45,7 +45,6 @@ router.post('/', async (req, res) => {
 router.post('/change', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
-    console.log(req.body.id);
     const attributes = req.body;
     //vorhandene Aufgabe über Change Funktion in Datenbank ändern und _id zurückgeben
     const taskId = await changeTaskInDatabase(id, attributes);
@@ -92,7 +91,7 @@ async function changeTaskInDatabase(idToUpdate, attributesToChange) {
     return new Promise(async (resolve, reject) => {
         //Datenbank und Collection verbinden
         await connectDatabase();
-        //Task Attribut über findbyidandupdate Funktion änderun und Fehler zurückgeben falls vorhanden
+        //Task über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
         task.findByIdAndUpdate(idToUpdate, attributesToChange, function (err, res) {
             if (err) return console.error(err);
             resolve (idToUpdate);
