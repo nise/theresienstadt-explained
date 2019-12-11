@@ -12,16 +12,17 @@ const taskSchema = new mongoose.Schema({
     text: String,
     videoPath: String,
     videoStartTime: Number,
-    videoEndTime: Number
+    videoEndTime: Number,
+    taskNumber: Number
 });
 
 //Task Klasse initialisieren
 const task = mongoose.model('task', taskSchema);
 
 //GET Requests behandeln
-router.get('/:session', async (req, res) => {
+router.get('/:session/:taskNumber', async (req, res) => {
     //Aufgaben aus Datenbank über Funktion abfragen; session ist pro Instanz der Videoanalyse eindeutig und wird automatisch generiert nach Start durch Lehrenden
-    const tasksFromDatabase = await loadTasksFromDatabase(req.params.session);
+    const tasksFromDatabase = await loadTasksFromDatabase(req.params.session, req.params.taskNumber);
     //Ergebnis zurücksenden
     res.send(tasksFromDatabase);
 });
@@ -33,8 +34,10 @@ router.post('/', async (req, res) => {
         session: req.body.session,
         text: req.body.text,
         videoPath: req.body.videoPath,
+        //VideoStartTime und VideoEndTime sind Zeitangaben in einem Video -> so kann ein einzelnes Video in mehrere Sequenzen aufgeteilt werden, aber es muss nur eine Videodatei abgelegt werden
         videoStartTime: req.body.videoStartTime,
-        videoEndTime: req.body.videoEndTime
+        videoEndTime: req.body.videoEndTime,
+        taskNumber: req.body.taskNumber
     });
     //neue Aufgabe über Post Funktion in Datenbank einfügen und _id zurückgeben
     const taskId = await postTaskToDatabase(newTask);
@@ -63,12 +66,12 @@ async function connectDatabase() {
     await mongoose.connect('mongodb://localhost:27017/tasks', {useNewUrlParser: true});
 }
 
-//laden der Aufgaben aus der Datenbank; Filter sessionFilter als Übergabeparameter
-async function loadTasksFromDatabase(sessionFilter) {
+//laden der Aufgaben aus der Datenbank; Filter sessionFilter und taskNumberFilter als Übergabeparameter
+async function loadTasksFromDatabase(sessionFilter, taskNumberFilter) {
     //Datenbank und Collection verbinden
     await connectDatabase();
     //alle Aufgaben aus der Datenbank lesen mit der richtigen Session
-    var result = task.find({session: sessionFilter});
+    var result = task.find({session: sessionFilter, taskNumber: taskNumberFilter});
     return result;
 }
 

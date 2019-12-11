@@ -70,7 +70,8 @@ export default {
   //Vuex Store
   computed: {
     ...mapState({
-      studentId: "studentId"
+      studentId: "studentId",
+      sessionId: "sessionId"
     }),
     
   },
@@ -90,12 +91,16 @@ export default {
     ...mapGetters({
     }),
     ...mapMutations([
-      "CHANGE_STUDENT_ID"
+      "CHANGE_STUDENT_ID",
+      "CHANGE_SESSION_ID"
     ]),
     ...mapActions({
     }),
     changeStudentId: function() {
       this.CHANGE_STUDENT_ID(this.id);
+    },
+    changeSessionId: function() {
+      this.CHANGE_SESSION_ID(this.session);
     },
     //Methode zur Überprüfung der Eingabefelder, ob sie befüllt sind, und Rückgabe einer Fehlermeldung in error Variable, wenn nicht
     validateInput: function () {
@@ -120,6 +125,7 @@ export default {
             this.id = await StudentService.postStudent(this.firstName, this.lastName, this.session);
             //studentId im Vuex Store aktualisieren, damit bei späteren Komponenten verwendbar
             this.changeStudentId();
+            this.changeSessionId();
           } catch (err) {
             this.error = err.message;
           }

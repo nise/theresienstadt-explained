@@ -5,12 +5,12 @@ import store from './store';
 import Session from './components/StartSession.vue';
 import GetStudents from './components/GetStudents.vue';
 import IndividualAnalysis from './components/IndividualAnalysis.vue';
+import ShowPartners from './components/ShowPartners.vue';
 import VuePlyr from 'vue-plyr'
 
 //Einbindung des Vue Router
 Vue.use(VueRouter);
 
-//Setzen von Standardeinstellungen für Videoplayer vue-plyr
 Vue.use(VuePlyr, {
   plyr: {
     fullscreen: { enabled: false }
@@ -22,6 +22,7 @@ const routes = [
   { path: '/createsession', component: Session },
   { path: '/', component: GetStudents },
   { path: '/individualanalysis', component: IndividualAnalysis},
+  { path: '/showpartners', component: ShowPartners}
 ];
 
 const router = new VueRouter({

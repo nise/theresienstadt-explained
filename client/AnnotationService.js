@@ -33,7 +33,7 @@ class AnnotationService {
         });
     }
     //POST Aufrufe
-    static postAnnotations(sessionToPost, studentToPost, annotationTextToPost, annotationStartTimeToPost, annotationEndTimeToPost) {
+    static postAnnotations(sessionToPost, studentToPost, annotationTextToPost, annotationStartTimeToPost, annotationEndTimeToPost, taskIdToPost) {
         //Promise wegen async Functions
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
@@ -44,7 +44,8 @@ class AnnotationService {
                     student: studentToPost,
                     annotationText: annotationTextToPost,
                     annotationStartTime: annotationStartTimeToPost,
-                    annotationEndTime: annotationEndTimeToPost
+                    annotationEndTime: annotationEndTimeToPost,
+                    taskId: taskIdToPost
                 });
                 //ID der neu erstellten Annotation zurückgeben
                 resolve(result.data);

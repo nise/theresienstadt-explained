@@ -5,35 +5,39 @@ import axios from 'axios';
 const url = 'http://localhost:5000/api/tasks';
 
 //Klasse zur Behandlung der Task-Aufrufe erstellen
-class SessionService {
+class TaskService {
     //GET Aufrufe
-    static getTasks(sessionToGet) {
+    static getTasks(sessionToGet, taskNumberToGet) {
         //Promise wegen async Functions
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
             try {
-                //API mit Axios aufrufen mit Parameter sessionToGet
-                const result = await axios.get(url + '/' + sessionToGet);
+                //API mit Axios aufrufen mit Parameter sessionToGet und taskNumberToGet
+                const result = await axios.get(url + '/' + sessionToGet + '/' + taskNumberToGet);
+                //gebe nur etwas zurück, wenn Abfrage Objekt enthält
+                if (result.data[0]) {
                 //Daten aus Rückgabe extrahieren
-                const data = result.data;
+                var resolveObject = {
+                    id: result.data[0]._id,
+                    session: result.data[0].session,
+                    text: result.data[0].text,
+                    videoPath: result.data[0].videoPath,
+                    videoStartTime: result.data[0].videoStartTime,
+                    videoEndTime: result.data[0].videoEndTime,
+                    taskNumber: result.data[0].taskNumber
+                };
                 //Rückgabe = Objekt mit allen Taskfeldern als Attribute
-                resolve(
-                    data.map(task => ({
-                        id: task._id,
-                        session: task.session,
-                        text: task.text,
-                        videoPath: task.videoPath,
-                        videoStartTime: task.videoStartTime,
-                        videoEndTime: task.videoEndTime
-                    }))
-                );
+                resolve(resolveObject);
+            } else { //sonst gib leeres Ergebnis zurück
+                resolve();
+            }
             } catch (err) {
                 reject (err);
             }
         });
     }
     //POST Aufrufe
-    static postTasks(sessionToPost, textToPost, videoPathToPost, videoStartTimeToPost, videoEndTimeToPost) {
+    static postTasks(sessionToPost, textToPost, videoPathToPost, videoStartTimeToPost, videoEndTimeToPost, taskNumberToPost) {
         //Promise wegen async Functions
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
@@ -44,7 +48,8 @@ class SessionService {
                     text: textToPost,
                     videoPath: videoPathToPost,
                     videoStartTime: videoStartTimeToPost,
-                    videoEndTime: videoEndTimeToPost
+                    videoEndTime: videoEndTimeToPost,
+                    taskNumber: taskNumberToPost
                 });
                 //ID des neu erstellten Tasks zurückgeben
                 resolve(result.data);
@@ -67,7 +72,7 @@ class SessionService {
                 reject (err);
             }
         });
-    }
+    } 
     //DELETE Aufrufe: Task-ID ist ID, die aus POST Aufruf zurückgegeben wird
     static deleteTasks(taskId) {
         return axios.delete(url, {

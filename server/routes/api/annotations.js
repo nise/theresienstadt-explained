@@ -12,16 +12,17 @@ const annotationSchema = new mongoose.Schema({
     student: String,
     annotationText: String,
     annotationStartTime: Number,
-    annotationEndTime: Number
+    annotationEndTime: Number,
+    taskId: String
 });
 
 //Annotation Klasse initialisieren
 const annotation = mongoose.model('annotation', annotationSchema);
 
 //GET Requests behandeln
-router.get('/:session/:student', async (req, res) => {
-    //Markierungen aus Datenbank über Funktion abfragen; session ID und Student ID als Filter
-    const annotationsFromDatabase = await loadAnnotationsFromDatabase(req.params.session, req.params.student);
+router.get('/:session/:student:/:taskId', async (req, res) => {
+    //Markierungen aus Datenbank über Funktion abfragen; session ID, Student ID und Task ID als Filter
+    const annotationsFromDatabase = await loadAnnotationsFromDatabase(req.params.session, req.params.student, req.params.taskId);
     //Ergebnis zurücksenden
     res.send(annotationsFromDatabase);
 });
@@ -34,7 +35,8 @@ router.post('/', async (req, res) => {
         student: req.body.student,
         annotationText: req.body.annotationText,
         annotationStartTime: req.body.annotationStartTime,
-        annotationEndTime: req.body.annotationEndTime
+        annotationEndTime: req.body.annotationEndTime,
+        taskId: req.body.taskId
     });
     //neue Annotation über Post Funktion in Datenbank einfügen und _id zurückgeben
     const annotationId = await postAnnotationToDatabase(newAnnotation);
@@ -63,12 +65,12 @@ async function connectDatabase() {
     await mongoose.connect('mongodb://localhost:27017/annotations', {useNewUrlParser: true});
 }
 
-//laden der Markierungen aus der Datenbank; Filter sessionFilter (sessionId) und studentFilter(studentId) als Übergabeparameter
-async function loadAnnotationsFromDatabase(sessionFilter, studentFilter) {
+//laden der Markierungen aus der Datenbank; Filter sessionFilter (sessionId), studentFilter(studentId) und taskId als Übergabeparameter
+async function loadAnnotationsFromDatabase(sessionFilter, studentFilter, taskIdFilter) {
     //Datenbank und Collection verbinden
     await connectDatabase();
     //alle Markierungen aus der Datenbank lesen mit der richtigen Session und vom richtigen Studenten
-    var result = annotation.find({session: sessionFilter, student: studentFilter});
+    var result = annotation.find({session: sessionFilter, student: studentFilter, taskId: taskIdFilter});
     return result;
 }
 
