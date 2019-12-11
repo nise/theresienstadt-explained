@@ -51,7 +51,6 @@
 </template>
 
 <script>
-//TODO: Markierungen nach Absenden in DB schreiben
 //Vuex Import
 import { mapState } from 'vuex';
 import { mapGetters } from 'vuex';
@@ -69,8 +68,7 @@ export default {
         task: {},
         error: '',
         iteration: 1,
-        player: null,
-        duration: null
+        player: null
     };
   },
   mounted() {
@@ -152,22 +150,49 @@ export default {
         },
         //prüfe, ob eine weitere Aufgabe verfügbar ist; wenn ja, dann Laden der nächsten Aufgabe; wenn nein, dann Abschluss der Aufgaben; in jedem Fall Speichern der Markierungen
         async jumpToNextTaskOrComplete() {
-            //wenn eine weitere Aufgabe in der Datenbank ist
-            if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
-                //speichere Markierungen in die Datenbank
-                this.annotations.forEach(element => {
-                    this.WRITE_ANNOTATIONS_TO_DATABASE(element);
-                });
-                //annotations Array leeren, damit für neue Aufgabe bereit
-                    this.EMPTY_ANNOTATIONS_ARRAY();
-                //Zähler auf nächste Aufgabe setzen
-                this.iteration++;
-                //nächste Aufgabe laden
-                this.task = await TaskService.getTasks(this.sessionId, this.iteration)
-            } else {
-                //zur Seite für Ansicht der gebildeten Dyaden springen
-                this.$router.push('/showpartners');
+            //prüfe, ob mindestens eine Markierung vorgenommen wurde
+            if (this.annotations[0]) {
+                //prüfe, ob der Begründungstext jeder Markierung ausgefüllt ist
+                if (this.validateInput()) {
+                    //wenn eine weitere Aufgabe in der Datenbank ist
+                    if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
+                        //speichere Markierungen in die Datenbank
+                        this.annotations.forEach(element => {
+                            this.WRITE_ANNOTATIONS_TO_DATABASE(element);
+                        });
+                        //annotations Array leeren, damit für neue Aufgabe bereit
+                            this.EMPTY_ANNOTATIONS_ARRAY();
+                        //Zähler auf nächste Aufgabe setzen
+                        this.iteration++;
+                        //nächste Aufgabe laden
+                        this.task = await TaskService.getTasks(this.sessionId, this.iteration)
+                    } else {
+                        //zur Seite für Ansicht der gebildeten Dyaden springen
+                        this.$router.push('/showpartners');
+                    }
+                }
+            } else { //wenn keine Markierung vorgenommen wurde, dann Fehler ausgeben
+                this.error = 'Bitte nehmen Sie mindestens eine Markierung vor';
             }
+        },
+        //prüfe, ob für jede Annotation ein Text eingetragen ist
+        validateInput: function () {
+            //Rückgabevariable
+            var feedback = false;
+            //Durchlaufen der Annotations
+            this.annotations.forEach(element => {
+                //wenn Text vorhanden, dann weiter
+                if (element.annotationText) {
+                    this.error = '';
+                    feedback = true;
+                } else { //wenn kein Text vorhanden dann Fehler setzen und beenden (false zurückgeben)
+                    this.error = 'Bitte begründen Sie Ihre Markierungen.'
+                    //false zurückgeben -> weitere Ausführung verhindern
+                    feedback = false;
+                }
+            });
+            //Rückgabevariable weitergeben
+            return feedback;
         }
     }
 };
