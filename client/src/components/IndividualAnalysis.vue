@@ -10,7 +10,7 @@
             <div class="Video col-md-7">
                 <vue-plyr ref="player">
                     <video>
-                        <source src="/theresienstadt.mp4" type="video/mp4" />
+                        <source :src="task.videoPath" type="video/mp4" />
                     </video>
                 </vue-plyr>
             </div>
@@ -59,6 +59,7 @@ import { mapActions } from 'vuex';
 
 //Import der Middleware für Tasks
 import TaskService from '../../TaskService';
+import StudentService from '../../StudentService';
 
 export default {
   name: "IndividualAnalysis",
@@ -167,6 +168,8 @@ export default {
                         //nächste Aufgabe laden
                         this.task = await TaskService.getTasks(this.sessionId, this.iteration)
                     } else {
+                        //in student abspeichern, dass er mit der Individualanalyse fertig ist
+                        StudentService.setStudentStatus(this.studentId, 'waitingForGroupAnalysis')
                         //zur Seite für Ansicht der gebildeten Dyaden springen
                         this.$router.push('/showpartners');
                     }

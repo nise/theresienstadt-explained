@@ -55,6 +55,7 @@
 <script>
 //SessionService Middleware importieren
 import SessionService from '../../SessionService';
+//StudentService Middleware importieren
 import StudentService from '../../StudentService';
 //Exports der Attribute, die aus den Eingabefeldern automatisch beschrieben werden
 export default {

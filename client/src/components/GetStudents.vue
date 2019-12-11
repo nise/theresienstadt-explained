@@ -122,7 +122,7 @@ export default {
           try {
             //Aufruf der Middleware zum Anlegen eines Studenten; firstName aus Nutzereingabe, lastName aus Nutzereingabe, session aus Funktion zum Session auslesen
             //ID des neuen Studenten wird in Variable id hinterlegt
-            this.id = await StudentService.postStudent(this.firstName, this.lastName, this.session);
+            this.id = await StudentService.postStudent(this.firstName, this.lastName, this.session, 'inRegistration');
             //studentId im Vuex Store aktualisieren, damit bei späteren Komponenten verwendbar
             this.changeStudentId();
             this.changeSessionId();
@@ -151,6 +151,9 @@ export default {
     },
     //Funktion zum Navigieren zu Komponente "IndividualAnalysis"
     async navigateToIndividualAnalysis() {
+      //in student abspeichern, dass er mit der Anmeldung fertig ist
+      StudentService.setStudentStatus(this.studentId, 'IndividualAnalysis')
+      //Navigieren zu IndividualAnalysis
       this.$router.push('/individualanalysis');
     }
   }
