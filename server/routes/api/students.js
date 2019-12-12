@@ -11,7 +11,8 @@ const studentSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     session: String,
-    status: String
+    status: String,
+    partner: String
 });
 
 //Student Klasse initialisieren
@@ -46,13 +47,23 @@ router.post('/', async (req, res) => {
 });
 
 
-//Requests für Statusänderungen behandeln; Anfragen mit /change
-router.post('/change', async (req, res) => {
+//Requests für Statusänderungen behandeln; Anfragen mit /changestatus
+router.post('/changestatus', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const status = req.body.status;
     //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
-    const studentId = await changeStudentInDatabase(id, status);
+    const studentId = await changeStudentStatusInDatabase(id, status);
+    res.send(studentId);
+});
+
+//Requests für Partneränderungen behandeln; Anfragen mit /changepartner
+router.post('/changepartner', async (req, res) => {
+    //Attribute der Anfrage auslesen
+    const id = req.body.id;
+    const partner = req.body.partner;
+    //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
+    const studentId = await changeStudentPartnerInDatabase(id, partner);
     res.send(studentId);
 });
 
@@ -96,13 +107,31 @@ async function postStudentToDatabase(studentToPost) {
     });
 }
 
-async function changeStudentInDatabase(idToUpdate, statusToUpdate) {
+//setze neuen Status bei Student mit id idToUpdate
+async function changeStudentStatusInDatabase(idToUpdate, statusToUpdate) {
     return new Promise(async (resolve, reject) => {
         //Datenbank und Collection verbinden
         await connectDatabase();
         //Objekt aus Übergabeparametern erstellen
         updateObject = {
             status: statusToUpdate
+        }
+        //Session Attribut über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
+        student.findByIdAndUpdate(idToUpdate, updateObject, function (err, res) {
+            if (err) return console.error(err);
+            resolve (idToUpdate);
+        });
+    });
+}
+
+//setze neuen Partner bei Student mit id idToUpdate
+async function changeStudentPartnerInDatabase(idToUpdate, partnerToUpdate) {
+    return new Promise(async (resolve, reject) => {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //Objekt aus Übergabeparametern erstellen
+        updateObject = {
+            partner: partnerToUpdate
         }
         //Session Attribut über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
         student.findByIdAndUpdate(idToUpdate, updateObject, function (err, res) {

@@ -61,7 +61,7 @@ class StudentService {
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
             try {
-                //API mit Axios aufrufen mit Parametern firstName, lastName, session; Rückgabe abspeichern
+                //API mit Axios aufrufen mit Parametern firstName, lastName, session, status; Rückgabe abspeichern
                 const result = await axios.post(url, {
                     firstName: firstNameToPost,
                     lastName: lastNameToPost,
@@ -81,8 +81,8 @@ class StudentService {
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
             try {
-                //API mit Axios aufrufen; für Änderung mit erweiterter URL /change; Parameter id, status
-                const result = await axios.post(url+'/change', {
+                //API mit Axios aufrufen; für Änderung mit erweiterter URL /changestatus; Parameter id, status
+                const result = await axios.post(url+'/changestatus', {
                     id: studentId,
                     status: statusName
                 });
