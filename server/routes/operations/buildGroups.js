@@ -49,7 +49,7 @@ router.get('/:session', async (req, res) => {
     setSessionStatus(session, 'groupAnalysis')
 
     //Erfolgsmeldung senden
-    res.status(200).send();
+    res.status(200).send('Die Dyaden wurden erfolgreich gebildet');
 });
 
 //Schüler mit Status "waitingForGroupAnalysis" aus Datenbank lesen; Zugriff auf students API über axios
@@ -122,6 +122,7 @@ function setSessionStatus(sessionId, statusName) {
     });
 }
 
+//für Student mit studentId Partner mit partnerId über API in die Datenbank schreiben
 async function writePartnerToDatabase(studentId, partnerId) {
     await axios.post(urlstudents+'/changepartner', {
         id: studentId,

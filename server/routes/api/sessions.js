@@ -24,6 +24,15 @@ router.get('/', async (req, res) => {
     res.send(sessionsFromDatabase);
 });
 
+//GET Requests mit ID Filter behandeln
+router.get('/:sessionFilter', async (req, res) => {
+    const sessionFilter = req.params.sessionFilter;
+    //Sessions aus Datenbank über Funktion abfragen
+    const sessionsFromDatabase = await loadSessionsFromDatabaseWithFilter(sessionFilter);
+    //Ergebnis zurücksenden
+    res.send(sessionsFromDatabase);
+});
+
 //POST Requests behandeln
 router.post('/', async (req, res) => {
     //neues Session Objekt initialisieren
@@ -61,9 +70,17 @@ async function connectDatabase() {
 async function loadSessionsFromDatabase() {
     //Datenbank und Collection verbinden
     await connectDatabase();
-    //alle Studenten aus der Datenbank lesen mit der richtigen Session
+    //alle Sessions aus der Datenbank lesen
     var result = session.find({});
     return result;
+}
+
+async function loadSessionsFromDatabaseWithFilter(sessionToGet) {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //alle Sessions aus der Datenbank lesen mit session Filter
+        var result = session.find({_id: sessionToGet});
+        return result;
 }
 
 async function postSessionToDatabase(sessionToPost) {

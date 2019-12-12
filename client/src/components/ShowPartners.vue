@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <div> <!-- TODO: nur anzeigen, wenn Status der Session noch nicht umgesetzt -->
+        <!-- Anzeige der Anweisung, dass gewartet werden soll, nur, wenn Dyadenbildung noch nicht stattgefunden hat -->
+        <div v-if="sessionStatus!=='groupAnalysis'">
             <h1>Bitte warten</h1>
             <p>Es sind noch nicht alle Schüler fertig mit der Analyse des Videos. Bitte warten Sie, bis alle fertig sind.</p>
             <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
@@ -18,18 +19,26 @@
                 </div>
             </div>
         </div>
+        <!-- wenn Dyadenbildung stattgefunden hat, dann zeige jedem Schüler seinen zugeteilten Partner an und ermögliche die Navigation zur Gruppenanalyse -->
+        <div v-if="sessionStatus==='groupAnalysis'">
+            <h1>Ihr Partner für die Gruppenarbeit</h1>
+            <p>Unten sehen Sie Ihren zugeteilten Partner für die Gruppenarbeit. Sie können nun über den Knopf "Weiter" fortfahren.</p>
+            <hr>
+            <!-- Anzeige der Daten des Partners über partnerId und API -->
+            <div class="card border-dark mx-auto" style="width: 18rem">
+                <ul class = "list-group list-group-flush">
+                    <li class="list-group-item"><b>{{partner.firstName}}</b></li>
+                    <li class="list-group-item"><b>{{partner.lastName}}</b></li>
+                </ul>
+            </div>
+            <hr>
+            <!-- Button zur Navigation zur Dyadenanalyse -->
+        <button class="btn btn-primary" @click="navigateToGroupAnalysis">Weiter</button>
+        </div>
     </div>
 </template>
 
 <script>
-//DONE: Überprüfung, ob alle anderen Schüler mit der Individualanalyse fertig sind -> schreiben eines Attributs für Status in student, get Studenten mit diesem Status
-//DONE: wenn in Warteposition, dann Anzeige, dass gewartet werden muss
-//TODO: wenn alle Schüler fertig sind, dann Dyadenbildung auslösen -> erstmal über URL zu Backend lösen -> kann später in Lehrer Komponente eingebaut werden
-//TODO: zufällige Bildung der Dyaden -> erstmal 1 mit 2, 3 mit 4, usw.
-//TODO: gebildete Dyaden bei den Schülern anzeigen
-//TODO: Weiterleitung der Schüler zu der Dyadenanalyse
-
-
     //SessionService Middleware importieren
     import SessionService from '../../SessionService';
     //StudentService Middleware importieren
@@ -42,7 +51,10 @@
         data() {
             return {
             error: '',
-            students: []
+            students: [],
+            session: null,
+            sessionStatus: '',
+            partner: null
             }
         },
         //Vuex Store
@@ -56,11 +68,32 @@
         async created() {
             //Befüllen des Student Arrays mit Studenten, die bereits mit Individualanalyse fertig sind; Wiederholung alle 3s
             setInterval(()=>{this.getReadyStudents()}, 3000);
+            //Befüllen der Session Status Variable mit dem aktuellen Session Status; Wiederholung alle 3s
+            setInterval(() => {this.getSessionStatus()}, 3000);
+        },
+        async mounted() {
+
         },
         methods: {
-            //Hilfsfunktion für setInterval; speichert Studenten mit Status waitingForGroupAnalysis in students Array
+            //Hilfsfunktion für setInterval; speichert Studenten mit Status waitingForGroupAnalysis in students Array; schreibt außerdem partner in partner Objekt, wenn Studenten geladen
             async getReadyStudents() {
-                this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'waitingForGroupAnalysis')
+                this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'waitingForGroupAnalysis');
+                if (this.students.find(element => element.id === this.studentId)) {
+                    const currentStudent = this.students.find(element => element.id === this.studentId);
+                    const partnerId = currentStudent.partner;
+                    this.partner = this.students.find(element => element.id === partnerId);
+                }
+            },
+            //Hilfsfunktion für setInterval; speichert Daten dieser Session in Objekt session und liest den aktuellen Status in Variable sessionStatus aus
+            async getSessionStatus() {
+                this.session = await SessionService.getSessionsWithId(this.sessionId);
+                this.sessionStatus = this.session[0].status;
+            },
+
+            //leitet weiter zur Komponente GroupAnalysis und schreibt neuen Status in student
+            navigateToGroupAnalysis: function() {
+                StudentService.setStudentStatus(this.studentId, 'groupAnalysis')
+                this.$router.push('/groupanalysis')
             }
         }
     }

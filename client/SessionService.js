@@ -30,6 +30,29 @@ class SessionService {
             }
         });
     }
+    static getSessionsWithId(sessionId) {
+        //Promise wegen async Functions
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen mit Parameter session
+                const result = await axios.get(url + '/' + sessionId);
+                //Daten aus Rückgabe extrahieren
+                const data = result.data;
+                //Rückgabe = Objekt mit allen Sessionfeldern als Attribute
+                resolve(
+                    data.map(session => ({
+                        name: session.name,
+                        date: session.date,
+                        id: session._id,
+                        status: session.status
+                    }))
+                );
+            } catch (err) {
+                reject (err);
+            }
+        });
+    }
     //POST Aufrufe
     static postSessions(nameToPost, dateToPost) {
         //Promise wegen async Functions

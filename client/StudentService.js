@@ -23,7 +23,8 @@ class StudentService {
                         lastName: student.lastName,
                         session: student.session,
                         id: student._id,
-                        status: student.status
+                        status: student.status,
+                        partner: student.partner
                     }))
                 );
             } catch (err) {
@@ -47,7 +48,8 @@ class StudentService {
                         lastName: student.lastName,
                         session: student.session,
                         id: student._id,
-                        status: student.status
+                        status: student.status,
+                        partner: student.partner
                     }))
                 );
             } catch (err) {
