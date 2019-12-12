@@ -104,10 +104,10 @@
 
 <script>
 
-//import Video from '../js/Video.js';
-//import store from '../store';
-//const videovue = new Video(store);
-//const video = videovue.video;
+// import Video from '../js/Video.js';
+// import store from '../store';
+// const videovue = new Video(store);
+// const video = videovue.video;
 
 
-</script> 
+</script>

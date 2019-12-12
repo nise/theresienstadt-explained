@@ -1,6 +1,6 @@
 /**
- * 
- * 
+ *
+ *
  * name: Vi2.Loop
  * author: Dmitriy Kolotov
  * license: MIT License

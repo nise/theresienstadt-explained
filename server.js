@@ -7,12 +7,13 @@ const morgan = require('morgan');
 
 const application = 'theresienstadt-explained';
 const mongoose = require('mongoose');
-
+const history = require('connect-history-api-fallback');
 
 const app = express();
 
 app.use(morgan('tiny'));
 app.use(cors());
+app.use(history());
 app.use(bodyParser.json());
 
 
@@ -21,7 +22,7 @@ app.use(bodyParser.json());
  * Module dependencies.
  */
 
-var app = require('../app');
+//var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
 
@@ -29,7 +30,7 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+
 
 /**
  * Create HTTP server.
@@ -115,7 +116,7 @@ var conn = mongoose.connect(
             console.log('\n\n***************************************************************');
             console.log('Started server for application »' + application + '« on port ' + port);
             console.log('***************************************************************\n\n');
-            console.log(process.env.NODE_ENV);
+            //console.log(process.env.NODE_ENV);
         });
         server.on('error', onError);
         server.on('listening', onListening);

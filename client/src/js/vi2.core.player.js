@@ -1,14 +1,14 @@
 
-/* 
-* name: Vi2.VideoPlayer 
+/*
+* name: Vi2.VideoPlayer
 * author: 2018 Niels Seidel, niels.seidel@nise81.com
 * license: MIT License
-* description: 
+* description:
 *	todo:
 
  - bug: keydown binding vary in different browsers
  -- onliest fix: https://github.com/google/closure-library/blob/master/closure/goog/events/keyhandler.js
- 
+
  - add getter and setter for quality, playback status, video information, next, previous, playback rate
 
  - YOuTube http://coding-everyday.blogspot.de/2013/03/how-to-grab-youtube-playback-video-files.html
@@ -28,7 +28,7 @@
 
 \\ normal playback time
 Schema: t=npt:<start-in-seconds>,<end-in-seconds>
-Beispiel: t=npt:10,20 
+Beispiel: t=npt:10,20
 .
 t=120s,121.5s
 Shema: t=npt:<m>,<s>.<ms>:<h>:<m>.<ms>

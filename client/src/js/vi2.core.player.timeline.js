@@ -1,12 +1,12 @@
-/* 
+/*
 * name: Vi2.AnnotatedTimline
 * author: niels.seidel@nise81.com
 * license: MIT License
 * description: Visualizes time-related annotions on multiple timelines below the video
-* related code:		
+* related code:
 	- timeline preview: https://github.com/brightcove/videojs-thumbnails/blob/master/videojs.thumbnails.js
 * todo:
-* - separate throbber from this plugin  
+* - separate throbber from this plugin
 * - cluster / zoom : - Vergleiche Darstellung von sehr vielen Markern bei Google Maps ...
 		- diagramm (?)
 		- filter

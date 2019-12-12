@@ -44,22 +44,25 @@
 </template>
 
 <script>
-import { latLng } from "leaflet";
-import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+import { latLng } from 'leaflet'
+import {
+  LMap, LTileLayer, LMarker, LPopup, LTooltip,
+} from 'vue2-leaflet'
+
 export default {
-  name: "Example",
+  name: 'Example',
   components: {
     LMap,
     LTileLayer,
     LMarker,
     LPopup,
-    LTooltip
+    LTooltip,
   },
   data() {
     return {
       zoom: 13,
       center: latLng(47.41322, -1.219482),
-      url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       withPopup: latLng(47.41322, -1.219482),
@@ -68,23 +71,23 @@ export default {
       currentCenter: latLng(47.41322, -1.219482),
       showParagraph: false,
       mapOptions: {
-        zoomSnap: 0.5
-      }
-    };
+        zoomSnap: 0.5,
+      },
+    }
   },
   methods: {
     zoomUpdate(zoom) {
-      //this.currentZoom = zoom;
+      // this.currentZoom = zoom;
     },
     centerUpdate(center) {
-      this.currentCenter = center;
+      this.currentCenter = center
     },
     showLongText() {
-      this.showParagraph = !this.showParagraph;
+      this.showParagraph = !this.showParagraph
     },
     innerClick() {
-      alert("Click!");
-    }
-  }
-};
+      alert('Click!')
+    },
+  },
+}
 </script>

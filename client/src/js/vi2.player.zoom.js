@@ -1,4 +1,4 @@
-/* 
+/*
 * name: Vi2.Zoom
 * author: niels.seidel@nise81.com
 * license: MIT License

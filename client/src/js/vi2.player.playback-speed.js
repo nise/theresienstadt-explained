@@ -1,5 +1,5 @@
 
-/* 
+/*
 * name: Vi2.Playbackspeed
 * author: niels.seidel@nise81.com
 * license: MIT License

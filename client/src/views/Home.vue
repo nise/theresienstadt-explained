@@ -12,7 +12,7 @@
       >Lorem et üürem et üürem et üürem et üürem et üürem et üürem et üürem et üürem et üürem et üürem et üürem et üürem et üüüpsüm</div>
       <div class="intro-box2">Lorem et üüüpsüm</div>
     </div>
-    
+
     <!--<div>
       <b-button size="sm" @click="toggle">{{ show ? 'Hide' : 'Show' }} Alert</b-button>
       <b-alert v-model="show" class="mt-3" dismissible @dismissed="dismissed">Hello {{ name }}!</b-alert>
@@ -31,7 +31,7 @@
       - ArgueGraph
       - Guided Presentations
       - Andere Filme
-      
+
       -->
     <div class="container-fluid page-apps">
       <div class="container">
@@ -91,24 +91,24 @@
 </template>
 
 <script>
-const API_URL = "http://localhost:4000/message";
-// {{ message }} 
+const API_URL = 'http://localhost:4000/message'
+// {{ message }}
 export default {
-  name: "home",
+  name: 'home',
   data: () => ({
-    error: "",
-    message: ''
+    error: '',
+    message: '',
   }),
- 
+
   mounted() {
     fetch(API_URL)
       .then(response => response.json())
-      .then(result => {
-        this.message = result;
-      });
+      .then((result) => {
+        this.message = result
+      })
   },
-  methods: {}
-};
+  methods: {},
+}
 
 /**
  * export default {

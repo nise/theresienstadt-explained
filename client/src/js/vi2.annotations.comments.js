@@ -1,8 +1,8 @@
-/* 
+/*
 *	name: Vi2.Comments
 *	author: niels.seidel@nise81.com
 *   license: MIT License
-*	description: 
+*	description:
 *	todo:
 	- re-comments could be sorted desc by date. Solution needed
 	- threaded comments

@@ -1,8 +1,8 @@
 /*
  * WORK IN PROGRESS
- * Creates controle element to hide/show the video frame 
+ * Creates controle element to hide/show the video frame
  * xxx todo: this should be accomplished with a audio description and other accessibility assistance
- **/
+ * */
 /* eslint-disable */ 
 
 define(['./jquery'], function ($) {

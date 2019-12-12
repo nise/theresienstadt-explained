@@ -49,6 +49,7 @@
   </div>
 </template>
 
+
 <style>
 @import url("https://fonts.googleapis.com/css?family=Germania+One");
 @import url("https://fonts.googleapis.com/css?family=Nunito");
@@ -272,4 +273,60 @@ footer .footer-logo {
   color: #4b4a4a;
   text-decoration: none;
 }
+
+.page a {
+  text-decoration: underline;
+  color:#000;
+}
+.page a:hover{
+  color: #C10000;
+}
+h1{
+  display: inline-block;
+  position: relative;
+  margin-top: 23px;
+  margin-bottom: 23px;
+  margin-left:0px;
+  align-content: left;
+  text-align: left;
+  padding: 20px 47px 27px 47px;
+  background-color:#C10000;
+  color:white;
+  font-family: Jost;
+  font-size:2em;
+  font-weight:bold;
+  text-transform: uppercase;
+}
+.page h2{
+  margin-top:0.5em;
+}
+.page strong {
+  margin-right:6px;
+  text-decoration: none;
+  font-weight: normal;
+}
+.page {
+  color:#000;
+  background-color: #fff;
+  align-content: left;
+  text-align:left;
+  padding:20px;
+  margin-bottom: 300px;
+}
+.page-list {
+  list-style: none;
+  padding-left: 1em;
+}
+
+.page-list li{
+  margin-bottom: 1em;
+}
+
+.page li:before{
+      content: "-";
+      text-indent: -1em;
+      display: inline-block;
+    }
+
+
 </style>

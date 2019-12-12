@@ -1,14 +1,14 @@
 
-/* 
+/*
 *	name: Vi2.Parser
 *	author: niels.seidel@nise81.com
 * license: MIT License
-*	description: 
+*	description:
 * dependencies:
 *  - jquery-1.11.2.min.js
 *  - jquery.inherit-1.1.1.js
 *	todo:
-    - separate widget-code 
+    - separate widget-code
     - popcorn.js export/import
     - scorm export?
     - show code box

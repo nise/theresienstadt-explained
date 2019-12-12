@@ -1,4 +1,4 @@
-/* 
+/*
 * name: Vi2.core.player.logger
 * author: niels.seidel@nise81.com
 * license: MIT License
