@@ -5,14 +5,15 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve --open"
+    "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve --open",
+    "start": "node ./server"
   },
   "keywords": [
     "interactive",
     "film",
     "hypervideo"
   ],
-  "author": "Niels Seidel",
+  "author": "Niels Seidel, niels.seidel@fernuni-hagen.de",
   "license": "MIT",
   "dependencies": {
     "@vue/cli": "^3.9.2",
