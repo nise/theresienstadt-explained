@@ -1,0 +1,774 @@
+<template>
+  <div class="home">
+    <h1>Protagonisten</h1>
+
+    <div v-for="person in persons">{{ person.name }}</div>
+  </div>
+</template>
+
+<script>
+import Vue from "vue";
+import BootstrapVue from "bootstrap-vue";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+
+Vue.use(BootstrapVue);
+// @ is an alias to /src
+//import HelloWorld from '@/components/HelloWorld.vue';
+
+//const API_URL = "http://localhost:4000/message";
+
+/**
+ * shortname: String,
+    name: String,
+    surename: String,
+    birth: String,
+    death: String,
+    birth_place: String,
+    death_place: String,
+    profession: String,
+    bio: String,
+    images: Array,
+    updated_at: Date
+ */
+
+export default {
+  name: "home",
+  data: () => ({
+    error: "",
+    persons: [
+        {
+            shortname: "Maximilian Adler",
+            name: "Maximilian",
+            surename: "Adler",
+            birth: "21.09.1884",
+            birth_place: "Budweis",
+            death: "16.10.1944",
+            death_place: "KZ Auschwitz",
+            profession: "Philologe und Hochschullehrer",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.989Z"
+            }
+        },
+        {
+            shortname: "Karel Ancerl",
+            name: "Karel",
+            surename: "Ančerl",
+            birth: "22.03.1905",
+            birth_place: "Tučapy",
+            death: "",
+            death_place: "Toronto",
+            profession: "Dirigent",
+            bio:
+            "Ančerl war ein bekannter tschechischer Dirigent. Am 16. November 1942 wurde er nach Theresienstadt deportiert, wo er 1943 ein Kammerorchester gründete, das bei der Interpretation großer musikalischer Werke im Ghetto hohes Niveau erreichte.\nAm 16. Oktober 1944 wurde er nach Auschwitz deportiert und kam später in andere Konzentrationslager. Nach der Befreiung arbeitete er \nbeim tschechischen Rundfunk. Ab 1950 war er Chefdirigent der Tschechischen Philharmoniker.\n\nQuelle:http://www.ghetto-theresienstadt.info/pages/a/ancerlk.htm",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.990Z"
+            }
+        },
+        {
+            shortname: "Leo Baeck",
+            name: "Leo",
+            surename: "Baeck",
+            birth: "23.05.1873",
+            birth_place: "Lissa",
+            death: "02.11.1956",
+            death_place: "London",
+            profession: "Rabbiner",
+            bio:
+            "Leo Baeck wird am 23. Mai in Lissa (heute Lezno/Polen \nEr wird früh in der jüdischen Kultur und Religion unterrichtet. Er besucht das konservative „Jüdisch-Theologische Seminar“ von Breslau (Wroclaw)und bis 1894 das Philosophische Seminar der Universität Breslau. Zum weiteren Studium der Philosophie, Geschichte und Religionsphilosophie zieht er nach Berlin. Er beginnt das Rabbinatsstudium an der liberalen „Lehranstalt für die Wissenschaft des Judentums“.\nBaeck promoviert 1895 und veröffentlicht seine vielbeachtete Dissertation über „Spinozas erste Einwirkungen auf Deutschland“. Im Herbst des Jahres geht er als junger Rabbiner nach Oppeln (Opole).\nEr wird zum führenden Vertreter des jüdischen Liberalismus. 1907 – 1912, Baeck ist Rabbiner in Düsseldorf. 1912 wird Baeck als Rabbiner nach Berlin berufen und arbeitet in der neu errichteten Synagoge in der Fasanenstraße. Zudem wird er Dozent an der „Hochschule für die Wissenschaft des Judentums“.\nWährend des 1. Weltkrieges wird Baeck Feldrabbiner an der West- und Ostfront.\n1933 – 1943, trotz mehrfacher Gelegenheit zur Emigration bleibt Baeck bei seiner Gemeinde, um den deutschen Juden in den Jahren der Diskriminierung und der Verfolgung beizustehen. Er organisiert die Emigration von Juden.\nAls am 1. Nov. 1938 der jüdische Religionsphilosoph Martin Buber aus Deutschland emigriert, ist Baeck der letzte hohe Repräsentant des Judentums in Deutschland. \n1943 wird Baeck zusammen mit seiner Familie in das Ghetto Theresienstadt deportiert. Dort unterstützt er die Gefangenen durch Vorträge und Predigten. Schwer misshandelt überlebt Baeck. Seine vier Schwestern sind im Ghetto umgekommen.\nIm Juli 1945 läßt sich Leo Baeck in London nieder. Ab 1948 bemüht er sich in ganz Deutschland um Versöhnung und Dialoge zwischen Juden und Christen. Die Wiederaufnahme der von ihm 1919 initiierten Gespräche zwischen den Glaubensgruppen ist ihm zunächst wichtiger als die Bestrafung der Schuldigen am Völkermord an den europäischen Juden. Neben seinen repräsentativen Funktionen beginnt Baeck eine umfangreiche Lehrtätigkeit an verschiedenen Universitäten in Europa und den USA. Leo Baeck stirbt am 2. November 1956 in London\nQuelle:http://www.ghetto-theresienstadt.info/pages/b/baeckl.htm",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.990Z"
+            }
+        },
+        {
+            shortname: "Cornelia Cohen",
+            name: "Cornelia",
+            surename: "Cohen",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "Eine geborene Spitzer. Ehefrau von David Cohen.",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.990Z"
+            }
+        },
+        {
+            shortname: "David Cohen",
+            name: "David",
+            surename: "Cohen",
+            birth: "31.12.1882",
+            birth_place: "Deventer",
+            death: "03.09.1967",
+            death_place: "Amsterdam",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.991Z"
+            }
+        },
+        {
+            shortname: "Elisabeth Czech",
+            name: "Elisabeth",
+            surename: "Czech",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "Witwe eines früheren tschechischen Ministers.",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.991Z"
+            },
+            __v: 0
+        },
+        {
+            shortname: "Heinrich Dessauer",
+            name: "Heinrich",
+            surename: "Dessauer",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.991Z"
+            }
+        },
+        {
+            shortname: "Paul Eppstein; ",
+            name: "Paul",
+            surename: "Eppstein",
+            birth: "04.03.1902",
+            birth_place: "Ludwigshafen",
+            death: "28.09.1944",
+            death_place: "Ghetto Theresienstadt",
+            profession: "Soziologe",
+            bio: "Eppstein war Judenälteste r im Ghetto Theresienstadt",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.992Z"
+            }
+        },
+        {
+            shortname: "Karel Fischer",
+            name: "Karel",
+            surename: "Fischer",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "Dirigent",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.992Z"
+            }
+        },
+        {
+            shortname: "Max Friediger",
+            name: "Max",
+            surename: "Friediger",
+            birth: "09.04.1884",
+            birth_place: "Budapest",
+            death: "09.04.1947",
+            death_place: "Kopenhagen",
+            profession: "Oberrabbiner",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.992Z"
+            }
+        },
+        {
+            shortname: "Desider Friedmann",
+            name: "Desider",
+            surename: "Friedmann",
+            birth: "24.11.1880",
+            birth_place: "Boskovice",
+            death: "00.10.1944",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.992Z"
+            }
+        },
+        {
+            shortname: "Heinrich Gans",
+            name: "Heinrich",
+            surename: "Gans",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.993Z"
+            }
+        },
+        {
+            shortname: "Kurt Gerron",
+            name: "Kurt",
+            surename: "Gerron",
+            birth: "11.05.1897",
+            birth_place: "Berlin",
+            death: "28.10.1944",
+            death_place: "KZ Auschwitz",
+            profession: "Schauspieler, Sänger, Regisseur",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.993Z"
+            }
+        },
+        {
+            shortname: "Rolf Grabower",
+            name: "Rolf",
+            surename: "Grabower",
+            birth: "21.05.1883",
+            birth_place: "Berlin",
+            death: "07.03.1963",
+            death_place: "München",
+            profession: "Steuerrechtler, Ministerialrat, Richter",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.993Z"
+            }
+        },
+        {
+            shortname: "Georg Gradnauer",
+            name: "Georg",
+            surename: "Gradnauer",
+            birth: "16.11.1866",
+            birth_place: "Magdeburg",
+            death: "18.11.1946",
+            death_place: "Berlin-Schlachtensee",
+            profession: "Politiker",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.993Z"
+            }
+        },
+        {
+            shortname: "Fritz Gutmann",
+            name: "Fritz",
+            surename: "Gutmann",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.994Z"
+            }
+        },
+        {
+            shortname: "Pavel Haas ",
+            name: "Pavel",
+            surename: "Haas",
+            birth: "21.06.1899",
+            birth_place: "Brünn",
+            death: "18.10.1944",
+            death_place: "KZ Auschwitz",
+            profession: "Komponist",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.994Z"
+            }
+        },
+        {
+            shortname: "Franz Kahn",
+            name: "Franz",
+            surename: "Kahn",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.994Z"
+            }
+        },
+        {
+            shortname: "Ernst Kantorowicz",
+            name: "Ernst",
+            surename: "Kantorowicz",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.995Z"
+            }
+        },
+        {
+            shortname: "Heinrich Klang",
+            name: "Heinrich",
+            surename: "Klang",
+            birth: "15.04.1875",
+            birth_place: "Wien",
+            death: "22.01.1954",
+            death_place: "Wien",
+            profession: "Rechtswissenschaftler",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.995Z"
+            }
+        },
+        {
+            shortname: "Alfred Klein",
+            name: "Alfred",
+            surename: "Klein",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.995Z"
+            }
+        },
+        {
+            shortname: "Gisela Kozower",
+            name: "Giesela",
+            surename: "Kozower",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.995Z"
+            }
+        },
+        {
+            shortname: "Philipp Kozower",
+            name: "Philipp",
+            surename: "Kozower",
+            birth: "28.01.1894",
+            birth_place: "Berlin",
+            death: "00.10.1944",
+            death_place: "KZ Auschwitz",
+            profession: "Jurist",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.996Z"
+            }
+        },
+        {
+            shortname: "Hans Krasa",
+            name: "Hans",
+            surename: "Krása",
+            birth: "30.11.1899",
+            birth_place: "Prag",
+            death: "17.10.1944",
+            death_place: "KZ Auschwitz",
+            profession: "Komponist",
+            bio:
+            'Die Eltern waren assimilierte Juden in Prag. Als 10 jähriger bekommt Krasa Violinen- und Klaverunterricht, als 11 jähriger komponierte er erste Stücke. Krasa studiert an der "Deutschen Akademie für Musik und darstellende Kunst" in Prag. 1924 Uraufführung einer "Orchestergroteske" nach den galgenliedern von Christian Morgenstern. 1938 schreibt Krasa sein bekanntestes Werk, die Kinderoper "Brundibar" im Stil Brechtscher Lehrstücke.\n1942 wird Krasa nach Thersienstadt deportiert, wo Brundibar über 50 mal aufgeführt wird, das erste mal am 23.8.1943 auf dem Dachboden der Magdeburger Kaserne.\nKrasa ging am 16.10.1944 auf "Transport" nach Auschwitz, mit ihm wurden auch so wichtige Künstler wie Haas, Klein und Ullmann deportiert. Keiner kehrte zurück.\nQuellen:\n(1) http://www.ghetto-theresienstadt.de/pages/k/krasah.htm',
+            updated_at: {
+            $date: "2018-09-21T18:34:42.996Z"
+            }
+        },
+        {
+            shortname: "Karl Löwenstein",
+            name: "Karl",
+            surename: "Löwenstein",
+            birth: "02.05.1887",
+            birth_place: "Siegen",
+            death: "1976",
+            death_place: "Bad Neuenahr-Ahrweiler",
+            profession: "Privatbankdirektor",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.996Z"
+            }
+        },
+        {
+            shortname: "Leo Löwenstein",
+            name: "Leo",
+            surename: "Löwenstein",
+            birth: "08.02.1879",
+            birth_place: "Aachen",
+            death: "13.02.1956",
+            death_place: "",
+            profession: "Physiker, Chemiker",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.996Z"
+            }
+        },
+        {
+            shortname: "Robert Mandler",
+            name: "Robert",
+            surename: "Mandler",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.996Z"
+            }
+        },
+        {
+            shortname: "Carl Meinhard",
+            name: "Carl",
+            surename: "Meinhard",
+            birth: "28.11.1875",
+            birth_place: "Iglau",
+            death: "12.02.1949",
+            death_place: "Buenos Aires",
+            profession: "Schauspieler, Theaterdirektor",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.997Z"
+            }
+        },
+        {
+            shortname: "Alfred Meissner",
+            name: "Alfred",
+            surename: "Meissner",
+            birth: "10.04.1871",
+            birth_place: "Jungbunzlau",
+            death: "29.09.1950",
+            death_place: "Prag",
+            profession: "Justizminister",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.997Z"
+            }
+        },
+        {
+            shortname: "Leon Meyer",
+            name: "Léon",
+            surename: "Meyer",
+            birth: "11.09.1868",
+            birth_place: "Le Havre",
+            death: "22.01.1948",
+            death_place: "Paris",
+            profession: "Minister",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.997Z"
+            }
+        },
+        {
+            shortname: "Ove Meyer",
+            name: "Ove",
+            surename: "Meyer",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.997Z"
+            }
+        },
+        {
+            shortname: "Julius Moritz",
+            name: "Julius",
+            surename: "Moritz",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.998Z"
+            }
+        },
+        {
+            shortname: "Benjamin Murmelstein",
+            name: "Benjamin",
+            surename: "Murmelstein",
+            birth: "09.06.1805",
+            birth_place: "Lemberg",
+            death: "27.10.1989",
+            death_place: "Rom",
+            profession: "Rabbiner",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.998Z"
+            }
+        },
+        {
+            shortname: "D. Leon Neuberger",
+            name: "D. Leon",
+            surename: "Neuberger",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.998Z"
+            }
+        },
+        {
+            shortname: "Melanie Oppenhejm",
+            name: "Mélanie",
+            surename: "Oppenhejm",
+            birth: "10.15.1897",
+            birth_place: "Hamburg",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.998Z"
+            }
+        },
+        {
+            shortname: "Morits Oppenhejm",
+            name: "Morits",
+            surename: "Oppenhejm",
+            birth: "13.10.1943",
+            birth_place: "Kopenhagen",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.999Z"
+            }
+        },
+        {
+            shortname: "Alfred Philippson",
+            name: "Alfred",
+            surename: "Philippson",
+            birth: "01.01.1864",
+            birth_place: "Bonn",
+            death: "28.03.1953",
+            death_place: "Bonn",
+            profession: "Geograph",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.999Z"
+            }
+        },
+        {
+            shortname: "Ernst Rosenthal",
+            name: "Ernst",
+            surename: "Rosenthal",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:42.999Z"
+            }
+        },
+        {
+            shortname: "Rudolf Saudek",
+            name: "Rudolf",
+            surename: "Saudek",
+            birth: "20.10.1880",
+            birth_place: "Kolin",
+            death: "19.07.1965",
+            death_place: "Prag",
+            profession: "Bildhauer, Grafiker",
+            bio:
+            'Rudolf Saudek ist ein tschechisch-deutscher Bildhauer und Grafiker. Nach der Handelsakademie und anschließender kaufmännischer Tätigkeit in Prag begann er 1903 seine künstlerische Ausbildung. Saudeck studierte drei Jahre bei Adolf Lehnert in Leipzig und danach bei Landislav Jan Saloun in Prag. An der Accademia dell arte in Florenz absolvierte er ebenfalls ein Studium bis er sich 1909 als freischaffender Bildhauer und Graphiker in Leipzig niederließ. Im Mittelpunkt seiner Arbeit standen Portraitbüsten, die teilweise heute noch sehr bekannt sind (z.B.: Friedrich Nietzsche (1912), Ludwig van Beethoven (1912) und Gerhard Hauptmann). 1910 folgten noch einmal Studienaufenthalte in Rom, Paris und London. 1933 wurde saudek wegen seiner jüdischen Herkunft von der Reichskammer der Künste mit einem Arbeitsverbot belegt. 1942 erfolgte die Deportation und Internierung in der „Kleinen Festung" im KZ Theresienstadt. Nach dem Zweiten Weltkrieg lebte und arbeite Saudek bis zu seinem Tode in Prag. Noch heute zieren einige seiner büsten Gebäude in der Leipziger Innenstadt.',
+            updated_at: {
+            $date: "2018-09-21T18:34:42.999Z"
+            }
+        },
+        {
+            shortname: "Franzi Schneidhuber",
+            name: "Franzi",
+            surename: "Schneidhuber",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.000Z"
+            }
+        },
+        {
+            shortname: "Emil Sommer",
+            name: "Emil",
+            surename: "Sommer",
+            birth: "19.11.1869",
+            birth_place: "Dorna-Watra",
+            death: "10.04.1947",
+            death_place: "Danvers",
+            profession: "Offizier",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.000Z"
+            }
+        },
+        {
+            shortname: "Jo Spier",
+            name: "Joseph Eduard Adolf",
+            surename: "Spier",
+            birth: "26.06.1900",
+            birth_place: "Zutphen",
+            death: "1978",
+            death_place: "",
+            profession: "Illustrator, Karrikaturist",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.000Z"
+            }
+        },
+        {
+            shortname: "Erich Springer",
+            name: "Erich",
+            surename: "Springer",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.000Z"
+            }
+        },
+        {
+            shortname: "Otto Stargardt",
+            name: "Otto",
+            surename: "Stargardt",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.001Z"
+            }
+        },
+        {
+            shortname: "Artur Stein",
+            name: "Artur",
+            surename: "Stein",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.001Z"
+            }
+        },
+        {
+            shortname: "Hermann Strauss",
+            name: "Hermann",
+            surename: "Strauss",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.001Z"
+            },
+            __v: 0
+        },
+        {
+            shortname: "Leo Taussig",
+            name: "Leo",
+            surename: "Taussig",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.001Z"
+            }
+        },
+        {
+            shortname: "Emil Utitz",
+            name: "Emil",
+            surename: "Utitz",
+            birth: "27.05.1883",
+            birth_place: "Rostocky (bei Prag)",
+            death: "02.11.56",
+            death_place: "Jena",
+            profession: "Psychologe, Philosoph",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.002Z"
+            }
+        },
+        {
+            shortname: "Elly von Bleichröder",
+            name: "Elly",
+            surename: "von Bleichröder",
+            birth: "17.09.1894",
+            birth_place: "Drehsa",
+            death: "00.00.1989",
+            death_place: "",
+            profession: "",
+            bio:
+            "Elli  von Bleichröder war die Tochter von James und # Harriet von Bleichröder. Obwohl bereits ihr  Großvater, der Bankier Baron Gerson von Bleichröder, vom Judentum zum  Christentum konvertiert war und sie über hochrangige Beziehungen  verfügte, wurde sie am 27. Juli 1942 in das KZ Theresienstadt   deportiert. Zu diesem Zeitpunkt war sie von Rudolph A. Herrschel   geschieden. Aus der Ehe hatte sie ein Kind. Bleichröder wurde am Ende   des Zweiten Weltkrieges aus dem KZ befreit.",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.002Z"
+            }
+        },
+        {
+            shortname: "Clara von Schultz",
+            name: "Clara",
+            surename: "von Schultz",
+            birth: "",
+            birth_place: "",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.002Z"
+            }
+        },
+        {
+            shortname: "Julia Salinger",
+            name: "Julie Frieda",
+            surename: "Zeman",
+            birth: "06.06.1873",
+            birth_place: "Savar",
+            death: "",
+            death_place: "",
+            profession: "",
+            bio: "",
+            updated_at: {
+            $date: "2018-09-21T18:34:43.002Z"
+            }
+        }
+        ]
+    }),
+
+  /*mounted() {
+    fetch(API_URL)
+      .then(response => response.json())
+      .then(result => {
+        this.message = result;
+      });
+  },*/
+  methods: {}
+};
+</script>
