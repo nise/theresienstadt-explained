@@ -65,5 +65,21 @@ Requirements: git, npm, node, forever
 * Go into the client folder `cd client`
 * Install client dependencies `npm install`
 * return to the rrot folder: `cd ..`
-* Test it: `node server` You should be able to 
-forever start -l forever.log -o out.log -e err.log server.js
+* Test it: `node server` You should be able to enter the domain in your browser and you should see the app. 
+* git fetch --all && git reset --hard origin/master
+* Run server.js forever: `sudo forever start -l forever.log -a -o terezin-out.log -e terzin-err.log server.js`
+* TODO: configure restart of `forever` after server reboot
+
+**setup Let's encrypt**
+* `sudo wget https://dl.eff.org/certbot-auto -O /usr/sbin/certbot-auto`
+* `sudo chmod a+x /usr/sbin/certbot-auto`
+* `sudo certbot-auto --nginx -d theresienstadt-film.net  -d www.theresienstadt-film.net`
+* TODO: add to cromntab: `0 2 * * * sudo /usr/sbin/certbot-auto -q renew`
+* I had solv this issue first: https://github.com/certbot/certbot/issues/2883
+* 
+
+
+
+
+sudo ufw enable
+

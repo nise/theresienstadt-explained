@@ -19,7 +19,10 @@ export default new Router({
       name: 'home',
       component: Home,
     },
-    { path: '/film', name: 'film', component: () => import(/* webpackChunkName: "imprint" */ './views/Video.vue') },
+    { 
+      path: '/film', 
+      name: 'film', 
+      component: () => import(/* webpackChunkName: "imprint" */ './views/Video.vue') },
     {
       path: '/about',
       name: 'about',
