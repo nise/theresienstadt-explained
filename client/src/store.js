@@ -10,6 +10,7 @@ export default new Vuex.Store({
         //Student-Id und Session als permanenter Speicher für alle Komponenten -> wird in GetStudents initial befüllt
         studentId: '',
         sessionId: '',
+        partnerId: '',
         //Markierungen als permanenter Speicher, wird nach abschließen der Analyse in Datenbank geschrieben
         annotations: new Array
     },
@@ -26,6 +27,10 @@ export default new Vuex.Store({
         //Funktion zum Ändern der sessionId
         CHANGE_SESSION_ID: (state, newId) => {
             state.sessionId = newId;
+        },
+        //Funktion zum Ändern der partnerId
+        CHANGE_PARTNER_ID: (state, newId) => {
+            state.partnerId = newId;
         },
         //Funktion zum Anlegen einer neuen Markierung; Übergabeparameter sind Attribute einer Markierung
         CREATE_NEW_ANNOTATION: (state, newAnnotation) => {

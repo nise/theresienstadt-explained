@@ -12,7 +12,8 @@ const studentSchema = new mongoose.Schema({
     lastName: String,
     session: String,
     status: String,
-    partner: String
+    partner: String,
+    group: String
 });
 
 //Student Klasse initialisieren
@@ -39,7 +40,8 @@ router.post('/', async (req, res) => {
     var newStudent = new student({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        session: req.body.session
+        session: req.body.session,
+        status: req.body.status
     });
     //neuen Studenten über Post Funktion in Datenbank einfügen und _id zurückgeben
     const studentId = await postStudentToDatabase(newStudent);
@@ -64,6 +66,16 @@ router.post('/changepartner', async (req, res) => {
     const partner = req.body.partner;
     //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
     const studentId = await changeStudentPartnerInDatabase(id, partner);
+    res.send(studentId);
+});
+
+//Requests für Gruppenänderungen behandeln; Anfragen mit /changegroup
+router.post('/changegroup', async (req, res) => {
+    //Attribute der Anfrage auslesen
+    const id = req.body.id;
+    const group = req.body.group;
+    //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
+    const studentId = await changeStudentGroupInDatabase(id, group);
     res.send(studentId);
 });
 
@@ -133,7 +145,24 @@ async function changeStudentPartnerInDatabase(idToUpdate, partnerToUpdate) {
         updateObject = {
             partner: partnerToUpdate
         }
-        //Session Attribut über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
+        //Student über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
+        student.findByIdAndUpdate(idToUpdate, updateObject, function (err, res) {
+            if (err) return console.error(err);
+            resolve (idToUpdate);
+        });
+    });
+}
+
+//setze neue Gruppe bei Student mit id idToUpdate
+async function changeStudentGroupInDatabase(idToUpdate, groupToUpdate) {
+    return new Promise(async (resolve, reject) => {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //Objekt aus Übergabeparametern erstellen
+        updateObject = {
+            group: groupToUpdate
+        }
+        //Student über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
         student.findByIdAndUpdate(idToUpdate, updateObject, function (err, res) {
             if (err) return console.error(err);
             resolve (idToUpdate);

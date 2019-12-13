@@ -5,7 +5,7 @@
             <h1>Bitte warten</h1>
             <p>Es sind noch nicht alle Schüler fertig mit der Analyse des Videos. Bitte warten Sie, bis alle fertig sind.</p>
             <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
-            <h4>Bereit zur Gruppenanalyse</h4>
+            <h4>Schüler in Warteposition</h4>
             <div class="row">
                 <div class="col-sm-4"
                     v-for="student in students"
@@ -45,6 +45,7 @@
     import StudentService from '../../StudentService';
     //Vuex Import
     import { mapState } from 'vuex';
+    import { mapMutations } from 'vuex';
     //Exports der Attribute, die aus den Eingabefeldern automatisch beschrieben werden
     export default {
         name: 'ShowPartners',
@@ -61,7 +62,8 @@
         computed: {
             ...mapState({
             studentId: "studentId",
-            sessionId: "sessionId"
+            sessionId: "sessionId",
+            partnerId: "partnerId"
             })
         },
         //bei Seitenaufruf ausführen
@@ -75,6 +77,9 @@
 
         },
         methods: {
+            ...mapMutations([
+                "CHANGE_PARTNER_ID"
+            ]),
             //Hilfsfunktion für setInterval; speichert Studenten mit Status waitingForGroupAnalysis in students Array; schreibt außerdem partner in partner Objekt, wenn Studenten geladen
             async getReadyStudents() {
                 this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'waitingForGroupAnalysis');
@@ -90,8 +95,9 @@
                 this.sessionStatus = this.session[0].status;
             },
 
-            //leitet weiter zur Komponente GroupAnalysis und schreibt neuen Status in student
+            //leitet weiter zur Komponente GroupAnalysis und schreibt neuen Status in student; speichert Partner in VueX Store
             navigateToGroupAnalysis: function() {
+                this.CHANGE_PARTNER_ID(this.partner.id);
                 StudentService.setStudentStatus(this.studentId, 'groupAnalysis')
                 this.$router.push('/groupanalysis')
             }

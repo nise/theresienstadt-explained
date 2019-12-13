@@ -24,7 +24,8 @@ class StudentService {
                         session: student.session,
                         id: student._id,
                         status: student.status,
-                        partner: student.partner
+                        partner: student.partner,
+                        group: student.group
                     }))
                 );
             } catch (err) {
@@ -49,7 +50,8 @@ class StudentService {
                         session: student.session,
                         id: student._id,
                         status: student.status,
-                        partner: student.partner
+                        partner: student.partner,
+                        group: student.group
                     }))
                 );
             } catch (err) {
@@ -71,6 +73,7 @@ class StudentService {
                     status: statusToPost
                 });
                 //ID des neu erstellten Schülers zurückgeben
+                console.log(result.data);
                 resolve(result.data);
             } catch (err) {
                 reject (err);

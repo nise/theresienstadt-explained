@@ -59,6 +59,7 @@ import { mapActions } from 'vuex';
 
 //Import der Middleware für Tasks
 import TaskService from '../../TaskService';
+//Import der Middleware für Students
 import StudentService from '../../StudentService';
 
 export default {

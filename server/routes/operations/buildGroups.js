@@ -11,6 +11,7 @@ const axios = require('axios');
 //URL der API festlegen, auf die zugegriffen wird = students
 const urlstudents = 'http://localhost:5000/api/students';
 const urlsessions = 'http://localhost:5000/api/sessions';
+const urlgroups = 'http://localhost:5000/api/groups'
 
 //Router für GET/POST/DELETE Anfragen initialisieren
 const router = express.Router();
@@ -44,6 +45,24 @@ router.get('/:session', async (req, res) => {
     students.forEach(student => {
         writePartnerToDatabase(student.id, student.partnerId);
     });
+
+    //erstelle Gruppe mit den zwei Studenten als Attribute und speichere GruppenId in die jeweiligen Studenten als Attribut
+    for (var i = 0; i<students.length; i++) {
+        //nur ausführen, wenn Gruppe nicht bereits in Student geschrieben wurde -> wird nur einmal pro Gruppe durchgeführt
+        if (students[i].group === undefined) {
+            //erstelle Gruppe und setze die zwei Studenten als Attribute
+            await createNewGroup(students[i].id, students[i].partnerId);
+        }
+    }
+    /**
+    students.forEach(student => {
+        //nur ausführen, wenn Gruppe nicht bereits in Student geschrieben wurde -> wird nur einmal pro Gruppe durchgeführt
+        if (student.group === undefined) {
+            //erstelle Gruppe und setze die zwei Studenten als Attribute
+            createNewGroup(student.id, student.partnerId);
+        }
+    });
+    */
 
     //setze Session Status auf groupAnalysis, damit Schüler beginnen können
     setSessionStatus(session, 'groupAnalysis')
@@ -104,7 +123,7 @@ function setPartner(studentId, partnerId) {
 }
 
 //Änderung des Session Status
-function setSessionStatus(sessionId, statusName) {
+async function setSessionStatus(sessionId, statusName) {
     //Promise wegen async Functions
     return new Promise(async (resolve, reject) => {
         //Fehlerbehandlung
@@ -128,6 +147,40 @@ async function writePartnerToDatabase(studentId, partnerId) {
         id: studentId,
         partner: partnerId
     })
+}
+
+//erstellt neue Gruppe mit student1Id und student2Id als Attribute und schreibt die GruppenId als Attribut in die zwei Students
+    async function createNewGroup(student1Id, student2Id) {
+    //neue Gruppe anlegen und zwei Studenten als Attribute setzen
+    const groupId = await axios.post(urlgroups, {
+        student1: student1Id,
+        student2: student2Id
+    });
+    //Gruppen-ID bei Student 1 als Attribut setzen (lokal)
+    this.students.find(function(student, index) {
+        if (student.id === student1Id) {
+            this.students[index].group = groupId.data;
+        }
+    });
+
+    //Gruppen-ID bei Student 2 als Attribut setzen (lokal)
+    this.students.find(function(student, index) {
+        if (student.id === student2Id) {
+            this.students[index].group = groupId.data;
+        }
+    });
+
+        //Gruppen-ID bei Student 1 als Attribut setzen (in DB)
+    await axios.post(urlstudents+'/changegroup', {
+        id: student1Id,
+        group: groupId.data
+    });
+
+    //Gruppen-ID bei Student 2 als Attribut setzen (in DB)
+    await axios.post(urlstudents+'/changegroup', {
+        id: student2Id,
+        group: groupId.data
+    });
 }
 
 module.exports = router;
