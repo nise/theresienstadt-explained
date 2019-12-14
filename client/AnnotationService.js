@@ -7,13 +7,13 @@ const url = 'http://localhost:5000/api/annotations';
 //Klasse zur Behandlung der Annotation-Aufrufe erstellen
 class AnnotationService {
     //GET Aufrufe
-    static getAnnotations(sessionToGet, studentToGet) {
+    static getAnnotations(sessionToGet, studentToGet, taskIdToGet) {
         //Promise wegen async Functions
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
             try {
                 //API mit Axios aufrufen mit Parameter sessionToGet und studentToGet
-                const result = await axios.get(url + '/' + sessionToGet) + '/' + studentToGet;
+                const result = await axios.get(url + '/' + sessionToGet + '/' + studentToGet + '/' + taskIdToGet);
                 //Daten aus Rückgabe extrahieren
                 const data = result.data;
                 //Rückgabe = Objekt mit allen Annotation-Feldern als Attribute
@@ -24,7 +24,8 @@ class AnnotationService {
                         student: annotation.student,
                         annotationText: annotation.annotationText,
                         annotationStartTime: annotation.annotationStartTime,
-                        annotationEndTime: annotation.annotationEndTime
+                        annotationEndTime: annotation.annotationEndTime,
+                        taskId: annotation.taskId
                     }))
                 );
             } catch (err) {

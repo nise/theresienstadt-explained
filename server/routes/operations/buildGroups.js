@@ -154,7 +154,8 @@ async function writePartnerToDatabase(studentId, partnerId) {
     //neue Gruppe anlegen und zwei Studenten als Attribute setzen
     const groupId = await axios.post(urlgroups, {
         student1: student1Id,
-        student2: student2Id
+        student2: student2Id,
+        status: 'GroupAnalysis'
     });
     //Gruppen-ID bei Student 1 als Attribut setzen (lokal)
     this.students.find(function(student, index) {

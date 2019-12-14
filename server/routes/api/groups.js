@@ -9,7 +9,8 @@ const router = express.Router();
 //Gruppen Schema für Mongoose anlegen
 const groupSchema = new mongoose.Schema({
     student1: String,
-    student2: String
+    student2: String,
+    status: String
 });
 
 //Gruppen Klasse initialisieren
@@ -29,10 +30,21 @@ router.post('/', async (req, res) => {
     //neues group Objekt initialisieren
     var newGroup = new group({
         student1: req.body.student1,
-        student2: req.body.student2
+        student2: req.body.student2,
+        status: req.body.status
     });
     //neue Gruppe über Post Funktion in Datenbank einfügen und _id zurückgeben
     const groupId = await postGroupsToDatabase(newGroup);
+    res.send(groupId);
+});
+
+//Requests für Statusänderungen behandeln; Anfragen mit /change
+router.post('/change', async (req, res) => {
+    //Attribute der Anfrage auslesen
+    const id = req.body.id;
+    const status = req.body.status;
+    //vorhandene Gruppe über Change Funktion in Datenbank ändern und _id zurückgeben
+    const groupId = await changeGroupInDatabase(id, status);
     res.send(groupId);
 });
 
@@ -64,6 +76,22 @@ async function postGroupsToDatabase(groupToPost) {
         groupToPost.save(function (err, groupDatabase) {
             if (err) reject (err);
             resolve (groupDatabase.id);
+        });
+    });
+}
+
+async function changeGroupInDatabase(idToUpdate, statusToUpdate) {
+    return new Promise(async (resolve, reject) => {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //Objekt aus Übergabeparametern erstellen
+        updateObject = {
+            status: statusToUpdate
+        }
+        //Gruppe über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
+        group.findByIdAndUpdate(idToUpdate, updateObject, function (err, res) {
+            if (err) return console.error(err);
+            resolve (idToUpdate);
         });
     });
 }

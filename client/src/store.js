@@ -8,9 +8,9 @@ export default new Vuex.Store({
     state: {
         //Storage für Attribute
         //Student-Id und Session als permanenter Speicher für alle Komponenten -> wird in GetStudents initial befüllt
-        studentId: '',
-        sessionId: '',
-        partnerId: '',
+        studentId: '5df24c9ff1e77c97749b1f00',
+        sessionId: '5df24c82f1e77c97749b1eff',
+        partnerId: '5df24ca9f1e77c97749b1f01',
         //Markierungen als permanenter Speicher, wird nach abschließen der Analyse in Datenbank geschrieben
         annotations: new Array
     },

@@ -9,7 +9,7 @@
             <!-- Div mit Video; Nutzung des Moduls "vue-plyr"; initialisiert in main.js -->
             <div class="Video col-md-7">
                 <vue-plyr ref="player">
-                    <video>
+                    <video v-bind:src="task.videoPath">
                         <source :src="task.videoPath" type="video/mp4" />
                     </video>
                 </vue-plyr>

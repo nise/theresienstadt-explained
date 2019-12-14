@@ -73,7 +73,6 @@ class StudentService {
                     status: statusToPost
                 });
                 //ID des neu erstellten Schülers zurückgeben
-                console.log(result.data);
                 resolve(result.data);
             } catch (err) {
                 reject (err);

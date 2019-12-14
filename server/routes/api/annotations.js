@@ -20,7 +20,7 @@ const annotationSchema = new mongoose.Schema({
 const annotation = mongoose.model('annotation', annotationSchema);
 
 //GET Requests behandeln
-router.get('/:session/:student:/:taskId', async (req, res) => {
+router.get('/:session/:student/:taskId', async (req, res) => {
     //Markierungen aus Datenbank über Funktion abfragen; session ID, Student ID und Task ID als Filter
     const annotationsFromDatabase = await loadAnnotationsFromDatabase(req.params.session, req.params.student, req.params.taskId);
     //Ergebnis zurücksenden
