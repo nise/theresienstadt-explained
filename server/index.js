@@ -25,6 +25,9 @@ const annotations = require('./routes/api/annotations');
 //Pfad zu groups API in Konstante speichern
 const groups = require('./routes/api/groups');
 
+//Pfad zu chatMessages API in Konstante speichern
+const chatMessages = require('./routes/api/chatMessages');
+
 //Pfad zu buildGroups Operation in Konstante speichern
 const buildGroups = require('./routes/operations/buildGroups');
 
@@ -42,6 +45,9 @@ app.use('/api/annotations', annotations);
 
 //URL /api/groups zu internem Pfad umleiten
 app.use('/api/groups', groups);
+
+//URL /api/chatmessages zu internem Pfad umleiten
+app.use('/api/chatmessages', chatMessages);
 
 //URL /operations/buildGroups zu internem Pfad umleiten
 app.use('/operations/buildGroups', buildGroups);

@@ -11,6 +11,7 @@ export default new Vuex.Store({
         studentId: '5df24c9ff1e77c97749b1f00',
         sessionId: '5df24c82f1e77c97749b1eff',
         partnerId: '5df24ca9f1e77c97749b1f01',
+        partnerName: 'Max Mustermann',
         //Markierungen als permanenter Speicher, wird nach abschließen der Analyse in Datenbank geschrieben
         annotations: new Array
     },
@@ -31,6 +32,10 @@ export default new Vuex.Store({
         //Funktion zum Ändern der partnerId
         CHANGE_PARTNER_ID: (state, newId) => {
             state.partnerId = newId;
+        },
+        //Funktion zum Ändern des partner Name
+        CHANGE_PARTNER_NAME: (state, newName) => {
+            state.partnerName = newName;
         },
         //Funktion zum Anlegen einer neuen Markierung; Übergabeparameter sind Attribute einer Markierung
         CREATE_NEW_ANNOTATION: (state, newAnnotation) => {

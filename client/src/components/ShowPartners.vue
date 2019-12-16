@@ -63,7 +63,8 @@
             ...mapState({
             studentId: "studentId",
             sessionId: "sessionId",
-            partnerId: "partnerId"
+            partnerId: "partnerId",
+            partnerName: "partnerName"
             })
         },
         //bei Seitenaufruf ausführen
@@ -78,7 +79,8 @@
         },
         methods: {
             ...mapMutations([
-                "CHANGE_PARTNER_ID"
+                "CHANGE_PARTNER_ID",
+                "CHANGE_PARTNER_NAME"
             ]),
             //Hilfsfunktion für setInterval; speichert Studenten mit Status waitingForGroupAnalysis in students Array; schreibt außerdem partner in partner Objekt, wenn Studenten geladen
             async getReadyStudents() {
@@ -87,6 +89,8 @@
                     const currentStudent = this.students.find(element => element.id === this.studentId);
                     const partnerId = currentStudent.partner;
                     this.partner = this.students.find(element => element.id === partnerId);
+                    //Partnername für GroupAnalysis in Vuex Store schreiben
+                    this.CHANGE_PARTNER_NAME(this.partner.firstName + ' ' + this.partner.lastName);
                 }
             },
             //Hilfsfunktion für setInterval; speichert Daten dieser Session in Objekt session und liest den aktuellen Status in Variable sessionStatus aus

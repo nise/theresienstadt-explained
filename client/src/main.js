@@ -6,13 +6,19 @@ import Session from './components/StartSession.vue';
 import GetStudents from './components/GetStudents.vue';
 import IndividualAnalysis from './components/IndividualAnalysis.vue';
 import ShowPartners from './components/ShowPartners.vue';
-import GroupAnalysis from './components/GroupAnalysis.vue'
-import VuePlyr from 'vue-plyr'
+import GroupAnalysis from './components/GroupAnalysis.vue';
+//Import für Vue-Plyr Video Player
+import VuePlyr from 'vue-plyr';
+//Import für Chat "vue-beautiful-chat"
+import Chat from 'vue-beautiful-chat';
 
 //Einbindung des Vue Router
 Vue.use(VueRouter);
 
-//Setzen von Standardeinstellungen für den Videoplayer vue-plyr
+//Einbindung des "vue-beautiful-chat"
+Vue.use(Chat);
+
+//Setzen von Standardeinstellungen für den Videoplayer vue-plyr; Einbindung des vue-plyr-Players
 Vue.use(VuePlyr, {
   plyr: {
     //standardmäßig kein Vollbild auswählbar

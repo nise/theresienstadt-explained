@@ -4,6 +4,25 @@
         <p style="font-size:large; text-align:justify">
         Sie können das Video mit dem Player abspielen. Zur Markierung einer Stelle drücken Sie den Knopf "Markieren" unter der Aufgabenstellung.
         Anschließend sollten Sie die Stelle Ihrer Markierung begründen. Ihre Markierungen werden mit den Markierungen Ihres Partners synchronisiert. Wenn Sie Senden drücken, dann wird die Aufgabe für Ihre Gruppe abgeschlossen.</p>
+        <!-- Anzeige des Chat-Fensters -->
+        <beautiful-chat
+        :participants="participants"
+        :titleImageUrl="titleImageUrl"
+        :onMessageWasSent="onMessageWasSent"
+        :messageList="messageList"
+        :newMessagesCount="newMessagesCount"
+        :isOpen="isChatOpen"
+        :close="closeChat"
+        :icons="icons"
+        :open="openChat"
+        :showEmoji="true"
+        :showFile="true"
+        :showTypingIndicator="showTypingIndicator"
+        :colors="colors"
+        :alwaysScrollToBottom="alwaysScrollToBottom"
+        :messageStyling="messageStyling"
+        @onType="handleOnType"
+        @edit="editMessage" />
         <!-- Zweispaltiges Layout mit Bootstrap row und col -->
         <div class="row">
             <!-- Div mit Video; Nutzung des Moduls "vue-plyr"; initialisiert in main.js -->
@@ -27,7 +46,7 @@
                         <div class="card-body">
                             <!-- Text wird angezeigt; key an Attribut gebunden und über @ Event geändert; v-if, v-else für Unterscheidung, von wem die Markierung ist-->
                             <p v-if="oldAnnotation.student === studentId" class="card-text"><b style="font-size:large">Markierung von Ihnen</b><br>{{oldAnnotation.annotationText}}</p>
-                            <p v-else class="card-text"><b style="font-size:large">Markierung von Ihrem Partner</b><br>{{oldAnnotation.annotationText}}</p>
+                            <p v-else class="card-text"><b style="font-size:large">Markierung von {{partnerName}}</b><br>{{oldAnnotation.annotationText}}</p>
                             <hr>
                             <!-- Button zum Springen zu der Stelle im Video -->
                             <button class="btn btn-info" @click="jumpToAnnotationTime(oldAnnotation.annotationStartTime)">Zur Stelle im Video springen</button>
@@ -37,14 +56,6 @@
             </div>
             <!-- Anzeigen der Aufgabenstellung -->
             <div class="right col-md-5">
-                <!-- Anzeige der Markierungen und der Aufgabenstellung unter dem Chat durch Verschachteln von rows in der bereits bestehenden row-->
-                <div class="row">
-                    <div class="alert alert-secondary col-md-12" role="alert">
-                        <h4 class="alert-heading">Hier kommt der Chat hin</h4>
-                        <hr>
-                        <p style="font-size:large">Platzhalter</p>
-                    </div>
-                </div>
                 <!-- Anzeige der Markierungen unter der Aufgabenstellung durch Verschachteln von rows in der bereits bestehenden row -->
                 <div class="row">
                     <div class="alert alert-secondary" role="alert">
@@ -99,7 +110,14 @@ import StudentService from '../../StudentService';
 import GroupService from '../../GroupService';
 //Import der Middleware für Annotations
 import AnnotationService from '../../AnnotationService';
+//Import der Middleware für Chat-Nachrichten
+import ChatMessageService from '../../ChatMessageService';
 
+//Import der Icons für vue-beautiful-chat
+import CloseIcon from 'vue-beautiful-chat/src/assets/close-icon.png'
+import OpenIcon from 'vue-beautiful-chat/src/assets/logo-no-bg.svg'
+import FileIcon from 'vue-beautiful-chat/src/assets/file.svg'
+import CloseIconSvg from 'vue-beautiful-chat/src/assets/close.svg'
 
 export default {
     name: "GroupAnalysis",
@@ -114,8 +132,66 @@ export default {
             group: null,
             iteration: 1,
             annotations: [],
-            oldAnnotations: []
-        };
+            oldAnnotations: [],
+            
+            //Variablen für vue-beautiful-chat
+            icons:{
+                open:{
+                    img: OpenIcon,
+                    name: 'default',
+                },
+                close:{
+                    img: CloseIcon,
+                    name: 'default',
+                },
+                file:{
+                    img: FileIcon,
+                    name: 'default',
+                },
+                closeSvg:{
+                    img: CloseIconSvg,
+                    name: 'default',
+                }
+            },
+            participants: [
+                {
+                id: this.$store.state.partnerId,
+                name: this.$store.state.partnerName,
+                imageUrl: 'Portrait_Placeholder.png'
+                }
+            ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
+            titleImageUrl: '/Chat_Default_Picture.png',
+            messageList: new Array, //z.B. type: 'text', author: `me`, data: { text: `Say yes!` } // the list of the messages to show, can be paginated and adjusted dynamically
+            newMessagesCount: 0,
+            isChatOpen: true, // to determine whether the chat window should be open or closed
+            showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
+            colors: {
+                header: {
+                    bg: '#4e8cff',
+                    text: '#ffffff'
+                },
+                launcher: {
+                    bg: '#4e8cff'
+                },
+                messageList: {
+                    bg: '#ffffff'
+                },
+                sentMessage: {
+                    bg: '#4e8cff',
+                    text: '#ffffff'
+                },
+                receivedMessage: {
+                    bg: '#eaeaea',
+                    text: '#222222'
+                },
+                userInput: {
+                    bg: '#f4f7f9',
+                    text: '#565867'
+                }
+            }, // specifies the color scheme for the component
+            alwaysScrollToBottom: false, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
+            messageStyling: true // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
+        }
     },
     mounted() {
         this.player = this.$refs.player.player;
@@ -125,7 +201,8 @@ export default {
         ...mapState({
         studentId: "studentId",
         sessionId: "sessionId",
-        partnerId: "partnerId"
+        partnerId: "partnerId",
+        partnerName: "partnerName"
         })
     },
     //bei Seitenaufruf ausführen
@@ -156,6 +233,8 @@ export default {
         }
         //Gruppe Objekt des aktuellen Studenten aus Datenbank holen und laufend aktualisieren -> wegen Statusänderungen
         setInterval(() => {this.getGroup()}, 3000);
+        //jede Sekunde auf neue Chat Nachrichten des Partners prüfen
+        setInterval(() => {this.getNewPartnerMessages()}, 1000);
     },
     methods: {
         //schreibt die Daten der dem Studenten zugeordneten Gruppe in Objekt this.group
@@ -200,6 +279,59 @@ export default {
             const desiredStudent = studentsTemp.find(student => student.id = studentIdToLookFor);
             const returnName = desiredStudent.firstName + ' ' + desiredStudent.lastName;
             return returnName;
+        },
+        
+        //Methoden für vue-beautiful-chat
+        
+        //Nachricht senden Ereignis bearbeiten: Zähler für neue Nachrichten hochsetzen; Nachricht der Nachrichtenliste hinzufügen mit Methode onMessageWasSent
+        sendMessage (text) {
+            if (text.length > 0) {
+                this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
+                this.onMessageWasSent({ author: 'me', type: 'text', data: { text } })
+            }
+        },
+        //übergebene Nachricht der Nachrichtenliste hinzufügen; in Datenbank schreiben
+        async onMessageWasSent (message) {
+            const newMessageId = this.messageList.push(message);
+            const messageId = await ChatMessageService.postChatMessage(message.type, this.studentId, message.data);
+            //der Nachricht als Attribut ID die ID in der Datenbank hinzufügen
+            this.messageList[newMessageId-1].id = messageId;
+        },
+        //behandelt Knopfdruck zum Öffnen des Chats: setzt isChatOpen Variable um und setzt neue Nachrichten Counter auf null
+        openChat () {
+            this.isChatOpen = true
+            this.newMessagesCount = 0
+        },
+        //behandelt Knopfdruck zum Schließen des Chats: setzt isChatOpen Variable um
+        closeChat () {
+            this.isChatOpen = false
+        },
+        handleScrollToTop () {
+            // called when the user scrolls message list to top
+            // leverage pagination for loading another page of messages
+        },
+        //Behandlung des Ereignisses: Benutzer tippt
+        handleOnType () {
+        },
+        //Bearbeitung einer Nachricht: Finden der zu bearbeitenden Nachricht in Nachrichtenliste; Setzen des bearbeitet Indikators; Ändern des Texts
+        editMessage(message){
+            const m = this.messageList.find(m=>m.id === message.id);
+            m.isEdited = true;
+            m.data.text = message.data.text;
+        },
+        //zyklisches Abrufen der neuen Chat-Nachrichten
+        async getNewPartnerMessages() {
+            const allPartnerMessages = await ChatMessageService.getChatMessages(this.partnerId);
+            //nur neue Nachrichten sollen hinzugefügt werden -> Vergleich der IDs der Nachrichten; wenn neue gefunden, dann Array push
+            for (var i = 0; i < allPartnerMessages.length; i++) {
+                if (this.messageList.find(message => message.id === allPartnerMessages[i].id)) {
+                    //nichts unternehmen -> ist keine neue Nachricht
+                } else {
+                    //neue Nachricht gefunden; der messageList hinzufügen; newMessagesCount hochsetzen
+                    this.messageList.push(allPartnerMessages[i]);
+                    this.newMessagesCount++;
+                }
+            }
         }
     },
 
