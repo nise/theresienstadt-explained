@@ -169,6 +169,10 @@ export default {
                         //nächste Aufgabe laden
                         this.task = await TaskService.getTasks(this.sessionId, this.iteration)
                     } else {
+                        //speichere Markierungen in die Datenbank
+                        this.annotations.forEach(element => {
+                            this.WRITE_ANNOTATIONS_TO_DATABASE(element);
+                        });
                         //in student abspeichern, dass er mit der Individualanalyse fertig ist
                         StudentService.setStudentStatus(this.studentId, 'waitingForGroupAnalysis')
                         //zur Seite für Ansicht der gebildeten Dyaden springen

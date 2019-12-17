@@ -7,6 +7,7 @@ import GetStudents from './components/GetStudents.vue';
 import IndividualAnalysis from './components/IndividualAnalysis.vue';
 import ShowPartners from './components/ShowPartners.vue';
 import GroupAnalysis from './components/GroupAnalysis.vue';
+import Debriefing from './components/Debriefing.vue';
 //Import für Vue-Plyr Video Player
 import VuePlyr from 'vue-plyr';
 //Import für Chat "vue-beautiful-chat"
@@ -33,7 +34,8 @@ const routes = [
   { path: '/', component: GetStudents },
   { path: '/individualanalysis', component: IndividualAnalysis},
   { path: '/showpartners', component: ShowPartners},
-  { path: '/groupanalysis', component: GroupAnalysis}
+  { path: '/groupanalysis', component: GroupAnalysis},
+  { path: '/debriefing', component: Debriefing}
 ];
 
 const router = new VueRouter({

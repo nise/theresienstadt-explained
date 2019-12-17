@@ -3,7 +3,7 @@
         <h1 class="display-4">Gruppenanalyse der Videos</h1>
         <p style="font-size:large; text-align:justify">
         Sie können das Video mit dem Player abspielen. Zur Markierung einer Stelle drücken Sie den Knopf "Markieren" unter der Aufgabenstellung.
-        Anschließend sollten Sie die Stelle Ihrer Markierung begründen. Ihre Markierungen werden mit den Markierungen Ihres Partners synchronisiert. Wenn Sie Senden drücken, dann wird die Aufgabe für Ihre Gruppe abgeschlossen.</p>
+        Anschließend sollten Sie die Stelle Ihrer Markierung begründen. Wenn Sie Senden drücken, dann wird die Lösung für Ihre Gruppe abgesendet.</p>
         <!-- Anzeige des Chat-Fensters -->
         <beautiful-chat
         :participants="participants"
@@ -16,7 +16,7 @@
         :icons="icons"
         :open="openChat"
         :showEmoji="true"
-        :showFile="true"
+        :showFile="false"
         :showTypingIndicator="showTypingIndicator"
         :colors="colors"
         :alwaysScrollToBottom="alwaysScrollToBottom"
@@ -85,19 +85,12 @@
                 </div>
             </div>
         </div>
+        <hr>
+        <button class="btn btn-primary" @click="jumpToNextTaskOrComplete">Senden</button>
     </div>
 </template>
 
 <script>
-//DONE: grundsätzliches Layout: Chat, Video, alte Markierungen, neue Markierungen
-//DONE: Layout dementsprechend bauen
-//TODO: Chat einbinden
-//DONE: alte Markierungen einbinden
-//DONE: Video einbinden
-//TODO: neue Markierungen ermöglichen
-//TODO: Absenden nur möglich machen, wenn Markierungen identisch sind -> einer macht für beide Markierungen?
-//TODO: Navigation zum Beenden der Analyse
-
 //Vuex Import
 import { mapState } from 'vuex';
 import { mapMutations } from 'vuex';
@@ -279,6 +272,60 @@ export default {
             const desiredStudent = studentsTemp.find(student => student.id = studentIdToLookFor);
             const returnName = desiredStudent.firstName + ' ' + desiredStudent.lastName;
             return returnName;
+        },
+
+        //prüfe, ob eine weitere Aufgabe verfügbar ist; wenn ja, dann Laden der nächsten Aufgabe; wenn nein, dann Abschluss der Aufgaben; in jedem Fall Speichern der Markierungen
+        async jumpToNextTaskOrComplete() {
+            //prüfe, ob mindestens eine Markierung vorgenommen wurde
+            if (this.annotations[0]) {
+                //prüfe, ob der Begründungstext jeder Markierung ausgefüllt ist
+                if (this.validateInput()) {
+                    //wenn eine weitere Aufgabe in der Datenbank ist
+                    if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
+                        //speichere Markierungen in die Datenbank
+                        this.annotations.forEach(element => {
+                            AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
+                        });
+                        //annotations Array leeren, damit für neue Aufgabe bereit
+                            this.annotations = [];
+                        //Zähler auf nächste Aufgabe setzen
+                        this.iteration++;
+                        //nächste Aufgabe laden
+                        this.task = await TaskService.getTasks(this.sessionId, this.iteration)
+                    } else {
+                        //speichere Markierungen in die Datenbank
+                        this.annotations.forEach(element => {
+                            AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
+                        });
+                        //in group abspeichern, dass sie mit der Gruppenanalyse fertig ist
+                        GroupService.setGroupStatus(this.group[0].id, 'finishedWithGroupAnalysis')
+                        //zur Seite für Abschluss springen
+                        this.$router.push('/debriefing');
+                    }
+                }
+            } else { //wenn keine Markierung vorgenommen wurde, dann Fehler ausgeben
+                this.error = 'Bitte nehmen Sie mindestens eine Markierung vor';
+            }
+        },
+
+        //prüfe, ob für jede Annotation ein Text eingetragen ist
+        validateInput: function () {
+            //Rückgabevariable
+            var feedback = false;
+            //Durchlaufen der Annotations
+            this.annotations.forEach(element => {
+                //wenn Text vorhanden, dann weiter
+                if (element.annotationText) {
+                    this.error = '';
+                    feedback = true;
+                } else { //wenn kein Text vorhanden dann Fehler setzen und beenden (false zurückgeben)
+                    this.error = 'Bitte begründen Sie Ihre Markierungen.'
+                    //false zurückgeben -> weitere Ausführung verhindern
+                    feedback = false;
+                }
+            });
+            //Rückgabevariable weitergeben
+            return feedback;
         },
         
         //Methoden für vue-beautiful-chat
