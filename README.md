@@ -20,9 +20,9 @@ Auf die Videoanalyse übertragen verfolgt das Modul folgende Vorgehensweise:
 - unter genannter Seite der Session einen Namen geben und starten
 - anschließend können Aufgaben für diese Session erstellt werden
 - sobald die Aufgaben erstellt sind, wird ein Link generiert, der den Lernenden zur Registrierung für diese Session weitergegeben werden kann
-- wenn alle Lernenden registriert sind, dann kann der Lehrende über den Knopf "Starten" die Lernsession starten
+- wenn alle Lernenden registriert sind, dann kann der Lehrende über den Knopf "Start der Session" die Lernsession starten
 - nachdem der Lehrende die Session gestartet hat, erscheint bei den Lernenden ein Knopf zum Starten der Individualanalyse
-- nachdem alle Lernenden die Individualanalyse abgeschlossen haben, muss der Lehrende folgenden Link aufrufen, um die Gruppenbildung zu starten: http://localhost:5000/operations/buildgroups/<hierSessionIdeinfügen>
+- nachdem alle Lernenden die Individualanalyse abgeschlossen haben, muss der Lehrende über den Knopf "Gruppenbildung starten" die Gruppenbildung lostreten
 - die Gruppenbildung erfolgt in der aktuellen Version noch zufällig
 - wenn die Gruppenbildung abgeschlossen ist, dann erscheint bei den Lernenden automatisch ein Knopf zum Starten der Gruppenanalyse
 - nach Abschluss der Gruppenanalyse erhalten die Schüler eine Meldung, dass die Videoanalyse nun abgeschlossen ist

@@ -8,16 +8,23 @@ import IndividualAnalysis from './components/IndividualAnalysis.vue';
 import ShowPartners from './components/ShowPartners.vue';
 import GroupAnalysis from './components/GroupAnalysis.vue';
 import Debriefing from './components/Debriefing.vue';
+import CreateTasks from './components/CreateTasks.vue';
+import Tracking from './components/Tracking.vue';
 //Import für Vue-Plyr Video Player
 import VuePlyr from 'vue-plyr';
 //Import für Chat "vue-beautiful-chat"
 import Chat from 'vue-beautiful-chat';
+//Import für Vue-Clipboard
+import VueClipboard from 'vue-clipboard2'
 
 //Einbindung des Vue Router
 Vue.use(VueRouter);
 
 //Einbindung des "vue-beautiful-chat"
 Vue.use(Chat);
+
+//Einbindung des Vue-Clipboard
+Vue.use(VueClipboard);
 
 //Setzen von Standardeinstellungen für den Videoplayer vue-plyr; Einbindung des vue-plyr-Players
 Vue.use(VuePlyr, {
@@ -32,10 +39,12 @@ Vue.use(VuePlyr, {
 const routes = [
   { path: '/createsession', component: Session },
   { path: '/', component: GetStudents },
-  { path: '/individualanalysis', component: IndividualAnalysis},
-  { path: '/showpartners', component: ShowPartners},
-  { path: '/groupanalysis', component: GroupAnalysis},
-  { path: '/debriefing', component: Debriefing}
+  { path: '/individualanalysis', component: IndividualAnalysis },
+  { path: '/showpartners', component: ShowPartners },
+  { path: '/groupanalysis', component: GroupAnalysis },
+  { path: '/debriefing', component: Debriefing },
+  { path: '/createtasks', component: CreateTasks },
+  { path: '/tracking', component: Tracking }
 ];
 
 const router = new VueRouter({
