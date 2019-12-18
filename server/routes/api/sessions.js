@@ -18,19 +18,27 @@ const session = mongoose.model('session', sessionSchema);
 
 //GET Requests behandeln
 router.get('/', async (req, res) => {
+    try {
     //Sessions aus Datenbank über Funktion abfragen
     const sessionsFromDatabase = await loadSessionsFromDatabase();
     //Ergebnis zurücksenden
     res.send(sessionsFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //GET Requests mit ID Filter behandeln
 router.get('/:sessionFilter', async (req, res) => {
     const sessionFilter = req.params.sessionFilter;
+    try {
     //Sessions aus Datenbank über Funktion abfragen
     const sessionsFromDatabase = await loadSessionsFromDatabaseWithFilter(sessionFilter);
     //Ergebnis zurücksenden
     res.send(sessionsFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //POST Requests behandeln
@@ -40,9 +48,13 @@ router.post('/', async (req, res) => {
         name: req.body.name,
         date: new Date(req.body.date)
     });
+    try {
     //neue Session über Post Funktion in Datenbank einfügen und _id zurückgeben
     const sessionId = await postSessionToDatabase(newSession);
         res.send(sessionId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Requests für Statusänderungen behandeln; Anfragen mit /change
@@ -50,34 +62,54 @@ router.post('/change', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const status = req.body.status;
+    try {
     //vorhandene Session über Change Funktion in Datenbank ändern und _id zurückgeben
     const sessionId = await changeSessionInDatabase(id, status);
     res.send(sessionId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //DELETE Requests behandeln
 router.delete('/', async (req, res) => {
+    try {
     //Sessions über _id aus der Datenbank löschen -> Funktionsaufruf, siehe unten
     await deleteSessionFromDatabase(req.body.id);
     res.status(201).send();
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Funktion zum Verbinden der Datenbank und der Collection "sessions"
 async function connectDatabase() {
-    await mongoose.connect('mongodb://localhost:27017/sessions', {useNewUrlParser: true});
+    try {
+        await mongoose.connect('mongodb://localhost:27017/sessions', {useNewUrlParser: true});
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 async function loadSessionsFromDatabase() {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //alle Sessions aus der Datenbank lesen
     var result = session.find({});
     return result;
 }
 
 async function loadSessionsFromDatabaseWithFilter(sessionToGet) {
+    try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
         //alle Sessions aus der Datenbank lesen mit session Filter
         var result = session.find({_id: sessionToGet});
         return result;
@@ -85,8 +117,12 @@ async function loadSessionsFromDatabaseWithFilter(sessionToGet) {
 
 async function postSessionToDatabase(sessionToPost) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Session über Save Funktion speichern und Fehler zurückgeben falls vorhanden
         sessionToPost.save(function (err, sessionDatabase) {
             if (err) reject (err);
@@ -97,8 +133,12 @@ async function postSessionToDatabase(sessionToPost) {
 
 async function changeSessionInDatabase(idToUpdate, statusToUpdate) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Objekt aus Übergabeparametern erstellen
         updateObject = {
             status: statusToUpdate
@@ -112,8 +152,12 @@ async function changeSessionInDatabase(idToUpdate, statusToUpdate) {
 }
 
 async function deleteSessionFromDatabase(sessionToDelete) {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //Session finden und löschen
     session.findByIdAndDelete(sessionToDelete, function (err, res) {
         if (err) return console.error(err);

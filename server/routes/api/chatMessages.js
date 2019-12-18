@@ -18,12 +18,16 @@ const chatMessage = mongoose.model('chatMessage', chatMessagesSchema);
 
 //GET Requests behandeln
 router.get('/:authorId', async (req, res) => {
+    try {
     //Autor ID in Konstante speichern
     const authorId = req.params.authorId;
     //Chat-Nachrichten aus Datenbank über Funktion abfragen
     const chatMessagesFromDatabase = await loadChatMessagesFromDatabase(authorId);
     //Ergebnis zurücksenden
     res.send(chatMessagesFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //POST Requests behandeln
@@ -34,19 +38,31 @@ router.post('/', async (req, res) => {
         author: req.body.author,
         data: req.body.data
     });
+    try {
     //neue Chat-Nachricht über Post Funktion in Datenbank einfügen und _id zurückgeben
     const chatMessageId = await postChatMessageToDatabase(newChatMessage);
         res.send(chatMessageId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Funktion zum Verbinden der Datenbank und der Collection "chatmessages"
 async function connectDatabase() {
+    try {
     await mongoose.connect('mongodb://localhost:27017/chatmessages', {useNewUrlParser: true});
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 async function loadChatMessagesFromDatabase(authorToGet) {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        console.error(err);
+    }
     //alle Chat-Nachrichten aus der Datenbank lesen mit Autoren Filter
     var result = chatMessage.find({author: authorToGet});
     return result;
@@ -54,8 +70,12 @@ async function loadChatMessagesFromDatabase(authorToGet) {
 
 async function postChatMessageToDatabase(chatMessageToPost) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //ChatMessage über Save Funktion speichern und Fehler zurückgeben falls vorhanden
         chatMessageToPost.save(function (err, chatMessageDatabase) {
             if (err) reject (err);

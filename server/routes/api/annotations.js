@@ -21,10 +21,14 @@ const annotation = mongoose.model('annotation', annotationSchema);
 
 //GET Requests behandeln
 router.get('/:session/:student/:taskId', async (req, res) => {
-    //Markierungen aus Datenbank über Funktion abfragen; session ID, Student ID und Task ID als Filter
-    const annotationsFromDatabase = await loadAnnotationsFromDatabase(req.params.session, req.params.student, req.params.taskId);
-    //Ergebnis zurücksenden
-    res.send(annotationsFromDatabase);
+    try {
+        //Markierungen aus Datenbank über Funktion abfragen; session ID, Student ID und Task ID als Filter
+        const annotationsFromDatabase = await loadAnnotationsFromDatabase(req.params.session, req.params.student, req.params.taskId);
+        //Ergebnis zurücksenden
+        res.send(annotationsFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //POST Requests behandeln
@@ -38,9 +42,13 @@ router.post('/', async (req, res) => {
         annotationEndTime: req.body.annotationEndTime,
         taskId: req.body.taskId
     });
+    try {
     //neue Annotation über Post Funktion in Datenbank einfügen und _id zurückgeben
-    const annotationId = await postAnnotationToDatabase(newAnnotation);
-        res.send(annotationId);
+        const annotationId = await postAnnotationToDatabase(newAnnotation);
+            res.send(annotationId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Requests für Änderungen behandeln; Anfragen mit /change
@@ -48,37 +56,57 @@ router.post('/change', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const attributes = req.body;
-    //vorhandene Annotation über Change Funktion in Datenbank ändern und _id zurückgeben
-    const annotationId = await changeAnnotationInDatabase(id, attributes);
-    res.send(annotationId);
+    try {
+        //vorhandene Annotation über Change Funktion in Datenbank ändern und _id zurückgeben
+        const annotationId = await changeAnnotationInDatabase(id, attributes);
+        res.send(annotationId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //DELETE Requests behandeln
 router.delete('/', async (req, res) => {
+    try {
     //Markierungen über _id aus der Datenbank löschen -> Funktionsaufruf, siehe unten
     await deleteAnnotationFromDatabase(req.body.id);
     res.status(201).send();
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Funktion zum Verbinden der Datenbank und der Collection "annotations"
 async function connectDatabase() {
-    await mongoose.connect('mongodb://localhost:27017/annotations', {useNewUrlParser: true});
+    try {
+        await mongoose.connect('mongodb://localhost:27017/annotations', {useNewUrlParser: true});
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 //laden der Markierungen aus der Datenbank; Filter sessionFilter (sessionId), studentFilter(studentId) und taskId als Übergabeparameter
 async function loadAnnotationsFromDatabase(sessionFilter, studentFilter, taskIdFilter) {
-    //Datenbank und Collection verbinden
-    await connectDatabase();
-    //alle Markierungen aus der Datenbank lesen mit der richtigen Session und vom richtigen Studenten
-    var result = annotation.find({session: sessionFilter, student: studentFilter, taskId: taskIdFilter});
-    return result;
+    try {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //alle Markierungen aus der Datenbank lesen mit der richtigen Session und vom richtigen Studenten
+        var result = annotation.find({session: sessionFilter, student: studentFilter, taskId: taskIdFilter});
+        return result;
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 //speichern einer neuen Markierung in die Datenbank; Übergabeparameter ist annotation Objekt
 async function postAnnotationToDatabase(annotationToPost) {
     return new Promise(async (resolve, reject) => {
-        //Datenbank und Collection verbinden
-        await connectDatabase();
+        try {
+            //Datenbank und Collection verbinden
+            await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Annotation über Save Funktion speichern und Fehler zurückgeben falls vorhanden
         annotationToPost.save(function (err, annotationDatabase) {
             if (err) reject (err);
@@ -91,8 +119,12 @@ async function postAnnotationToDatabase(annotationToPost) {
 //Ändern einer oder mehrerer Attribute einer Markierung in der Datenbank; Übergabeparameter ist Objekt mit zu ändernden Attributen und korrespondierenden Werten
 async function changeAnnotationInDatabase(idToUpdate, attributesToChange) {
     return new Promise(async (resolve, reject) => {
-        //Datenbank und Collection verbinden
-        await connectDatabase();
+        try {
+            //Datenbank und Collection verbinden
+            await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Annotation über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
         annotation.findByIdAndUpdate(idToUpdate, attributesToChange, function (err, res) {
             if (err) return console.error(err);
@@ -103,8 +135,12 @@ async function changeAnnotationInDatabase(idToUpdate, attributesToChange) {
 
 //Löschen einer Annotation aus der Datenbank; Übergabeparameter annotationToDelete ist _id der zu löschenden Markierung
 async function deleteAnnotationFromDatabase(annotationToDelete) {
-    //Datenbank und Collection verbinden
-    await connectDatabase();
+    try {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //Markierung finden und löschen
     annotation.findByIdAndDelete(annotationToDelete, function (err, res) {
         if (err) return console.error(err);

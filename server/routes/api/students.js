@@ -21,17 +21,25 @@ const student = mongoose.model('student', studentSchema);
 
 //GET Requests behandeln
 router.get('/:session', async (req, res) => {
+    try {
     //Studenten aus Datenbank über Funktion abfragen; session ist pro Instanz der Videoanalyse eindeutig und wird automatisch generiert nach Start durch Lehrenden
     const studentsFromDatabase = await loadStudentsFromDatabase(req.params.session);
     //Ergebnis zurücksenden
     res.send(studentsFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 //GET Requests mit Status behandeln
 router.get('/:session/:status', async (req, res) => {
+    try {
     //Studenten aus Datenbank über Funktion abfragen
     const studentsFromDatabase = await loadStudentsFromDatabaseWithStatus(req.params.session, req.params.status);
     //Ergebnis zurücksenden
     res.send(studentsFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //POST Requests behandeln
@@ -43,20 +51,27 @@ router.post('/', async (req, res) => {
         session: req.body.session,
         status: req.body.status
     });
+    try {
     //neuen Studenten über Post Funktion in Datenbank einfügen und _id zurückgeben
     const studentId = await postStudentToDatabase(newStudent);
         res.send(studentId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
-
 
 //Requests für Statusänderungen behandeln; Anfragen mit /changestatus
 router.post('/changestatus', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const status = req.body.status;
+    try {
     //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
     const studentId = await changeStudentStatusInDatabase(id, status);
     res.send(studentId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Requests für Partneränderungen behandeln; Anfragen mit /changepartner
@@ -64,9 +79,13 @@ router.post('/changepartner', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const partner = req.body.partner;
+    try {
     //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
     const studentId = await changeStudentPartnerInDatabase(id, partner);
     res.send(studentId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Requests für Gruppenänderungen behandeln; Anfragen mit /changegroup
@@ -74,34 +93,54 @@ router.post('/changegroup', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const group = req.body.group;
+    try {
     //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
     const studentId = await changeStudentGroupInDatabase(id, group);
     res.send(studentId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //DELETE Requests behandeln
 router.delete('/', async (req, res) => {
+    try {
     //Studenten über _id aus der Datenbank löschen -> Funktionsaufruf, siehe unten
     await deleteStudentFromDatabase(req.body.id);
     res.status(201).send();
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Funktion zum Verbinden der Datenbank und der Collection "students"
 async function connectDatabase() {
+    try {
     await mongoose.connect('mongodb://localhost:27017/students', {useNewUrlParser: true});
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 async function loadStudentsFromDatabase(sessionFilter) {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //alle Studenten aus der Datenbank lesen mit der richtigen Session
     var result = student.find({session: sessionFilter});
     return result;
 }
 
 async function loadStudentsFromDatabaseWithStatus(sessionFilter, statusFilter) {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //alle Studenten aus der Datenbank lesen mit der richtigen Session
     var result = student.find({session: sessionFilter, status: statusFilter});
     return result;
@@ -109,8 +148,12 @@ async function loadStudentsFromDatabaseWithStatus(sessionFilter, statusFilter) {
 
 async function postStudentToDatabase(studentToPost) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Student über Save Funktion speichern und Fehler zurückgeben falls vorhanden
         studentToPost.save(function (err, studentDatabase) {
             if (err) reject (err);
@@ -122,8 +165,12 @@ async function postStudentToDatabase(studentToPost) {
 //setze neuen Status bei Student mit id idToUpdate
 async function changeStudentStatusInDatabase(idToUpdate, statusToUpdate) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Objekt aus Übergabeparametern erstellen
         updateObject = {
             status: statusToUpdate
@@ -139,8 +186,12 @@ async function changeStudentStatusInDatabase(idToUpdate, statusToUpdate) {
 //setze neuen Partner bei Student mit id idToUpdate
 async function changeStudentPartnerInDatabase(idToUpdate, partnerToUpdate) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Objekt aus Übergabeparametern erstellen
         updateObject = {
             partner: partnerToUpdate
@@ -156,8 +207,12 @@ async function changeStudentPartnerInDatabase(idToUpdate, partnerToUpdate) {
 //setze neue Gruppe bei Student mit id idToUpdate
 async function changeStudentGroupInDatabase(idToUpdate, groupToUpdate) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Objekt aus Übergabeparametern erstellen
         updateObject = {
             group: groupToUpdate
@@ -171,8 +226,12 @@ async function changeStudentGroupInDatabase(idToUpdate, groupToUpdate) {
 }
 
 async function deleteStudentFromDatabase(studentToDelete) {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //Student finden und löschen
     student.findByIdAndDelete(studentToDelete, function (err, res) {
         if (err) return console.error(err);

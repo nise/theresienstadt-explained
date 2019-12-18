@@ -24,8 +24,12 @@ students = new Array;
 router.get('/:session', async (req, res) => {
     //Session in Konstante speichern
     const session = req.params.session;
+    try {
     //alle Schüler, die in dieser Session auf die Gruppenanalyse warten, aus Datenbank lesen; Speichern in Array students; 
     students = await getWaitingStudents(session);
+    } catch (err) {
+        return console.error(err);
+    }
     
     //schreibe alle Student IDs in ein Array, um nach Zufall zu mischen
     students.forEach(student => {
@@ -50,20 +54,14 @@ router.get('/:session', async (req, res) => {
     for (var i = 0; i<students.length; i++) {
         //nur ausführen, wenn Gruppe nicht bereits in Student geschrieben wurde -> wird nur einmal pro Gruppe durchgeführt
         if (students[i].group === undefined) {
+            try {
             //erstelle Gruppe und setze die zwei Studenten als Attribute
             await createNewGroup(students[i].id, students[i].partnerId);
+            } catch (err) {
+                return console.error(err);
+            }
         }
     }
-    /**
-    students.forEach(student => {
-        //nur ausführen, wenn Gruppe nicht bereits in Student geschrieben wurde -> wird nur einmal pro Gruppe durchgeführt
-        if (student.group === undefined) {
-            //erstelle Gruppe und setze die zwei Studenten als Attribute
-            createNewGroup(student.id, student.partnerId);
-        }
-    });
-    */
-
     //setze Session Status auf groupAnalysis, damit Schüler beginnen können
     setSessionStatus(session, 'groupAnalysis')
 
@@ -73,7 +71,11 @@ router.get('/:session', async (req, res) => {
 
 //Schüler mit Status "waitingForGroupAnalysis" aus Datenbank lesen; Zugriff auf students API über axios
 async function getWaitingStudents(sessionToGet) {
+    try {
     const result = await axios.get(urlstudents + '/' + sessionToGet + '/' + 'waitingForGroupAnalysis');
+    } catch (err) {
+        return console.error(err);
+    }
     const data = result.data;
     const waitingStudents = data.map(student => ({
         firstName: student.firstName,
@@ -143,20 +145,28 @@ async function setSessionStatus(sessionId, statusName) {
 
 //für Student mit studentId Partner mit partnerId über API in die Datenbank schreiben
 async function writePartnerToDatabase(studentId, partnerId) {
+    try {
     await axios.post(urlstudents+'/changepartner', {
         id: studentId,
         partner: partnerId
     })
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 //erstellt neue Gruppe mit student1Id und student2Id als Attribute und schreibt die GruppenId als Attribut in die zwei Students
     async function createNewGroup(student1Id, student2Id) {
+        try {
     //neue Gruppe anlegen und zwei Studenten als Attribute setzen
     const groupId = await axios.post(urlgroups, {
         student1: student1Id,
         student2: student2Id,
         status: 'GroupAnalysis'
     });
+        } catch (err) {
+            return console.error(err);
+        }
     //Gruppen-ID bei Student 1 als Attribut setzen (lokal)
     this.students.find(function(student, index) {
         if (student.id === student1Id) {
@@ -172,16 +182,24 @@ async function writePartnerToDatabase(studentId, partnerId) {
     });
 
         //Gruppen-ID bei Student 1 als Attribut setzen (in DB)
+        try {
     await axios.post(urlstudents+'/changegroup', {
         id: student1Id,
         group: groupId.data
     });
+        } catch (err) {
+            return console.error(err);
+        }
 
     //Gruppen-ID bei Student 2 als Attribut setzen (in DB)
+    try {
     await axios.post(urlstudents+'/changegroup', {
         id: student2Id,
         group: groupId.data
     });
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 module.exports = router;

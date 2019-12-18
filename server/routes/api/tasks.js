@@ -21,10 +21,14 @@ const task = mongoose.model('task', taskSchema);
 
 //GET Requests behandeln
 router.get('/:session/:taskNumber', async (req, res) => {
+    try {
     //Aufgaben aus Datenbank über Funktion abfragen; session ist pro Instanz der Videoanalyse eindeutig und wird automatisch generiert nach Start durch Lehrenden
     const tasksFromDatabase = await loadTasksFromDatabase(req.params.session, req.params.taskNumber);
     //Ergebnis zurücksenden
     res.send(tasksFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //POST Requests behandeln
@@ -39,9 +43,13 @@ router.post('/', async (req, res) => {
         videoEndTime: req.body.videoEndTime,
         taskNumber: req.body.taskNumber
     });
+    try {
     //neue Aufgabe über Post Funktion in Datenbank einfügen und _id zurückgeben
     const taskId = await postTaskToDatabase(newTask);
         res.send(taskId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Requests für Änderungen behandeln; Anfragen mit /change
@@ -49,27 +57,43 @@ router.post('/change', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const attributes = req.body;
+    try {
     //vorhandene Aufgabe über Change Funktion in Datenbank ändern und _id zurückgeben
     const taskId = await changeTaskInDatabase(id, attributes);
     res.send(taskId);
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //DELETE Requests behandeln
 router.delete('/', async (req, res) => {
+    try {
     //Aufgaben über _id aus der Datenbank löschen -> Funktionsaufruf, siehe unten
     await deleteTaskFromDatabase(req.body.id);
     res.status(201).send();
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Funktion zum Verbinden der Datenbank und der Collection "tasks"
 async function connectDatabase() {
+    try {
     await mongoose.connect('mongodb://localhost:27017/tasks', {useNewUrlParser: true});
+    } catch (err) {
+        return console.error(err);
+    }
 }
 
 //laden der Aufgaben aus der Datenbank; Filter sessionFilter und taskNumberFilter als Übergabeparameter
 async function loadTasksFromDatabase(sessionFilter, taskNumberFilter) {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //alle Aufgaben aus der Datenbank lesen mit der richtigen Session
     var result = task.find({session: sessionFilter, taskNumber: taskNumberFilter});
     return result;
@@ -78,8 +102,12 @@ async function loadTasksFromDatabase(sessionFilter, taskNumberFilter) {
 //speichern einer neuen Aufgabe in die Datenbank; Übergabeparameter ist task Objekt
 async function postTaskToDatabase(taskToPost) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Task über Save Funktion speichern und Fehler zurückgeben falls vorhanden
         taskToPost.save(function (err, taskDatabase) {
             if (err) reject (err);
@@ -92,8 +120,12 @@ async function postTaskToDatabase(taskToPost) {
 //Ändern einer oder mehrerer Attribute einer Aufgabe in der Datenbank; Übergabeparameter ist Objekt mit zu ändernden Attributen und korrespondierenden Werten
 async function changeTaskInDatabase(idToUpdate, attributesToChange) {
     return new Promise(async (resolve, reject) => {
+        try {
         //Datenbank und Collection verbinden
         await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
         //Task über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
         task.findByIdAndUpdate(idToUpdate, attributesToChange, function (err, res) {
             if (err) return console.error(err);
@@ -104,8 +136,12 @@ async function changeTaskInDatabase(idToUpdate, attributesToChange) {
 
 //Löschen einer Aufgabe aus der Datenbank; Übergabeparameter taskToDelete ist _id der zu löschenden Aufgabe
 async function deleteTaskFromDatabase(taskToDelete) {
+    try {
     //Datenbank und Collection verbinden
     await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
     //Aufgabe finden und löschen
     task.findByIdAndDelete(taskToDelete, function (err, res) {
         if (err) return console.error(err);
