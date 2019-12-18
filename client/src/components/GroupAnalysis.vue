@@ -226,6 +226,8 @@ export default {
         }
         //Gruppe Objekt des aktuellen Studenten aus Datenbank holen und laufend aktualisieren -> wegen Statusänderungen
         setInterval(() => {this.getGroup()}, 3000);
+        //jede Sekunde prüfen, ob Gruppenarbeit erledigt ist
+        setInterval(() => {this.jumpToDebriefingIfGroupFinished()}, 1000);
         //jede Sekunde auf neue Chat Nachrichten des Partners prüfen
         setInterval(() => {this.getNewPartnerMessages()}, 1000);
     },
@@ -328,6 +330,15 @@ export default {
             return feedback;
         },
         
+        //wenn der Status der Gruppe auf Debriefing steht, dann automatisch dorthin weiterspringen -> wenn ein Schüler die Antwort absendet, dann kommt der zweite Schüler auch ins Debriefing
+        jumpToDebriefingIfGroupFinished() {
+            //wenn Gruppenstatus auf Debriefing
+            if (this.group[0].status === "finishedWithGroupAnalysis") {
+                //leite auf Debriefing Seite weiter
+                this.$router.push('/debriefing');
+            }
+        },
+
         //Methoden für vue-beautiful-chat
         
         //Nachricht senden Ereignis bearbeiten: Zähler für neue Nachrichten hochsetzen; Nachricht der Nachrichtenliste hinzufügen mit Methode onMessageWasSent
