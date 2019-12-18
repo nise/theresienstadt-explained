@@ -3,9 +3,9 @@
         <!-- Anzeige der Anweisung, dass gewartet werden soll, nur, wenn Dyadenbildung noch nicht stattgefunden hat -->
         <div v-if="sessionStatus!=='groupAnalysis'">
             <h1>Bitte warten</h1>
-            <p>Es sind noch nicht alle Schüler fertig mit der Analyse des Videos. Bitte warten Sie, bis alle fertig sind.</p>
+            <p>Es sind noch nicht alle Teilnehmer fertig mit der Analyse des Videos. Bitte warten Sie, bis alle fertig sind.</p>
             <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
-            <h4>Schüler in Warteposition</h4>
+            <h4>Teilnehmer in Warteposition</h4>
             <div class="row">
                 <div class="col-sm-4"
                     v-for="student in students"
@@ -22,7 +22,7 @@
         <!-- wenn Dyadenbildung stattgefunden hat, dann zeige jedem Schüler seinen zugeteilten Partner an und ermögliche die Navigation zur Gruppenanalyse -->
         <div v-if="sessionStatus==='groupAnalysis'">
             <h1>Ihr Partner für die Gruppenarbeit</h1>
-            <p>Unten sehen Sie Ihren zugeteilten Partner für die Gruppenarbeit. Sie können nun über den Knopf "Weiter" fortfahren.</p>
+            <p>Unten sehen Sie Ihre/-n zugeteilten Partner/-in für die Gruppenarbeit. Sie können nun über den Knopf "Weiter" fortfahren.</p>
             <hr>
             <!-- Anzeige der Daten des Partners über partnerId und API -->
             <div class="card border-dark mx-auto" style="width: 18rem">

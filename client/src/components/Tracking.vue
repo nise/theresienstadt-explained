@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <h1>Tracking</h1>
-        <label for="basic-url">Die Session wurde gestartet. Bitte geben Sie untenstehende URL an die Lernenden weiter. Unten können Sie sehen, in welcher Phase sich die Lernenden befinden. Sobald alle Lernenden mit der Individualanalyse fertig sind, können Sie über den Knopf "Gruppenbildung starten" die Bildung der Zweiergruppen auslösen.</label>
+        <label for="basic-url">Die Session wurde gestartet. Bitte geben Sie untenstehende URL an die Teilnehmer weiter. Unten können Sie sehen, in welcher Phase sich die Teilnehmer befinden. Sobald alle Teilnehmer mit der Individualanalyse fertig sind, können Sie über den Knopf "Gruppenbildung starten" die Bildung der Zweiergruppen auslösen.</label>
         <!-- Anzeige der URL für die Schüler zum Registrieren -->
         <div>
             <div class="input-group mb-3">

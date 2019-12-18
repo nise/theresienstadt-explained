@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="display-4">Teilnehmererfassung</h1>
     <div v-if="this.id">
-      <p style="font-size:large;">Bitte warten Sie, bis der Lehrer die Session startet.</p>
+      <p style="font-size:large;">Bitte warten Sie, bis der Lehrende die Session startet.</p>
       <button class="btn btn-primary" v-if="this.sessionStatus==='Individualanalyse'" v-on:click="navigateToIndividualAnalysis">Starten</button>
     </div>
     <!-- Input Gruppe zur Eingabe von Vor- und Nachmame; wird über v-model jeweils mit der Variable synchronisiert -->
@@ -25,7 +25,7 @@
       <hr>
     </div>
     <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
-  <h2 class="display-6">Aktuell registrierte Schüler</h2>
+  <h2 class="display-6">Aktuell registrierte Teilnehmer</h2>
     <div class="row">
       <div class="col-sm-4"
         v-for="student in students"
