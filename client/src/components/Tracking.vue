@@ -96,13 +96,21 @@ export default {
         },
         //liest alle Studenten der aktuellen Session in students Variable ein
         async getStudentsWithStatus() {
+            try {
             this.students = await StudentService.getStudents(this.sessionId);
+            } catch (err) {
+                this.error = err.message;
+            }
         },
         //löst Gruppenbildung aus und schreibt in Variable groupBuildingSuccess, wenn erfolgreich
         async startBuildingGroups() {
             //nur Gruppenbildung erlauben, wenn alle Schüler im richtigen Status, sonst Fehlermeldung
             if (this.checkIfReadyForGroupBuilding()) {
+                try {
                 this.groupBuildingSuccess = await GroupBuildingService.getGroupBuilding(this.sessionId);
+                } catch (err) {
+                    this.error = err.message;
+                }
             } else {
                 this.error = "Bitte warten Sie, bis alle Schüler die Individualanalyse vollendet haben";
             }

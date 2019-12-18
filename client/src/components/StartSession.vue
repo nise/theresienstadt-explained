@@ -66,7 +66,11 @@ export default {
             //Aufruf der Middleware zum Anlegen einer Session; name aus Nutzereingabe, date automatisch generiert
             //ID der neuen Session wird in Variable id hinterlegt
             this.date = new Date();
+            try {
             this.id = await SessionService.postSessions(this.name, this.date);
+            } catch (err) {
+              this.error = err.message;
+            }
             //ID der neuen Session in Vuex Store schreiben
             this.CHANGE_SESSION_ID(this.id);
           } catch (err) {

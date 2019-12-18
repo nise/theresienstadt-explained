@@ -126,11 +126,11 @@ export default {
             //studentId im Vuex Store aktualisieren, damit bei späteren Komponenten verwendbar
             this.changeStudentId();
             this.changeSessionId();
+          //Studenten erneut auslesen zur Aktualisierung der Anzeige
+          this.students = await StudentService.getStudents(this.session);
           } catch (err) {
             this.error = err.message;
           }
-          //Studenten erneut auslesen zur Aktualisierung der Anzeige
-          this.students = await StudentService.getStudents(this.session);
       } else {
         return this.error;
       }
@@ -145,7 +145,11 @@ export default {
     },
     //prüft, ob Session Status "Individualanalyse ist"; wenn ja, dann true; wenn nein, dann false
     async getSessionStatus() {
+      try {
       this.sessions = await SessionService.getSessions();
+      } catch (err) {
+        this.error = err.message;
+      }
       const filteredSession = this.sessions.find(element => element.id === this.session);
       this.sessionStatus = filteredSession.status;
     },

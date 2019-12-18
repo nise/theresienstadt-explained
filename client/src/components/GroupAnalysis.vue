@@ -270,7 +270,11 @@ export default {
         },
 
         async getStudentName(studentIdToLookFor) {
+            try {
             const studentsTemp = await StudentService.getStudents(this.sessionId);
+            } catch (err) {
+                this.error = err.message;
+            }
             const desiredStudent = studentsTemp.find(student => student.id = studentIdToLookFor);
             const returnName = desiredStudent.firstName + ' ' + desiredStudent.lastName;
             return returnName;
@@ -282,6 +286,7 @@ export default {
             if (this.annotations[0]) {
                 //prüfe, ob der Begründungstext jeder Markierung ausgefüllt ist
                 if (this.validateInput()) {
+                    try {
                     //wenn eine weitere Aufgabe in der Datenbank ist
                     if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
                         //speichere Markierungen in die Datenbank
@@ -303,6 +308,9 @@ export default {
                         GroupService.setGroupStatus(this.group[0].id, 'finishedWithGroupAnalysis')
                         //zur Seite für Abschluss springen
                         this.$router.push('/debriefing');
+                    }
+                    } catch (er) {
+                        this.error = err.message;
                     }
                 }
             } else { //wenn keine Markierung vorgenommen wurde, dann Fehler ausgeben
@@ -351,7 +359,11 @@ export default {
         //übergebene Nachricht der Nachrichtenliste hinzufügen; in Datenbank schreiben
         async onMessageWasSent (message) {
             const newMessageId = this.messageList.push(message);
+            try {
             const messageId = await ChatMessageService.postChatMessage(message.type, this.studentId, message.data);
+            } catch (err) {
+                this.error = err.message;
+            }
             //der Nachricht als Attribut ID die ID in der Datenbank hinzufügen
             this.messageList[newMessageId-1].id = messageId;
         },
@@ -379,7 +391,11 @@ export default {
         },
         //zyklisches Abrufen der neuen Chat-Nachrichten
         async getNewPartnerMessages() {
+            try {
             const allPartnerMessages = await ChatMessageService.getChatMessages(this.partnerId);
+            } catch (err) {
+                this.error = err.message;
+            }
             //nur neue Nachrichten sollen hinzugefügt werden -> Vergleich der IDs der Nachrichten; wenn neue gefunden, dann Array push
             for (var i = 0; i < allPartnerMessages.length; i++) {
                 if (this.messageList.find(message => message.id === allPartnerMessages[i].id)) {

@@ -84,7 +84,11 @@
             ]),
             //Hilfsfunktion für setInterval; speichert Studenten mit Status waitingForGroupAnalysis in students Array; schreibt außerdem partner in partner Objekt, wenn Studenten geladen
             async getReadyStudents() {
+                try {
                 this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'waitingForGroupAnalysis');
+                } catch (err) {
+                    this.error = err.message;
+                }
                 if (this.students.find(element => element.id === this.studentId)) {
                     const currentStudent = this.students.find(element => element.id === this.studentId);
                     const partnerId = currentStudent.partner;
@@ -95,8 +99,12 @@
             },
             //Hilfsfunktion für setInterval; speichert Daten dieser Session in Objekt session und liest den aktuellen Status in Variable sessionStatus aus
             async getSessionStatus() {
+                try {
                 this.session = await SessionService.getSessionsWithId(this.sessionId);
                 this.sessionStatus = this.session[0].status;
+                } catch (err) {
+                    this.error = err.message;
+                }
             },
 
             //leitet weiter zur Komponente GroupAnalysis und schreibt neuen Status in student; speichert Partner in VueX Store

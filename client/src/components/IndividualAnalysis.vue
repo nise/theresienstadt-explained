@@ -156,6 +156,7 @@ export default {
             if (this.annotations[0]) {
                 //prüfe, ob der Begründungstext jeder Markierung ausgefüllt ist
                 if (this.validateInput()) {
+                    try {
                     //wenn eine weitere Aufgabe in der Datenbank ist
                     if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
                         //speichere Markierungen in die Datenbank
@@ -177,6 +178,9 @@ export default {
                         StudentService.setStudentStatus(this.studentId, 'waitingForGroupAnalysis')
                         //zur Seite für Ansicht der gebildeten Dyaden springen
                         this.$router.push('/showpartners');
+                    }
+                    } catch (err) {
+                        this.error = err.message;
                     }
                 }
             } else { //wenn keine Markierung vorgenommen wurde, dann Fehler ausgeben

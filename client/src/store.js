@@ -70,7 +70,11 @@ export default new Vuex.Store({
     //asynchrones Hinzufügen neuer Daten (in ein Array) oder Verändern von Daten
         //Schreiben von Markierungen aus dem VueX Store in die Datenbank; bleiben im Store aber erhalten; Nutzung des AnnotationService
         async WRITE_ANNOTATIONS_TO_DATABASE ({ commit, state }, annotation) {
+            try {
                 await AnnotationService.postAnnotations(annotation.session, annotation.student, annotation.annotationText, annotation.annotationStartTime, annotation.annotationEndTime, annotation.taskId);
+            } catch (err) {
+                this.error = err.message;
+            }
         }
     }
 })
