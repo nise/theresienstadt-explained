@@ -73,9 +73,6 @@ router.get('/:session', async (req, res) => {
 async function getWaitingStudents(sessionToGet) {
     try {
     const result = await axios.get(urlstudents + '/' + sessionToGet + '/' + 'waitingForGroupAnalysis');
-    } catch (err) {
-        return console.error(err);
-    }
     const data = result.data;
     const waitingStudents = data.map(student => ({
         firstName: student.firstName,
@@ -85,6 +82,9 @@ async function getWaitingStudents(sessionToGet) {
         status: student.status 
     }))
     return waitingStudents;
+    } catch (err) {
+    return console.error(err);
+    }
 }
 
 function getRandomPartner(selectedStudent) {
@@ -164,14 +164,17 @@ async function writePartnerToDatabase(studentId, partnerId) {
         student2: student2Id,
         status: 'GroupAnalysis'
     });
-        } catch (err) {
-            return console.error(err);
-        }
     //Gruppen-ID bei Student 1 als Attribut setzen (lokal)
     this.students.find(function(student, index) {
         if (student.id === student1Id) {
             this.students[index].group = groupId.data;
         }
+    });
+
+    //Partner-ID bei Student 1 als Attribut setzen (in DB)
+    await axios.post(urlstudents+'/changepartner', {
+        id: student1Id,
+        partner: student2Id
     });
 
     //Gruppen-ID bei Student 2 als Attribut setzen (lokal)
@@ -181,18 +184,19 @@ async function writePartnerToDatabase(studentId, partnerId) {
         }
     });
 
-        //Gruppen-ID bei Student 1 als Attribut setzen (in DB)
-        try {
+    //Partner-ID bei Student 2 als Attribut setzen (in DB)
+    await axios.post(urlstudents+'/changepartner', {
+        id: student2Id,
+        partner: student1Id
+    });
+
+    //Gruppen-ID bei Student 1 als Attribut setzen (in DB)
     await axios.post(urlstudents+'/changegroup', {
         id: student1Id,
         group: groupId.data
     });
-        } catch (err) {
-            return console.error(err);
-        }
 
     //Gruppen-ID bei Student 2 als Attribut setzen (in DB)
-    try {
     await axios.post(urlstudents+'/changegroup', {
         id: student2Id,
         group: groupId.data

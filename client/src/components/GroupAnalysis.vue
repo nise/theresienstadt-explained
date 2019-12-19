@@ -304,8 +304,11 @@ export default {
                         this.annotations.forEach(element => {
                             AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
                         });
+                        //in Students abspeichern, dass sie mit der Gruppenanalyse fertig sind
+                        await StudentService.setStudentStatus(this.studentId, 'finishedWithGroupAnalysis');
+                        await StudentService.setStudentStatus(this.partnerId, 'finishedWithGroupAnalysis');
                         //in group abspeichern, dass sie mit der Gruppenanalyse fertig ist
-                        GroupService.setGroupStatus(this.group[0].id, 'finishedWithGroupAnalysis')
+                        await GroupService.setGroupStatus(this.group[0].id, 'finishedWithGroupAnalysis');
                         //zur Seite für Abschluss springen
                         this.$router.push('/debriefing');
                     }
@@ -340,10 +343,13 @@ export default {
         
         //wenn der Status der Gruppe auf Debriefing steht, dann automatisch dorthin weiterspringen -> wenn ein Schüler die Antwort absendet, dann kommt der zweite Schüler auch ins Debriefing
         jumpToDebriefingIfGroupFinished() {
-            //wenn Gruppenstatus auf Debriefing
-            if (this.group[0].status === "finishedWithGroupAnalysis") {
-                //leite auf Debriefing Seite weiter
-                this.$router.push('/debriefing');
+            //wenn Gruppe Variable bereits befüllt
+            if (this.group) {
+                //wenn Gruppenstatus auf Debriefing
+                if (this.group[0].status === "finishedWithGroupAnalysis") {
+                    //leite auf Debriefing Seite weiter
+                    this.$router.push('/debriefing');
+                }
             }
         },
 
@@ -361,11 +367,11 @@ export default {
             const newMessageId = this.messageList.push(message);
             try {
             const messageId = await ChatMessageService.postChatMessage(message.type, this.studentId, message.data);
+            //der Nachricht als Attribut ID die ID in der Datenbank hinzufügen
+            this.messageList[newMessageId-1].id = messageId;
             } catch (err) {
                 this.error = err.message;
             }
-            //der Nachricht als Attribut ID die ID in der Datenbank hinzufügen
-            this.messageList[newMessageId-1].id = messageId;
         },
         //behandelt Knopfdruck zum Öffnen des Chats: setzt isChatOpen Variable um und setzt neue Nachrichten Counter auf null
         openChat () {
@@ -393,9 +399,6 @@ export default {
         async getNewPartnerMessages() {
             try {
             const allPartnerMessages = await ChatMessageService.getChatMessages(this.partnerId);
-            } catch (err) {
-                this.error = err.message;
-            }
             //nur neue Nachrichten sollen hinzugefügt werden -> Vergleich der IDs der Nachrichten; wenn neue gefunden, dann Array push
             for (var i = 0; i < allPartnerMessages.length; i++) {
                 if (this.messageList.find(message => message.id === allPartnerMessages[i].id)) {
@@ -406,8 +409,10 @@ export default {
                     this.newMessagesCount++;
                 }
             }
-        }
-    },
-
+            } catch (err) {
+                this.error = err.message;
+            }
+        },
+    }
 }
 </script>

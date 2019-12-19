@@ -86,15 +86,15 @@
             async getReadyStudents() {
                 try {
                 this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'waitingForGroupAnalysis');
-                } catch (err) {
-                    this.error = err.message;
-                }
                 if (this.students.find(element => element.id === this.studentId)) {
                     const currentStudent = this.students.find(element => element.id === this.studentId);
-                    const partnerId = currentStudent.partner;
-                    this.partner = this.students.find(element => element.id === partnerId);
-                    //Partnername für GroupAnalysis in Vuex Store schreiben
-                    this.CHANGE_PARTNER_NAME(this.partner.firstName + ' ' + this.partner.lastName);
+                    if (currentStudent.partner) {
+                        const partnerId = currentStudent.partner;
+                        this.partner = this.students.find(element => element.id === partnerId);
+                    }
+                }
+                } catch (err) {
+                    this.error = err.message;
                 }
             },
             //Hilfsfunktion für setInterval; speichert Daten dieser Session in Objekt session und liest den aktuellen Status in Variable sessionStatus aus
@@ -109,6 +109,8 @@
 
             //leitet weiter zur Komponente GroupAnalysis und schreibt neuen Status in student; speichert Partner in VueX Store
             navigateToGroupAnalysis: function() {
+                //Partnername für GroupAnalysis in Vuex Store schreiben
+                this.CHANGE_PARTNER_NAME(this.partner.firstName + ' ' + this.partner.lastName);
                 this.CHANGE_PARTNER_ID(this.partner.id);
                 StudentService.setStudentStatus(this.studentId, 'groupAnalysis')
                 this.$router.push('/groupanalysis')
