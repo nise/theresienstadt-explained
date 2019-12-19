@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+        <!-- Anzeige eines Fehlers, falls vorhanden -->
+        <div class="alert alert-danger" role="alert" v-if="error">
+            Fehler: {{this.error}}
+        </div>
       <h1 class="display-4">Einzelanalyse der Videos</h1>
       <p style="font-size:large; text-align:justify">
           Sie können das Video mit dem Player abspielen. Zur Markierung einer Stelle drücken Sie den Knopf "Markieren" unter der Aufgabenstellung.
@@ -154,6 +158,7 @@ export default {
         async jumpToNextTaskOrComplete() {
             //prüfe, ob mindestens eine Markierung vorgenommen wurde
             if (this.annotations[0]) {
+                this.error = '';
                 //prüfe, ob der Begründungstext jeder Markierung ausgefüllt ist
                 if (this.validateInput()) {
                     try {

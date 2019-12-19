@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <!-- Anzeige eines Fehlers, falls vorhanden -->
+    <div class="alert alert-danger" role="alert" v-if="error">
+      Fehler: {{this.error}}
+    </div>
     <h1 class="display-4">Starten einer neuen Session</h1>
     <!-- Sprung zur Aufgabenpflege; wird durch v-if nur angezeigt, wenn bereits eine Session generiert wurde -->
     <div v-if="sessionId">

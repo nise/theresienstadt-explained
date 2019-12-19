@@ -1,5 +1,9 @@
 <template>
     <div class="container">
+        <!-- Anzeige eines Fehlers, falls vorhanden -->
+        <div class="alert alert-danger" role="alert" v-if="error">
+            Fehler: {{this.error}}
+        </div>
         <h1>Tracking</h1>
         <label for="basic-url">Die Session wurde gestartet. Bitte geben Sie untenstehende URL an die Teilnehmer weiter. Unten können Sie sehen, in welcher Phase sich die Teilnehmer befinden. Sobald alle Teilnehmer mit der Individualanalyse fertig sind, können Sie über den Knopf "Gruppenbildung starten" die Bildung der Zweiergruppen auslösen.</label>
         <!-- Anzeige der URL für die Schüler zum Registrieren -->
@@ -107,6 +111,8 @@ export default {
             //nur Gruppenbildung erlauben, wenn alle Schüler im richtigen Status, sonst Fehlermeldung
             if (this.checkIfReadyForGroupBuilding()) {
                 try {
+                this.error = '';
+                this.groupBuildingSuccess = 'Bitte warten. Die Gruppen werden nun automatisch gebildet';
                 this.groupBuildingSuccess = await GroupBuildingService.getGroupBuilding(this.sessionId);
                 } catch (err) {
                     this.error = err.message;
@@ -131,6 +137,7 @@ export default {
         startSession() {
             //wenn gerade Teilnehmerzahl
             if (this.students.length % 2 === 0 && this.students.length !== 0) {
+                this.error = '';
                 //rufe Middleware auf und setze Status der Session mit aktueller Session ID auf "Individualanalyse"
                 SessionService.setSessionStatus(this.sessionId, 'Individualanalyse');
                 this.startSessionSuccess = true;

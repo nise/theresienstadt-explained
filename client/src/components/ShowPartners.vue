@@ -1,5 +1,9 @@
 <template>
     <div class="container">
+        <!-- Anzeige eines Fehlers, falls vorhanden -->
+        <div class="alert alert-danger" role="alert" v-if="error">
+            Fehler: {{this.error}}
+        </div>
         <!-- Anzeige der Anweisung, dass gewartet werden soll, nur, wenn Dyadenbildung noch nicht stattgefunden hat -->
         <div v-if="sessionStatus!=='groupAnalysis'">
             <h1>Bitte warten</h1>

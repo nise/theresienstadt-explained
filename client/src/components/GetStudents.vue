@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <!-- Anzeige eines Fehlers, falls vorhanden -->
+    <div class="alert alert-danger" role="alert" v-if="error">
+      Fehler: {{this.error}}
+    </div>
     <h1 class="display-4">Teilnehmererfassung</h1>
     <div v-if="this.id">
       <p style="font-size:large;">Bitte warten Sie, bis der Lehrende die Session startet.</p>

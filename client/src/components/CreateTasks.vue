@@ -1,5 +1,9 @@
 <template>
     <div class="container">
+        <!-- Anzeige eines Fehlers, falls vorhanden -->
+        <div class="alert alert-danger" role="alert" v-if="error">
+            Fehler: {{this.error}}
+        </div>
         <h1>Aufgabenpflege</h1>
         <label for="basic-url">Bitte erstellen Sie nun unten die Aufgaben. Wenn Sie alle Aufgaben eingetragen haben, dann klicken Sie auf "Abschließen"</label>
         <!-- Button Neue Aufgabe erstellen fügt neuen Input hinzu; Aufgabennr. wird automatisch eingetragen -->
