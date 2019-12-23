@@ -8,6 +8,10 @@
       <p style="font-size:large; text-align:justify">
           Sie sehen unten nun Ihre Aufgabenstellung. Zur Beantwortung der Aufgabe markieren Sie Stellen im Video. Sie können das Video mit dem Player abspielen. Zur Markierung einer Stelle drücken Sie den Knopf "Markieren" unter der Aufgabenstellung. Bitte begründen Sie Ihre Markierung anschließend. Wenn Sie mit der Bearbeitung der Aufgabe fertig sind, dann drücken Sie auf "Absenden". Sie gelangen so zur nächsten Aufgabe - wenn vorhanden - oder schließen die Bearbeitung ab.</p>
       <hr>
+        <!-- Anzeigen der Aufgabenstellung -->
+      <h4>Aufgabe {{task.taskNumber}}</h4>
+      <p><em>{{task.text}}</em></p>
+      <hr>
       <!-- Zweispaltiges Layout mit Bootstrap row und col -->
         <div class="row">
             <!-- Div mit Video; Nutzung des Moduls "vue-plyr"; initialisiert in main.js -->
@@ -18,35 +22,26 @@
                     </video>
                 </vue-plyr>
             </div>
-            <!-- Anzeigen der Aufgabenstellung -->
             <div class="Task col-md-5">
-                <!-- Anzeige der Markierungen unter der Aufgabenstellung durch Verschachteln von rows in der bereits bestehenden row -->
+                <!--<button class="btn btn-success" @click="addAnnotation">Markieren</button>-->
+                <h4>Markierungen:</h4>
                 <div class="row">
-                    <div class="alert alert-secondary" role="alert">
-                        <h4 class="alert-heading">Aufgabe {{task.taskNumber}}</h4>
-                        <hr>
-                        <p style="font-size:large">{{task.text}}</p>
-                        <hr>
-                        <button class="btn btn-success" @click="addAnnotation">Markieren</button>
-                    </div>
+                    <!-- Zeige die Markierungen in einer Tabelle an; so viele Markierungen wie es Einträge im Array gibt -->
+                    <b-table class="col-md-12" bordered striped hover :items="annotations" :fields="fields" responsive="sm">
+                        <!-- Anzeige der Zeitpunkte im Format (hh:)mm:ss --> 
+                        <template v-slot:cell(annotationStartTime)="data">
+                            {{showTimeInMMSS(data.value)}}
+                        </template>
+                        <!-- AnnoationText als Input Feld -->
+                        <template v-slot:cell(annotationText)="data">
+                            <b-form-input type="text" v-model="annotations[data.index].annotationText"></b-form-input>
+                        </template>
+                        <template v-slot:cell(actions)="data">
+                            <button v-b-tooltip.hover title="Springe zur Stelle im Video" style="font-size:large;" class="btn typcn typcn-media-play" @click="jumpToAnnotationTime(annotations[data.index].annotationStartTime)"></button><button v-b-tooltip.hover title="Lösche Markierung" style="font-size:large;" class="btn typcn typcn-trash" @click="removeAnnotation(data.index)"></button>
+                        </template>
+                    </b-table>
                 </div>
-                <!-- Markierungen aus VueX Store Array -->
-                <p style="font-size:x-large">Markierungen:</p>
-                <div class="row">
-                    <!-- Erstelle so viele Annotation Elemente wie es Einträge im Array gibt -->
-                    <div class="card col-md-12" v-for="(annotation, index) in annotations" v-bind:key="index">
-                        <!-- Überschrift ist Zeitpunkt der Markierung (automatisch eingetragen über Button Markieren) -->
-                        <div class="card-header" style="font-size:x-large">{{annotation.annotationStartTime}} s</div>
-                        <div class="card-body">
-                            <!-- Text wird vom Benutzer eingetragen; key an vuex Attribut gebunden und über @ Event geändert mit Mutation -->
-                            <p class="card-text"><input v:value="annotation.text" @input="changeAnnotationText($event.target.value, index)" type="text" class="form-control" placeholder="Bitte hier die Begründung eingeben"></p>
-                            <hr>
-                            <!-- Buttons zum Löschen und zum Springen zu der Stelle im Video -->
-                            <button class="btn btn-info" @click="jumpToAnnotationTime(annotation.annotationStartTime)">Zur Stelle im Video springen</button>
-                            <button class="btn btn-secondary" @click="removeAnnotation(index)">Markierung löschen</button>
-                        </div>
-                    </div>
-                </div>
+                <button @click="addAnnotation" class="btn btn-success">Markieren</button>
             </div>
         </div>
         <hr>
@@ -74,7 +69,21 @@ export default {
         task: {},
         error: '',
         iteration: 1,
-        player: null
+        player: null,
+        fields: [
+            {
+                key: 'annotationStartTime',
+                label: 'Zeitpunkt'
+            },
+            {
+                key: "annotationText",
+                label: "Begründung"
+            },
+            {
+                key: "actions",
+                label: "Aktionen"
+            }
+        ]
     };
   },
   mounted() {
@@ -210,6 +219,20 @@ export default {
             });
             //Rückgabevariable weitergeben
             return feedback;
+        },
+        //erhält eine Zahl in Sekunden und rechnet sie um in hh:mm:ss, wenn größer 1 Stunde oder mm:ss, wenn kleiner 1 Stunde
+        showTimeInMMSS(time) {
+            var hours   = Math.floor(time / 3600);
+            var minutes = Math.floor((time - (hours * 3600)) / 60);
+            var seconds = time - (hours * 3600) - (minutes * 60);
+            if (hours   < 10) {hours   = "0"+hours;}
+            if (minutes < 10) {minutes = "0"+minutes;}
+            if (seconds < 10) {seconds = "0"+seconds;}
+            if (hours > 0) {
+                return hours+':'+minutes+':'+seconds;
+            } else {
+            return minutes+':'+seconds;
+            }
         }
     }
 };
