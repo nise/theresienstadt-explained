@@ -26,7 +26,7 @@
         <!-- wenn Dyadenbildung stattgefunden hat, dann zeige jedem Schüler seinen zugeteilten Partner an und ermögliche die Navigation zur Gruppenanalyse -->
         <div v-if="sessionStatus==='Gruppenanalyse'">
             <h1>Ihr Partner für die Gruppenarbeit</h1>
-            <p>Unten sehen Sie Ihre/-n zugeteilten Partner/-in für die Gruppenarbeit. Sie können nun über den Knopf "Weiter" fortfahren.</p>
+            <p>Unten sehen Sie Ihren zugeteilten Partner für die Gruppenarbeit. Dieser wurde Ihnen aufgrund Ihrer Antworten zugewiesen. Sie bearbeiten nun dieselbe Aufgabenstellung erneut in einer Zweiergruppe mit Ihrem Partner. Sie können nun über den Knopf "Weiter" fortfahren.</p>
             <hr>
             <!-- Anzeige der Daten des Partners über partnerId und API -->
             <div class="card border-dark mx-auto" style="width: 18rem">

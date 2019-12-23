@@ -4,10 +4,10 @@
         <div class="alert alert-danger" role="alert" v-if="error">
             Fehler: {{this.error}}
         </div>
-        <h1 class="display-4">Gruppenanalyse der Videos</h1>
+        <h1>Gruppenanalyse der Videos</h1>
         <p style="font-size:large; text-align:justify">
-        Sie können das Video mit dem Player abspielen. Zur Markierung einer Stelle drücken Sie den Knopf "Markieren" unter der Aufgabenstellung.
-        Anschließend sollten Sie die Stelle Ihrer Markierung begründen. Wenn Sie Senden drücken, dann wird die Lösung für Ihre Gruppe abgesendet.</p>
+        Bitte bearbeiten Sie die Aufgaben nun mit Ihrem Partner. Sie können über ein Chat-Fenster mit Ihrem Partner kommunizieren. Dieses öffnen Sie über den runden Knopf am unteren rechten Ende der Seite. Einigen Sie sich mit Ihrem Partner auf eine gemeinsame Antwort durch Diskussion Ihrer Standpunkte. Als Grundlage der Diskussion werden Ihnen die Antworten von Ihnen und Ihrem Partner auf die Aufgabe angezeigt. Haben Sie sich auf eine gemeinsame Antwort geeinigt, dann bearbeitet bitte ein Mitglied Ihrer Gruppe die Aufgabe und drückt auf "Absenden"</p>
+        <hr>
         <!-- Anzeige des Chat-Fensters -->
         <beautiful-chat
         :participants="participants"
@@ -42,7 +42,7 @@
                 <br>
                 <!-- Anzeige der alten Markierungen unter dem Video durch Verschachteln von rows in der bereits bestehenden row-->
                 <div class="oldAnnotations row">
-                    <h3 class="col-md-12">Markierungen aus der Individualanalyse</h3>
+                    <h3 class="col-md-12">Markierungen von Ihnen und Ihrem Partner</h3>
                     <!-- Erstelle so viele Annotation Elemente wie es Einträge im Array gibt -->
                     <div class="card col-md-12" v-for="(oldAnnotation, index) in oldAnnotations" v-bind:key="index">
                         <!-- Überschrift ist Zeitpunkt der Markierung-->
@@ -90,7 +90,7 @@
             </div>
         </div>
         <hr>
-        <button class="btn btn-primary" @click="jumpToNextTaskOrComplete">Senden</button>
+        <button class="btn btn-primary" @click="jumpToNextTaskOrComplete">Absenden</button>
     </div>
 </template>
 
@@ -160,7 +160,7 @@ export default {
             titleImageUrl: '/Chat_Default_Picture.png',
             messageList: new Array, //z.B. type: 'text', author: `me`, data: { text: `Say yes!` } // the list of the messages to show, can be paginated and adjusted dynamically
             newMessagesCount: 0,
-            isChatOpen: true, // to determine whether the chat window should be open or closed
+            isChatOpen: false, // to determine whether the chat window should be open or closed
             showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
             colors: {
                 header: {
@@ -310,10 +310,10 @@ export default {
                             AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
                         });
                         //in Students abspeichern, dass sie mit der Gruppenanalyse fertig sind
-                        await StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
-                        await StudentService.setStudentStatus(this.partnerId, 'fertig_mit_Gruppenanalyse');
+                        StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
+                        StudentService.setStudentStatus(this.partnerId, 'fertig_mit_Gruppenanalyse');
                         //in group abspeichern, dass sie mit der Gruppenanalyse fertig ist
-                        await GroupService.setGroupStatus(this.group[0].id, 'fertig_mit_Gruppenanalyse');
+                        GroupService.setGroupStatus(this.group[0].id, 'fertig_mit_Gruppenanalyse');
                         //zur Seite für Abschluss springen
                         this.$router.push('/debriefing');
                     }

@@ -4,10 +4,10 @@
         <div class="alert alert-danger" role="alert" v-if="error">
             Fehler: {{this.error}}
         </div>
-      <h1 class="display-4">Einzelanalyse der Videos</h1>
+      <h1>Einzelanalyse</h1>
       <p style="font-size:large; text-align:justify">
-          Sie können das Video mit dem Player abspielen. Zur Markierung einer Stelle drücken Sie den Knopf "Markieren" unter der Aufgabenstellung.
-          Anschließend sollten Sie die Stelle Ihrer Markierung begründen.</p>
+          Sie sehen unten nun Ihre Aufgabenstellung. Zur Beantwortung der Aufgabe markieren Sie Stellen im Video. Sie können das Video mit dem Player abspielen. Zur Markierung einer Stelle drücken Sie den Knopf "Markieren" unter der Aufgabenstellung. Bitte begründen Sie Ihre Markierung anschließend. Wenn Sie mit der Bearbeitung der Aufgabe fertig sind, dann drücken Sie auf "Absenden". Sie gelangen so zur nächsten Aufgabe - wenn vorhanden - oder schließen die Bearbeitung ab.</p>
+      <hr>
       <!-- Zweispaltiges Layout mit Bootstrap row und col -->
         <div class="row">
             <!-- Div mit Video; Nutzung des Moduls "vue-plyr"; initialisiert in main.js -->
@@ -27,7 +27,7 @@
                         <hr>
                         <p style="font-size:large">{{task.text}}</p>
                         <hr>
-                        <button class="btn btn-primary" @click="addAnnotation">Markieren</button>
+                        <button class="btn btn-success" @click="addAnnotation">Markieren</button>
                     </div>
                 </div>
                 <!-- Markierungen aus VueX Store Array -->
@@ -43,7 +43,7 @@
                             <hr>
                             <!-- Buttons zum Löschen und zum Springen zu der Stelle im Video -->
                             <button class="btn btn-info" @click="jumpToAnnotationTime(annotation.annotationStartTime)">Zur Stelle im Video springen</button>
-                            <button class="btn btn-danger" @click="removeAnnotation(index)">Markierung löschen</button>
+                            <button class="btn btn-secondary" @click="removeAnnotation(index)">Markierung löschen</button>
                         </div>
                     </div>
                 </div>

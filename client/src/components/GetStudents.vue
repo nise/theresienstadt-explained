@@ -4,14 +4,15 @@
     <div class="alert alert-danger" role="alert" v-if="error">
       Fehler: {{this.error}}
     </div>
-    <h1 class="display-4">Teilnehmererfassung</h1>
-    <div v-if="this.id">
-      <p style="font-size:large;">Bitte warten Sie, bis der Lehrende die Session startet.</p>
+    <h1>Registrierung</h1>
+    <div>
+      <p style="font-size:large;" v-if="this.id && this.sessionStatus !== 'Individualanalyse'">Sie haben sich erfolgreich registriert. Bitte warten Sie noch, bis sich alle anderen Teilnehmer registriert haben.</p>
+      <p style="font-size: large" v-if="this.sessionStatus === 'Individualanalyse'">Nun können Sie fortfahren, indem Sie auf den Knopf unten drücken. Sie gelangen zur Einzelanalyse des Videos.</p>
       <button class="btn btn-primary" v-if="this.sessionStatus==='Individualanalyse'" v-on:click="navigateToIndividualAnalysis">Starten</button>
     </div>
     <!-- Input Gruppe zur Eingabe von Vor- und Nachmame; wird über v-model jeweils mit der Variable synchronisiert -->
-    <div v-else>
-      <label for="basic-url">Bitte geben Sie Ihren Vor- und Nachnamen ein. Mit einem Klick auf Senden können Sie an der Videoanalyse teilnehmen.</label>
+    <div v-if="this.id===''">
+      <label for="basic-url">Bitte geben Sie Ihren Vor- und Nachnamen ein. Mit einem Klick auf Senden nehmen Sie an der Videoanalyse teil.</label>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width: 100px;">Vorname</span>
@@ -29,16 +30,18 @@
       <hr>
     </div>
     <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
-  <h2 class="display-6">Aktuell registrierte Teilnehmer</h2>
-    <div class="row">
-      <div class="col-sm-4"
-        v-for="student in students"
-        v-bind:key="student._id">
-        <div class="card border-dark mb-3" style="width: 18rem;">
-          <ul class = "list-group list-group-flush">
-            <li class="list-group-item">{{student.firstName}}</li>
-            <li class="list-group-item">{{student.lastName}}</li>
-          </ul>
+    <div v-if="this.sessionStatus !== 'Individualanalyse'">
+    <h2 class="display-6">Aktuell registrierte Teilnehmer</h2>
+      <div class="row">
+        <div class="col-sm-4"
+          v-for="student in students"
+          v-bind:key="student._id">
+          <div class="card border-dark mb-3" style="width: 18rem;">
+            <ul class = "list-group list-group-flush">
+              <li class="list-group-item">{{student.firstName}}</li>
+              <li class="list-group-item">{{student.lastName}}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
