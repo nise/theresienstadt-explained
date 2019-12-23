@@ -23,11 +23,10 @@
                 </vue-plyr>
             </div>
             <div class="Task col-md-5">
-                <!--<button class="btn btn-success" @click="addAnnotation">Markieren</button>-->
                 <h4>Markierungen:</h4>
                 <div class="row">
                     <!-- Zeige die Markierungen in einer Tabelle an; so viele Markierungen wie es Einträge im Array gibt -->
-                    <b-table class="col-md-12" bordered striped hover :items="annotations" :fields="fields" responsive="sm">
+                    <b-table class="col-md-12" bordered small striped hover :items="annotations" :fields="fields" responsive="sm">
                         <!-- Anzeige der Zeitpunkte im Format (hh:)mm:ss --> 
                         <template v-slot:cell(annotationStartTime)="data">
                             {{showTimeInMMSS(data.value)}}
