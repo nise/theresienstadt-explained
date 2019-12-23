@@ -13,7 +13,8 @@ const studentSchema = new mongoose.Schema({
     session: String,
     status: String,
     partner: String,
-    group: String
+    group: String,
+    partnerName: String
 });
 
 //Student Klasse initialisieren
@@ -79,9 +80,10 @@ router.post('/changepartner', async (req, res) => {
     //Attribute der Anfrage auslesen
     const id = req.body.id;
     const partner = req.body.partner;
+    const partnerName = req.body.partnerName;
     try {
     //vorhandenen Student über Change Funktion in Datenbank ändern und _id zurückgeben
-    const studentId = await changeStudentPartnerInDatabase(id, partner);
+    const studentId = await changeStudentPartnerInDatabase(id, partner, partnerName);
     res.send(studentId);
     } catch (err) {
         return console.error(err);
@@ -184,7 +186,7 @@ async function changeStudentStatusInDatabase(idToUpdate, statusToUpdate) {
 }
 
 //setze neuen Partner bei Student mit id idToUpdate
-async function changeStudentPartnerInDatabase(idToUpdate, partnerToUpdate) {
+async function changeStudentPartnerInDatabase(idToUpdate, partnerToUpdate, partnerNameToUpdate) {
     return new Promise(async (resolve, reject) => {
         try {
         //Datenbank und Collection verbinden
@@ -194,13 +196,14 @@ async function changeStudentPartnerInDatabase(idToUpdate, partnerToUpdate) {
         }
         //Objekt aus Übergabeparametern erstellen
         updateObject = {
-            partner: partnerToUpdate
+            partner: partnerToUpdate,
+            partnerName: partnerNameToUpdate
         }
         //Student über findbyidandupdate Funktion ändern und Fehler zurückgeben falls vorhanden
         student.findByIdAndUpdate(idToUpdate, updateObject, function (err, res) {
             if (err) return console.error(err);
-            resolve (idToUpdate);
         });
+        resolve(idToUpdate);
     });
 }
 

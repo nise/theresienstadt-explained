@@ -30,12 +30,10 @@ router.get('/:session', async (req, res) => {
     } catch (err) {
         return console.error(err);
     }
-    
     //schreibe alle Student IDs in ein Array, um nach Zufall zu mischen
     students.forEach(student => {
         studentIds.push(student.id);
     });
-    
     //Bestimme für jeden Studenten einen zufälligen Partner mit Funktion getRandomPartner
     students.forEach(student => {
         //Wenn Student noch keinen Partner hat, dann
@@ -49,7 +47,6 @@ router.get('/:session', async (req, res) => {
     students.forEach(student => {
         writePartnerToDatabase(student.id, student.partnerId);
     });
-
     //erstelle Gruppe mit den zwei Studenten als Attribute und speichere GruppenId in die jeweiligen Studenten als Attribut
     for (var i = 0; i<students.length; i++) {
         //nur ausführen, wenn Gruppe nicht bereits in Student geschrieben wurde -> wird nur einmal pro Gruppe durchgeführt
@@ -63,7 +60,7 @@ router.get('/:session', async (req, res) => {
         }
     }
     //setze Session Status auf groupAnalysis, damit Schüler beginnen können
-    setSessionStatus(session, 'groupAnalysis')
+    setSessionStatus(session, 'Gruppenanalyse')
 
     //Erfolgsmeldung senden
     res.status(200).send('Die Dyaden wurden erfolgreich gebildet');
@@ -72,7 +69,7 @@ router.get('/:session', async (req, res) => {
 //Schüler mit Status "waitingForGroupAnalysis" aus Datenbank lesen; Zugriff auf students API über axios
 async function getWaitingStudents(sessionToGet) {
     try {
-    const result = await axios.get(urlstudents + '/' + sessionToGet + '/' + 'waitingForGroupAnalysis');
+    const result = await axios.get(urlstudents + '/' + sessionToGet + '/' + 'wartend_auf_Gruppenanalyse');
     const data = result.data;
     const waitingStudents = data.map(student => ({
         firstName: student.firstName,
@@ -145,10 +142,14 @@ async function setSessionStatus(sessionId, statusName) {
 
 //für Student mit studentId Partner mit partnerId über API in die Datenbank schreiben
 async function writePartnerToDatabase(studentId, partnerId) {
+    //Partner-Namen ermitteln
+    var partnerObject = students.find(student => student.id === partnerId);
+    var partnerName = partnerObject.firstName + ' ' + partnerObject.lastName;
     try {
     await axios.post(urlstudents+'/changepartner', {
         id: studentId,
-        partner: partnerId
+        partner: partnerId,
+        partnerName: partnerName
     })
     } catch (err) {
         return console.error(err);
@@ -162,7 +163,7 @@ async function writePartnerToDatabase(studentId, partnerId) {
     const groupId = await axios.post(urlgroups, {
         student1: student1Id,
         student2: student2Id,
-        status: 'GroupAnalysis'
+        status: 'Gruppenanalyse'
     });
     //Gruppen-ID bei Student 1 als Attribut setzen (lokal)
     this.students.find(function(student, index) {
@@ -171,23 +172,11 @@ async function writePartnerToDatabase(studentId, partnerId) {
         }
     });
 
-    //Partner-ID bei Student 1 als Attribut setzen (in DB)
-    await axios.post(urlstudents+'/changepartner', {
-        id: student1Id,
-        partner: student2Id
-    });
-
     //Gruppen-ID bei Student 2 als Attribut setzen (lokal)
     this.students.find(function(student, index) {
         if (student.id === student2Id) {
             this.students[index].group = groupId.data;
         }
-    });
-
-    //Partner-ID bei Student 2 als Attribut setzen (in DB)
-    await axios.post(urlstudents+'/changepartner', {
-        id: student2Id,
-        partner: student1Id
     });
 
     //Gruppen-ID bei Student 1 als Attribut setzen (in DB)

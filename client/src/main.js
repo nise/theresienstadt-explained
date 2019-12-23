@@ -16,6 +16,8 @@ import VuePlyr from 'vue-plyr';
 import Chat from 'vue-beautiful-chat';
 //Import für Vue-Clipboard
 import VueClipboard from 'vue-clipboard2'
+//Import für Bootstrap-vue
+import BootstrapVue from 'bootstrap-vue'
 
 //Einbindung des Vue Router
 Vue.use(VueRouter);
@@ -25,6 +27,9 @@ Vue.use(Chat);
 
 //Einbindung des Vue-Clipboard
 Vue.use(VueClipboard);
+
+//Einbindung von Boostrap-vue
+Vue.use(BootstrapVue);
 
 //Setzen von Standardeinstellungen für den Videoplayer vue-plyr; Einbindung des vue-plyr-Players
 Vue.use(VuePlyr, {
@@ -57,4 +62,10 @@ new Vue({
   router,
   store,
   render: h => h(App),
+  created() {
+    //Bestätigung notwendig vor dem Verlassen einer Seite mit den Browser Buttons -> Sicherheit wegen Nicht-Benutzung von Cookies
+    window.addEventListener('beforeunload', (event) => {
+      event.returnValue ="Wenn Sie die Seite verlassen, dann können Sie nicht zurückkehren. Bitte verlassen Sie die Seite wirklich nur, wenn Sie mit der Videoanalyse fertig sind.";
+    }, false)
+  },
 }).$mount('#app')

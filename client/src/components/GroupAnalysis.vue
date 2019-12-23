@@ -310,10 +310,10 @@ export default {
                             AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
                         });
                         //in Students abspeichern, dass sie mit der Gruppenanalyse fertig sind
-                        await StudentService.setStudentStatus(this.studentId, 'finishedWithGroupAnalysis');
-                        await StudentService.setStudentStatus(this.partnerId, 'finishedWithGroupAnalysis');
+                        await StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
+                        await StudentService.setStudentStatus(this.partnerId, 'fertig_mit_Gruppenanalyse');
                         //in group abspeichern, dass sie mit der Gruppenanalyse fertig ist
-                        await GroupService.setGroupStatus(this.group[0].id, 'finishedWithGroupAnalysis');
+                        await GroupService.setGroupStatus(this.group[0].id, 'fertig_mit_Gruppenanalyse');
                         //zur Seite für Abschluss springen
                         this.$router.push('/debriefing');
                     }
@@ -351,7 +351,7 @@ export default {
             //wenn Gruppe Variable bereits befüllt
             if (this.group) {
                 //wenn Gruppenstatus auf Debriefing
-                if (this.group[0].status === "finishedWithGroupAnalysis") {
+                if (this.group[0].status === "fertig_mit_Gruppenanalyse") {
                     //leite auf Debriefing Seite weiter
                     this.$router.push('/debriefing');
                 }

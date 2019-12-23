@@ -5,7 +5,7 @@
             Fehler: {{this.error}}
         </div>
         <!-- Anzeige der Anweisung, dass gewartet werden soll, nur, wenn Dyadenbildung noch nicht stattgefunden hat -->
-        <div v-if="sessionStatus!=='groupAnalysis'">
+        <div v-if="sessionStatus!=='Gruppenanalyse'">
             <h1>Bitte warten</h1>
             <p>Es sind noch nicht alle Teilnehmer fertig mit der Analyse des Videos. Bitte warten Sie, bis alle fertig sind.</p>
             <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
@@ -24,7 +24,7 @@
             </div>
         </div>
         <!-- wenn Dyadenbildung stattgefunden hat, dann zeige jedem Schüler seinen zugeteilten Partner an und ermögliche die Navigation zur Gruppenanalyse -->
-        <div v-if="sessionStatus==='groupAnalysis'">
+        <div v-if="sessionStatus==='Gruppenanalyse'">
             <h1>Ihr Partner für die Gruppenarbeit</h1>
             <p>Unten sehen Sie Ihre/-n zugeteilten Partner/-in für die Gruppenarbeit. Sie können nun über den Knopf "Weiter" fortfahren.</p>
             <hr>
@@ -89,7 +89,7 @@
             //Hilfsfunktion für setInterval; speichert Studenten mit Status waitingForGroupAnalysis in students Array; schreibt außerdem partner in partner Objekt, wenn Studenten geladen
             async getReadyStudents() {
                 try {
-                this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'waitingForGroupAnalysis');
+                this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'wartend_auf_Gruppenanalyse');
                 if (this.students.find(element => element.id === this.studentId)) {
                     const currentStudent = this.students.find(element => element.id === this.studentId);
                     if (currentStudent.partner) {
@@ -116,7 +116,7 @@
                 //Partnername für GroupAnalysis in Vuex Store schreiben
                 this.CHANGE_PARTNER_NAME(this.partner.firstName + ' ' + this.partner.lastName);
                 this.CHANGE_PARTNER_ID(this.partner.id);
-                StudentService.setStudentStatus(this.studentId, 'groupAnalysis')
+                StudentService.setStudentStatus(this.studentId, 'Gruppenanalyse')
                 this.$router.push('/groupanalysis')
             }
         }

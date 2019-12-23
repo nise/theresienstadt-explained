@@ -180,7 +180,7 @@ export default {
                             this.WRITE_ANNOTATIONS_TO_DATABASE(element);
                         });
                         //in student abspeichern, dass er mit der Individualanalyse fertig ist
-                        StudentService.setStudentStatus(this.studentId, 'waitingForGroupAnalysis')
+                        StudentService.setStudentStatus(this.studentId, 'wartend_auf_Gruppenanalyse')
                         //zur Seite für Ansicht der gebildeten Dyaden springen
                         this.$router.push('/showpartners');
                     }

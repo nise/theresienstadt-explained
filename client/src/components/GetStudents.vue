@@ -160,7 +160,7 @@ export default {
     //Funktion zum Navigieren zu Komponente "IndividualAnalysis"
     async navigateToIndividualAnalysis() {
       //in student abspeichern, dass er mit der Anmeldung fertig ist
-      StudentService.setStudentStatus(this.studentId, 'IndividualAnalysis')
+      StudentService.setStudentStatus(this.studentId, 'Individualanalyse')
       //Navigieren zu IndividualAnalysis
       this.$router.push('/individualanalysis');
     }

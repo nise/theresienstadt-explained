@@ -25,7 +25,8 @@ class StudentService {
                         id: student._id,
                         status: student.status,
                         partner: student.partner,
-                        group: student.group
+                        group: student.group,
+                        partnerName: student.partnerName
                     }))
                 );
             } catch (err) {
@@ -51,7 +52,8 @@ class StudentService {
                         id: student._id,
                         status: student.status,
                         partner: student.partner,
-                        group: student.group
+                        group: student.group,
+                        partnerName: student.partnerName
                     }))
                 );
             } catch (err) {
