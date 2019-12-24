@@ -321,7 +321,26 @@ export default {
                 annotationEndTime: Math.round(this.videoPlayer.currentTime()),
                 taskId: this.task.id
             }
-            this.annotations.push(newAnnotation);
+            //an der richtigen Stelle im Array einfügen mit Splice Methode
+            //dafür ermitteln, wo sich sich das Element einordnet
+            //wenn Array schon mindestens ein Element enthält
+            if (this.annotations.length > 0) {
+                for (var i = 0; i < this.annotations.length; i++) {
+                    //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
+                    if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
+                        this.annotations.splice(i, 0, newAnnotation);
+                        break;
+                    }
+                    //wenn letztes Element erreicht, dann einfach am Ende einfügen
+                    if (i === this.annotations.length-1) {
+                        this.annotations.push(newAnnotation);
+                        break;
+                    }
+                }
+            //wenn Array bisher leer, dann einfach am Ende einfügen
+            } else {
+                this.annotations.push(newAnnotation);
+            }
             //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
             this.videoPlayer.markers.add([{
                 time: Math.round(this.videoPlayer.currentTime()),

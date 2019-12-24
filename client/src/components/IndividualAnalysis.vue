@@ -59,6 +59,8 @@ import VideoPlayer from "./VideoPlayer.vue";
 import TaskService from '../../TaskService';
 //Import der Middleware für Students
 import StudentService from '../../StudentService';
+//Import der Middleware für Annotations
+import AnnotationService from '../../AnnotationService';
 
 export default {
   name: "IndividualAnalysis",
@@ -71,6 +73,7 @@ export default {
         task: {},
         error: '',
         iteration: 1,
+        annotations: [],
         videoPlayer: null,
         //Felder für Markierungstabelle
         fields: [
@@ -109,8 +112,7 @@ export default {
     computed: {
         ...mapState({
         studentId: "studentId",
-        sessionId: "sessionId",
-        annotations: "annotations",
+        sessionId: "sessionId"
         })
     },
     //bei Seitenaufruf ausführen
@@ -145,18 +147,6 @@ export default {
         });
     },
     methods: {
-        //Vuex Methoden: Getters, Mutations, Actions
-        ...mapGetters([
-        ]),
-        ...mapMutations([
-            "DELETE_EXISTING_ANNOTATION",
-            "CHANGE_EXISTING_ANNOTATION",
-            "CREATE_NEW_ANNOTATION",
-            "EMPTY_ANNOTATIONS_ARRAY"
-        ]),
-        ...mapActions([
-            "WRITE_ANNOTATIONS_TO_DATABASE"
-        ]),
         //Iteration um 1 erhöhen und Task neu laden -> nächster Task wird aus Datenbank geladen und in task Variable gespeichert -> Felder aktualisieren sich automatisch
         async switchToNextTask() {
             //zu nächster Aufgabe wechseln:
@@ -182,7 +172,26 @@ export default {
                 annotationEndTime: Math.round(this.videoPlayer.currentTime()),
                 taskId: this.task.id
             }
-            this.CREATE_NEW_ANNOTATION(newAnnotation);
+            //an der richtigen Stelle im Array einfügen mit Splice Methode
+            //dafür ermitteln, wo sich sich das Element einordnet
+            //wenn Array schon mindestens ein Element enthält
+            if (this.annotations.length > 0) {
+                for (var i = 0; i < this.annotations.length; i++) {
+                    //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
+                    if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
+                        this.annotations.splice(i, 0, newAnnotation);
+                        break;
+                    }
+                    //wenn letztes Element erreicht, dann einfach am Ende einfügen
+                    if (i === this.annotations.length-1) {
+                        this.annotations.push(newAnnotation);
+                        break;
+                    }
+                }
+            //wenn Array bisher leer, dann einfach am Ende einfügen
+            } else {
+                this.annotations.push(newAnnotation);
+            }
             //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
             this.videoPlayer.markers.add([{
                 time: Math.round(this.videoPlayer.currentTime()),
@@ -190,17 +199,13 @@ export default {
                 overlayText: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime()))
             }]);
         },
-        //Text der Markierung ändern; Id und Text an Mutation in Form eines Objekts übergeben
+        //Text der Markierung ändern
         changeAnnotationText(text, annotationId) {
-            var annotationToChange = {
-                id: annotationId,
-                annotationText: text
-            }
-            this.CHANGE_EXISTING_ANNOTATION(annotationToChange);
+            this.annotations[annotationId].text = text;
         },
-        //bestehende Markierung löschen; Id der zu löschenden Markierung an Mutation übergeben
+        //bestehende Markierung löschen
         removeAnnotation (annotationId) {
-            this.DELETE_EXISTING_ANNOTATION(annotationId);
+            this.annotations.splice(annotationId, 1);
             //Marker entfernen
             this.videoPlayer.markers.remove([annotationId]);
         },
@@ -220,10 +225,10 @@ export default {
                     if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
                         //speichere Markierungen in die Datenbank
                         this.annotations.forEach(element => {
-                            this.WRITE_ANNOTATIONS_TO_DATABASE(element);
+                            this.writeAnnotationsToDatabase(element);
                         });
                         //annotations Array leeren, damit für neue Aufgabe bereit
-                            this.EMPTY_ANNOTATIONS_ARRAY();
+                            this.annotations = [];
                         //Zähler auf nächste Aufgabe setzen
                         this.iteration++;
                         //nächste Aufgabe laden
@@ -231,7 +236,7 @@ export default {
                     } else {
                         //speichere Markierungen in die Datenbank
                         this.annotations.forEach(element => {
-                            this.WRITE_ANNOTATIONS_TO_DATABASE(element);
+                            this.writeAnnotationsToDatabase(element);
                         });
                         //in student abspeichern, dass er mit der Individualanalyse fertig ist
                         StudentService.setStudentStatus(this.studentId, 'wartend_auf_Gruppenanalyse')
@@ -277,6 +282,13 @@ export default {
                 return hours+':'+minutes+':'+seconds;
             } else {
             return minutes+':'+seconds;
+            }
+        },
+        async writeAnnotationsToDatabase(annotation) {
+            try {
+                AnnotationService.postAnnotations(annotation.session, annotation.student, annotation.annotationText, annotation.annotationStartTime, annotation.annotationEndTime, annotation.taskId);
+            } catch (err) {
+                this.error = err.message;
             }
         }
     }
