@@ -10,8 +10,6 @@ import GroupAnalysis from './components/GroupAnalysis.vue';
 import Debriefing from './components/Debriefing.vue';
 import CreateTasks from './components/CreateTasks.vue';
 import Tracking from './components/Tracking.vue';
-//Import für Vue-Plyr Video Player
-import VuePlyr from 'vue-plyr';
 //Import für Chat "vue-beautiful-chat"
 import Chat from 'vue-beautiful-chat';
 //Import für Vue-Clipboard
@@ -31,14 +29,6 @@ Vue.use(VueClipboard);
 //Einbindung von Boostrap-vue
 Vue.use(BootstrapVue);
 
-//Setzen von Standardeinstellungen für den Videoplayer vue-plyr; Einbindung des vue-plyr-Players
-Vue.use(VuePlyr, {
-  plyr: {
-    //standardmäßig kein Vollbild auswählbar
-    fullscreen: { enabled: false }
-  },
-  emit: ['ended']
-})
 
 //Anlegen der Routen fürs Routing im Frontend
 const routes = [

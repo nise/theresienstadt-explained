@@ -14,13 +14,9 @@
       <hr>
       <!-- Zweispaltiges Layout mit Bootstrap row und col -->
         <div class="row">
-            <!-- Div mit Video; Nutzung des Moduls "vue-plyr"; initialisiert in main.js -->
+            <!-- Div mit Video; Nutzung des Moduls "videojs"-->
             <div class="Video col-md-7">
-                <vue-plyr ref="player">
-                    <video v-bind:src="task.videoPath">
-                        <source :src="task.videoPath" type="video/mp4" />
-                    </video>
-                </vue-plyr>
+                <video-player ref="videoPlayer" :options="videoOptions"/>
             </div>
             <div class="Task col-md-5">
                 <h4>Markierungen:</h4>
@@ -35,6 +31,7 @@
                         <template v-slot:cell(annotationText)="data">
                             <b-form-input type="text" v-model="annotations[data.index].annotationText"></b-form-input>
                         </template>
+                        <!-- Aktionen Löschen und zur Stelle im Video springen -->
                         <template v-slot:cell(actions)="data">
                             <button v-b-tooltip.hover title="Springe zur Stelle im Video" style="font-size:large;" class="btn typcn typcn-media-play" @click="jumpToAnnotationTime(annotations[data.index].annotationStartTime)"></button><button v-b-tooltip.hover title="Lösche Markierung" style="font-size:large;" class="btn typcn typcn-trash" @click="removeAnnotation(data.index)"></button>
                         </template>
@@ -55,6 +52,9 @@ import { mapGetters } from 'vuex';
 import { mapMutations } from 'vuex';
 import { mapActions } from 'vuex';
 
+//Videojs Import
+import VideoPlayer from "./VideoPlayer.vue";
+
 //Import der Middleware für Tasks
 import TaskService from '../../TaskService';
 //Import der Middleware für Students
@@ -62,13 +62,17 @@ import StudentService from '../../StudentService';
 
 export default {
   name: "IndividualAnalysis",
+  components: {
+		VideoPlayer
+  },
   //komponenteigener Datenstore
   data() {
     return {
         task: {},
         error: '',
         iteration: 1,
-        player: null,
+        videoPlayer: null,
+        //Felder für Markierungstabelle
         fields: [
             {
                 key: 'annotationStartTime',
@@ -82,12 +86,24 @@ export default {
                 key: "actions",
                 label: "Aktionen"
             }
-        ]
+        ],
+        //Optionen für video.js VideoPlayer
+        videoOptions: {
+			autoplay: false,
+            controls: true,
+            width: "640",
+            controlBar: {
+                //kein Vollbild-Button
+                fullscreenToggle: false
+            },
+			sources: [
+				{
+					src: "/theresienstadt.mp4",
+					type: "video/mp4"
+				}
+			]
+		}
     };
-  },
-  mounted() {
-    //Plyr Player referenzieren
-    this.player = this.$refs.player.player;
   },
     //Vuex Store
     computed: {
@@ -105,6 +121,28 @@ export default {
         } catch (err) {
             this.error = err.message;
         }
+    },
+    mounted() {
+        this.videoPlayer = this.$refs.videoPlayer.player;
+        //Initialisierung von vuejs-markers Plugin
+        this.videoPlayer.markers({
+            markerStyle: {
+                //Festlegung des Stils der Markierungen
+                'width':'3px',
+                'height': '15px',
+                'border-radius': '0%',
+                'background-color': 'red'
+            },
+            markerTip:{
+                display: true,
+                text: function(marker) {
+                    //Festlegen, wie Popup angezeigt wird, wenn man über die Markierung fährt;  geändert von Break + Zeitpunkt auf nur Zeitpunkt
+                    return marker.text;
+                }
+            },
+            //Initialisierung des Arrays für die Marker; befüllt über markers.add Funktion
+            markers: []
+        });
     },
     methods: {
         //Vuex Methoden: Getters, Mutations, Actions
@@ -133,18 +171,24 @@ export default {
         //neue Markierung hinzufügen; neues Annotation Objekt anlegen und über Mutation CREATE NEW ANNOTATION zu Store hinzufügen
         addAnnotation () {
             //Wiedergabe pausieren
-            this.player.pause();
+            this.videoPlayer.pause();
             //neues Markierungsobjekt anlegen
             const newAnnotation = {
                 session: this.sessionId,
                 student: this.studentId,
                 annotationText: null,
                 //auf volle Sekunden runden
-                annotationStartTime: Math.round(this.player.currentTime),
-                annotationEndTime: Math.round(this.player.currentTime),
+                annotationStartTime: Math.round(this.videoPlayer.currentTime()),
+                annotationEndTime: Math.round(this.videoPlayer.currentTime()),
                 taskId: this.task.id
             }
             this.CREATE_NEW_ANNOTATION(newAnnotation);
+            //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
+            this.videoPlayer.markers.add([{
+                time: Math.round(this.videoPlayer.currentTime()),
+                text: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime())),
+                overlayText: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime()))
+            }]);
         },
         //Text der Markierung ändern; Id und Text an Mutation in Form eines Objekts übergeben
         changeAnnotationText(text, annotationId) {
@@ -157,10 +201,12 @@ export default {
         //bestehende Markierung löschen; Id der zu löschenden Markierung an Mutation übergeben
         removeAnnotation (annotationId) {
             this.DELETE_EXISTING_ANNOTATION(annotationId);
+            //Marker entfernen
+            this.videoPlayer.markers.remove([annotationId]);
         },
         //zu übergebener Zeit im Videoplayer springen
         jumpToAnnotationTime(timeToJump) {
-            this.player.currentTime = timeToJump;
+            this.videoPlayer.currentTime(timeToJump);
         },
         //prüfe, ob eine weitere Aufgabe verfügbar ist; wenn ja, dann Laden der nächsten Aufgabe; wenn nein, dann Abschluss der Aufgaben; in jedem Fall Speichern der Markierungen
         async jumpToNextTaskOrComplete() {

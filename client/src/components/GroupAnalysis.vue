@@ -33,16 +33,9 @@
         @edit="editMessage" />
         <!-- Zweispaltiges Layout mit Bootstrap row und col -->
         <div class="row">
-            <!-- Div mit Video; Nutzung des Moduls "vue-plyr"; initialisiert in main.js -->
+            <!-- Div mit Video; Nutzung des Moduls "videojs"-->
             <div class="left col-md-7">
-                <div class="video row col-md-12">
-                    <vue-plyr ref="player">
-                        <video v-bind:src="task.videoPath">
-                            <source v-bind:src="task.videoPath" type="video/mp4" />
-                        </video>
-                    </vue-plyr>
-                </div>
-                <br>
+                <video-player ref="videoPlayer" :options="videoOptions"/>
             </div>
             <div class="right col-md-5">
             <!-- Anzeigen der alten Markierung und neuen Markierungen in einer Tabelle -->
@@ -95,6 +88,9 @@
 import { mapState } from 'vuex';
 import { mapMutations } from 'vuex';
 
+//Videojs Import
+import VideoPlayer from "./VideoPlayer.vue";
+
 //Import der Middleware für Tasks
 import TaskService from '../../TaskService';
 //Import der Middleware für Students
@@ -114,18 +110,22 @@ import CloseIconSvg from 'vue-beautiful-chat/src/assets/close.svg'
 
 export default {
     name: "GroupAnalysis",
+    components: {
+		VideoPlayer
+    },
     //komponenteigener Datenstore
     data() {
         return {
             task: {},
             error: '',
             iteration: 1,
-            player: null,
+            videoPlayer: null,
             student: null,
             group: null,
             iteration: 1,
             annotations: [],
             oldAnnotations: [],
+            //Felder für Markierungstabelle
             fieldsOld: [
             {
                 key: 'annotationOf',
@@ -214,11 +214,47 @@ export default {
                 }
             }, // specifies the color scheme for the component
             alwaysScrollToBottom: false, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
-            messageStyling: true // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
+            messageStyling: true, // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
+            
+            //Optionen für video.js VideoPlayer
+            videoOptions: {
+                autoplay: false,
+                controls: true,
+                width: "640",
+                controlBar: {
+                    //kein Vollbild-Button
+                    fullscreenToggle: false
+                },
+                sources: [
+                    {
+                        src: "/theresienstadt.mp4",
+                        type: "video/mp4"
+                    }
+                ]
+		    }
         }
     },
     mounted() {
-        this.player = this.$refs.player.player;
+        this.videoPlayer = this.$refs.videoPlayer.player;
+        //Initialisierung von vuejs-markers Plugin
+        this.videoPlayer.markers({
+            markerStyle: {
+                //Festlegung des Stils der Markierungen
+                'width':'3px',
+                'height': '15px',
+                'border-radius': '0%',
+                'background-color': 'red'
+            },
+            markerTip:{
+                display: true,
+                text: function(marker) {
+                    //Festlegen, wie Popup angezeigt wird, wenn man über die Markierung fährt;  geändert von Break + Zeitpunkt auf nur Zeitpunkt
+                    return marker.text;
+                }
+            },
+            //Initialisierung des Arrays für die Marker; befüllt über markers.add Funktion
+            markers: []
+        });
     },
     //Vuex Store
     computed: {
@@ -274,18 +310,24 @@ export default {
         //neue Markierung hinzufügen; neues Annotation Objekt anlegen und über Mutation CREATE NEW ANNOTATION zu Store hinzufügen
         addAnnotation () {
             //Wiedergabe pausieren
-            this.player.pause();
+            this.videoPlayer.pause();
             //neues Markierungsobjekt anlegen
             const newAnnotation = {
                 session: this.sessionId,
                 student: this.group[0].id,
                 annotationText: null,
                 //auf volle Sekunden runden
-                annotationStartTime: Math.round(this.player.currentTime),
-                annotationEndTime: Math.round(this.player.currentTime),
+                annotationStartTime: Math.round(this.videoPlayer.currentTime()),
+                annotationEndTime: Math.round(this.videoPlayer.currentTime()),
                 taskId: this.task.id
             }
             this.annotations.push(newAnnotation);
+            //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
+            this.videoPlayer.markers.add([{
+                time: Math.round(this.videoPlayer.currentTime()),
+                text: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime())),
+                overlayText: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime()))
+            }]);
         },
         //Text der Markierung ändern
         changeAnnotationText(text, annotationId) {
@@ -293,11 +335,13 @@ export default {
         },
         //zu übergebener Zeit im Videoplayer springen
         jumpToAnnotationTime(timeToJump) {
-            this.player.currentTime = timeToJump;
+            this.videoPlayer.currentTime(timeToJump);
         },
         //bestehende Markierung löschen
         removeAnnotation (annotationId) {
             this.annotations.splice(annotationId, 1);
+            //Marker entfernen
+            this.videoPlayer.markers.remove([annotationId]);
         },
 
         async getStudentName(studentIdToLookFor) {
