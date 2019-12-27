@@ -47,13 +47,17 @@
                         <template v-slot:cell(annotationOf)="data">
                             {{getAnnotationSource(oldAnnotations[data.index].student)}}
                         </template>
-                        <!-- Anzeige der Zeitpunkte im Format (hh:)mm:ss --> 
+                        <!-- Anzeige der Startzeit im Format (hh:)mm:ss -->
                         <template v-slot:cell(annotationStartTime)="data">
+                            {{showTimeInMMSS(data.value)}}
+                        </template>
+                        <!-- Anzeige der Endzeit im Format (hh:)mm:ss -->
+                        <template v-slot:cell(annotationEndTime)="data">
                             {{showTimeInMMSS(data.value)}}
                         </template>
                         <!-- Buttons für Aktionen -->
                         <template v-slot:cell(actions)="data">
-                            <button v-b-tooltip.hover title="Springe zur Stelle im Video" style="font-size:large;" class="btn typcn typcn-media-play" @click="jumpToAnnotationTime(oldAnnotations[data.index].annotationStartTime)"></button>
+                            <button v-b-tooltip.hover title="Spiele markierte Passage ab" style="font-size:large;" class="btn btn-sm typcn typcn-media-play" @click="jumpToAnnotationTime(oldAnnotations[data.index].annotationStartTime, oldAnnotations[data.index].annotationEndTime)"></button>
                         </template>
                     </b-table>
                 </div>
@@ -61,8 +65,12 @@
                 <div class="row">
                     <!-- Zeige die neuen Markierungen in einer Tabelle an; so viele Markierungen wie es Einträge im Array gibt -->
                     <b-table class="col-md-12" bordered small striped hover :items="annotations" :fields="fieldsNew" responsive="sm">
-                        <!-- Anzeige der Zeitpunkte im Format (hh:)mm:ss --> 
+                        <!-- Anzeige der Startzeit im Format (hh:)mm:ss --> 
                         <template v-slot:cell(annotationStartTime)="data">
+                            {{showTimeInMMSS(data.value)}}
+                        </template>
+                        <!-- Anzeige der Endzeit im Format (hh:)mm:ss -->
+                        <template v-slot:cell(annotationEndTime)="data">
                             {{showTimeInMMSS(data.value)}}
                         </template>
                         <!-- AnnotationText als Input Feld -->
@@ -71,13 +79,14 @@
                         </template>
                         <!-- Buttons für Aktionen -->
                         <template v-slot:cell(actions)="data">
-                            <button v-b-tooltip.hover title="Springe zur Stelle im Video" style="font-size:large;" class="btn typcn typcn-media-play" @click="jumpToAnnotationTime(annotations[data.index].annotationStartTime)"></button><button v-b-tooltip.hover title="Lösche Markierung" style="font-size:large;" class="btn typcn typcn-trash" @click="removeAnnotation(data.index)"></button>
+                            <button v-b-tooltip.hover title="Spiele markierte Passage ab" style="font-size:large;" class="btn btn-sm typcn typcn-media-play" @click="jumpToAnnotationTime(annotations[data.index].annotationStartTime, annotations[data.index].annotationEndTime)"></button><button v-b-tooltip.hover title="Lösche Markierung" style="font-size:large;" class="btn btn-sm typcn typcn-trash" @click="removeAnnotation(data.index)"></button>
                         </template>
                     </b-table>
                 </div>
-                <button class="btn btn-success" @click="addAnnotation">Markieren</button>
+                <button @click="startAnnotation" class="btn btn-success" v-if="isAnnotationRunning!==true">Starte Markierung</button>
+                <button @click="stopAnnotation" class="btn btn-info" v-if="isAnnotationRunning===true">Stoppe Markierung</button>            
             </div>
-            </div>
+        </div>
         <hr>
         <button class="btn btn-primary" @click="jumpToNextTaskOrComplete">Absenden</button>
     </div>
@@ -123,6 +132,8 @@ export default {
             student: null,
             group: null,
             iteration: 1,
+            latestAnnotationIndex: null,
+            isAnnotationRunning: false,
             annotations: [],
             oldAnnotations: [],
             //Felder für Markierungstabelle
@@ -133,7 +144,11 @@ export default {
             },
             {
                 key: 'annotationStartTime',
-                label: 'Zeitpunkt'
+                label: 'Startzeit'
+            },
+            {
+                key: 'annotationEndTime',
+                label: 'Endzeit'
             },
             {
                 key: "annotationText",
@@ -148,6 +163,14 @@ export default {
                 {
                     key: 'annotationStartTime',
                     label: 'Zeitpunkt'
+                },
+                {
+                    key: 'annotationStartTime',
+                    label: 'Startzeit'
+                },
+                {
+                    key: 'annotationEndTime',
+                    label: 'Endzeit'
                 },
                 {
                     key: "annotationText",
@@ -308,53 +331,107 @@ export default {
             }
         },
         //neue Markierung hinzufügen; neues Annotation Objekt anlegen und über Mutation CREATE NEW ANNOTATION zu Store hinzufügen
-        addAnnotation () {
-            //Wiedergabe pausieren
-            this.videoPlayer.pause();
-            //neues Markierungsobjekt anlegen
-            const newAnnotation = {
-                session: this.sessionId,
-                student: this.group[0].id,
-                annotationText: null,
-                //auf volle Sekunden runden
-                annotationStartTime: Math.round(this.videoPlayer.currentTime()),
-                annotationEndTime: Math.round(this.videoPlayer.currentTime()),
-                taskId: this.task.id
-            }
-            //an der richtigen Stelle im Array einfügen mit Splice Methode
-            //dafür ermitteln, wo sich sich das Element einordnet
-            //wenn Array schon mindestens ein Element enthält
-            if (this.annotations.length > 0) {
-                for (var i = 0; i < this.annotations.length; i++) {
-                    //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
-                    if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
-                        this.annotations.splice(i, 0, newAnnotation);
-                        break;
-                    }
-                    //wenn letztes Element erreicht, dann einfach am Ende einfügen
-                    if (i === this.annotations.length-1) {
-                        this.annotations.push(newAnnotation);
-                        break;
-                    }
+        //Start einer neuen Markierung; neues Markierungs-Objekt anlegen; an der richtigen Position im annotations Array einfügen; neuen Start Marker in Video Timeline einfügen; laufendes Beschreiben der Endtime, bis Stop gedrückt wird
+        startAnnotation() {
+            //nur durchführen, wenn Video auch gerade läuft
+            if (this.videoPlayer.paused() !== true) {
+                this.error = '';
+                //neues Markierungsobjekt anlegen
+                const newAnnotation = {
+                    session: this.sessionId,
+                    student: this.group[0].id,
+                    annotationText: null,
+                    //auf volle Sekunden runden
+                    annotationStartTime: Math.round(this.videoPlayer.currentTime()),
+                    annotationEndTime: 0,
+                    taskId: this.task.id
                 }
-            //wenn Array bisher leer, dann einfach am Ende einfügen
+                //an der richtigen Stelle im Array einfügen mit Splice Methode
+                //dafür ermitteln, wo sich sich das Element einordnet
+                //wenn Array schon mindestens ein Element enthält
+                if (this.annotations.length > 0) {
+                    for (var i = 0; i < this.annotations.length; i++) {
+                        //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
+                        if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
+                            this.annotations.splice(i, 0, newAnnotation);
+                            this.latestAnnotationIndex = i + 1;
+                            break;
+                        }
+                        //wenn letztes Element erreicht, dann einfach am Ende einfügen
+                        if (i === this.annotations.length-1) {
+                            this.annotations.push(newAnnotation);
+                            this.latestAnnotationIndex = i + 1;
+                            break;
+                        }
+                    }
+                //wenn Array bisher leer, dann einfach am Ende einfügen
+                } else {
+                    this.annotations.push(newAnnotation);
+                    this.latestAnnotationIndex = 0;
+                }
+                //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
+                this.videoPlayer.markers.add([{
+                    time: Math.round(this.videoPlayer.currentTime()),
+                    text: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime())),
+                    overlayText: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime()))
+                }]);
+                var vm = this;
+                //Statusindikator umsetzen, dass gerade Markierung läuft
+                this.isAnnotationRunning = true;
+                //Listener hinzufügen für timeupdate Event des Videoplayers, dass AnnotationEndTime aktualisiert wird
+                this.videoPlayer.on('timeupdate', function(e) {
+                    //aktuelle Laufzeit des Players in annotationEndTime des Objekts des zuletzt hinzugefügten Indizes schreiben
+                    vm.annotations[vm.latestAnnotationIndex].annotationEndTime = Math.round(vm.videoPlayer.currentTime());
+                    return;
+                }); 
             } else {
-                this.annotations.push(newAnnotation);
+                this.error = 'Bitte starten Sie das Video, bevor Sie eine Markierung beginnen';
             }
-            //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
-            this.videoPlayer.markers.add([{
-                time: Math.round(this.videoPlayer.currentTime()),
-                text: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime())),
-                overlayText: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime()))
-            }]);
+        },
+        //Stop einer Markierung; Event Listener wird beendet; aktuelle Endzeit bleibt in AnnotationEndTime stehen
+        stopAnnotation() {
+            if (this.videoPlayer.currentTime() >= this.annotations[this.latestAnnotationIndex].annotationStartTime) {
+                this.error = '';
+                //Player pausieren
+                this.videoPlayer.pause();
+                //Listener stoppen
+                this.videoPlayer.off("timeupdate");
+                //Statusindikator zurücksetzen
+                this.isAnnotationRunning = false;
+            } else {
+                this.error = 'Bitte stellen Sie sicher, dass der Endzeitpunkt Ihrer Markierung hinter dem Startzeitpunkt liegt';
+            }
         },
         //Text der Markierung ändern
         changeAnnotationText(text, annotationId) {
             this.annotations[annotationId].annotationText = text;
         },
-        //zu übergebener Zeit im Videoplayer springen
-        jumpToAnnotationTime(timeToJump) {
+        //zu übergebener Sektion im Videoplayer springen und Video wieder stoppen, wenn Player an Ende der Markierung ankommt
+        jumpToAnnotationTime(timeToJump, endTime) {
             this.videoPlayer.currentTime(timeToJump);
+            this.videoPlayer.play();
+            var vm = this;
+            this.videoPlayer.on('timeupdate', function(e) {
+                if (vm.checkIfEndTimeIsReached(timeToJump, endTime)) {
+                    vm.videoPlayer.pause();
+                    vm.videoPlayer.off('timeupdate');
+                }
+            });
+        },
+        //prüft, ob Sektion vollständig abgespielt wurde
+        checkIfEndTimeIsReached(timeToStart, timeToEnd) {
+            //wenn Spielzeit Endzeit der Markierung überschritten hat -> beenden
+            if (this.videoPlayer.currentTime() >= timeToEnd) {
+                return true;
+            } else {
+                //wenn vor den Start der Markierung gespult wurde -> beenden
+                if (this.videoPlayer.currentTime() < timeToStart) {
+                return true;
+                } else {
+                    //alle anderen Fälle -> weiterlaufen lassen
+                    return false;
+                }
+            }
         },
         //bestehende Markierung löschen
         removeAnnotation (annotationId) {
