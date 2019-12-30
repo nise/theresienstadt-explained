@@ -1,6 +1,6 @@
-//Operation zum Bilden der Dyaden für die Analyse
-//zufällige Zuweisung eines Partners
+//Operation zum Bilden der Dyaden für die Analyse; erstes Kriterium -> Übereinstimmungen beim Markieren; zweites Kriterium -> Unterschiede bei der Länge der Begründungen
 //Schreiben des Partners in die Datenbank als Attribut partner
+//Schreiben der Gruppe in die Datenbank mit den Studenten als Attribute
 
 //Require für Express Framework
 const express = require('express');
@@ -8,62 +8,135 @@ const express = require('express');
 //Import von Axios, weil auf andere Backend Teile zugegriffen wird
 const axios = require('axios');
 
-//URL der API festlegen, auf die zugegriffen wird = students
+//Import des Moduls IntervalTree zur Feststellung von Übereinstimmungen bei Markierungen
+const IntervalTree =  require('@flatten-js/interval-tree').default;
+
+//URL der API festlegen, auf die zugegriffen wird = students, sessions, groups, annotations
 const urlstudents = 'http://localhost:5000/api/students';
 const urlsessions = 'http://localhost:5000/api/sessions';
-const urlgroups = 'http://localhost:5000/api/groups'
+const urlgroups = 'http://localhost:5000/api/groups';
+const urlannotations = 'http://localhost:5000/api/annotations';
+const urltasks = 'http://localhost:5000/api/tasks';
+
+students = new Array;
 
 //Router für GET/POST/DELETE Anfragen initialisieren
 const router = express.Router();
 
-//Array StudentIDs und Students initialisieren
-studentIds = new Array;
-students = new Array;
-
 //GET Requests behandeln; Parameter = aktuelle Session in URL
 router.get('/:session', async (req, res) => {
+
+    let pairs = new Array;
+
     //Session in Konstante speichern
     const session = req.params.session;
+    //Aufgaben für die Session aus dem Backend holen
+    let tasks = await getTasksForSession(session);
     try {
     //alle Schüler, die in dieser Session auf die Gruppenanalyse warten, aus Datenbank lesen; Speichern in Array students; 
-    students = await getWaitingStudents(session);
-    } catch (err) {
-        return console.error(err);
-    }
-    //schreibe alle Student IDs in ein Array, um nach Zufall zu mischen
-    students.forEach(student => {
-        studentIds.push(student.id);
-    });
-    //Bestimme für jeden Studenten einen zufälligen Partner mit Funktion getRandomPartner
-    students.forEach(student => {
-        //Wenn Student noch keinen Partner hat, dann
-        if (student.partnerId === undefined) {
-        //überschreibe Student mit Objekt inkl. hinzugefügtem Attribut partnerId 
-        student = getRandomPartner(student);
-        }
-    });
+    const students = await getWaitingStudents(session);
 
-    //schreibe zugewiesene Partner in Datenbank
-    students.forEach(student => {
-        writePartnerToDatabase(student.id, student.partnerId);
-    });
-    //erstelle Gruppe mit den zwei Studenten als Attribute und speichere GruppenId in die jeweiligen Studenten als Attribut
-    for (var i = 0; i<students.length; i++) {
-        //nur ausführen, wenn Gruppe nicht bereits in Student geschrieben wurde -> wird nur einmal pro Gruppe durchgeführt
-        if (students[i].group === undefined) {
-            try {
-            //erstelle Gruppe und setze die zwei Studenten als Attribute
-            await createNewGroup(students[i].id, students[i].partnerId);
-            } catch (err) {
-                return console.error(err);
-            }
+    //erstelle Array mit allen möglichen Paarungen von Schülern
+    for (let i = students.length - 1; i >= 0; i--) {
+        for (let j = i - 1; j >= 0; j--) {
+            let newPair = {
+                student1Id: students[i].id,
+                student2Id: students[j].id,
+                score: 0
+            };
+            pairs.push(newPair);
         }
     }
+
+    for (let i=0; i<tasks.length;i++) {
+        //alle Markierungen der Session und des Tasks in Annotations Array speichern
+            const annotations = await getAnnotationsForSessionAndTask(session, tasks[i].id);
+            //neuen IntervalTree anlegen zur Auswertung Markierungen
+            let annotationTree = new IntervalTree();
+            //Intervalle mit Referenz auf jeweiligen Studenten in IntervalTree schreiben; jeweils + 5 Sekunden, um Ungenauigkeiten bei der Markierung auszugleichen
+            for (let i=0; i < annotations.length; i++) {
+                let newAnnotation = {
+                    interval: [annotations[i].annotationStartTime - 5, annotations[i].annotationEndTime + 5],
+                    studentId: annotations[i].student
+                }
+                annotationTree.insert(newAnnotation.interval, newAnnotation.studentId);
+            }
+            //durchlaufe jede mögliche Paarung und prüfe, ob Überschneidungen vorhanden sind; wenn Überschneidungen vorhanden sind, dann reduziere Score pro Überschneidung um 100
+            pairs.forEach(pair => {
+                //ermittle die Markierungen von Student 1
+                let annotationsStudent1 = annotations.filter(annotation => annotation.student === pair.student1Id);
+                //ermittle für jede Markierung von Student 1 die Übereinstimmungen im IntervalTree
+                annotationsStudent1.forEach(annotation => {
+                    let positives = annotationTree.search([annotation.annotationStartTime, annotation.annotationEndTime]);
+                    //wenn Übereinstimmungen gefunden
+                    if (positives.length > 0) {
+                        //dann prüfe, ob es sich bei der Übereinstimmung um eine Übereinstimmung mit Student 2 handelt
+                        positives.forEach(positive => {
+                            //wenn Übereinstimmung mit Student 2, dann reduziere Score um 100
+                            if (positive === pair.student2Id) {
+                                pair.score = pair.score - 100;
+                            }
+                        })
+                    }
+                });
+            })
+    } 
+    const annotationsForSession = await getAnnotationsForSession(session);
+    //ermittle die Länge des Begründungstextes über alle Aufgaben hinweg; je größer der Unterschied der Länge des Textes, desto höhere Punktzahl plus
+    pairs.forEach(pair => {
+        //kombiniere Begründungstext aller Aufgaben von Schüler 1 in Variable
+        let annotationsStudent1 = annotationsForSession.filter(annotation => annotation.student === pair.student1Id);
+        //kombiniere Begründungstext aller Aufgaben von Schüler 2 in Variable
+        let annotationsStudent2 = annotationsForSession.filter(annotation => annotation.student === pair.student2Id);
+        //Länge der Markierungen ermitteln
+        let lengthAnnotationsStudent1 = 0;
+        let lengthAnnotationsStudent2 = 0;
+        //addiere für jede Markierung die Länge des Texts
+        annotationsStudent1.forEach(annotation => {
+            lengthAnnotationsStudent1 = lengthAnnotationsStudent1 + annotation.annotationText.length;
+        });
+        annotationsStudent2.forEach(annotation => {
+            lengthAnnotationsStudent2 = lengthAnnotationsStudent2 + annotation.annotationText.length;
+        });
+        //speichere Betrag der Differenz in Variable
+        let differenceLength = Math.abs(lengthAnnotationsStudent1 - lengthAnnotationsStudent2);
+        //prüfe die Differenz -> pro 10 Zeichen Unterschied gibt es 5 Punkte plus
+        let fivePointsPlus = differenceLength/10;
+        pair.score = pair.score + (fivePointsPlus * 5);
+    });
+    //sortiere Pairs absteigend nach Score; Nutzung einer benutzerdefinierten compare Funktion für Vergleich auf Basis Attribut Score
+    pairs.sort(compare);
+    let numberOfIterations = (students.length/2);
+    //Durchlaufe pairs Array und schreibe die Gruppen und Partner; nach jedem Schreiben: entferne alle Paare mit den Schülern, die in der gerade zugewiesenen Gruppe waren, da Schüler nicht gleichzeitig in zwei Gruppen sein können
+    for (let i = 0; i < numberOfIterations; i++) {
+    //halb so viele Durchläufe wie es Paare gibt
+        const student1IdToDo = pairs[0].student1Id;
+        const student2IdToDo = pairs[0].student2Id;
+        //schreibe Partner in Student Datensätze
+        writePartnerToDatabase(students, pairs[0].student1Id, pairs[0].student2Id);
+        writePartnerToDatabase(students, pairs[0].student2Id, pairs[0].student1Id);
+        //erstelle Gruppe mit den zwei Studenten als Attributen und speichere Gruppen-ID in die jeweiligen Studenten als Attribut
+        await createNewGroup(pairs[0].student1Id, pairs[0].student2Id);
+        //entferne alle Paare, die einen der beiden Studenten als Mitglied hatten, aus dem Array
+        let pairsToDelete = new Array;
+        pairs.forEach(function (pair, index) {
+            if (pair.student1Id === student1IdToDo || pair.student1Id === student2IdToDo || pair.student2Id === student1IdToDo || pair.student2Id === student2IdToDo) {
+                pairsToDelete.push(index);
+            }
+        });
+        for (j = pairsToDelete.length-1; j >= 0; j--) {
+            pairs.splice(pairsToDelete[j], 1);
+        }
+    }
+
     //setze Session Status auf groupAnalysis, damit Schüler beginnen können
     setSessionStatus(session, 'Gruppenanalyse')
 
     //Erfolgsmeldung senden
     res.status(200).send('Die Dyaden wurden erfolgreich gebildet');
+    } catch (err) {
+        return console.error(err);
+    }
 });
 
 //Schüler mit Status "waitingForGroupAnalysis" aus Datenbank lesen; Zugriff auf students API über axios
@@ -84,42 +157,6 @@ async function getWaitingStudents(sessionToGet) {
     }
 }
 
-function getRandomPartner(selectedStudent) {
-    //Der Schüler darf nicht sich selbst zugeteilt werden; Bestimmung der ID, die nicht zugeteilt werden darf
-    const noGoId = selectedStudent.id;
-    const noGoIndex = studentIds.indexOf(noGoId);
-    //Bestimme Anzahl der Studenten im Array über array length
-    const numberStudents = studentIds.length-1;
-    //Wähle zufälligen Studenten im Array durch Würfeln einer Zufallszahl im Bereich des gültigen Array Index
-    //var random = Math.floor(Math.random() * (max - min + 1)) + min;
-    var randomNumber = Math.floor(Math.random() * (numberStudents - 0 + 1)) + 0;
-    //falls Zufallszahl eine Selbstzuteilung bedeuten würde, verringere Index um 1, wenn nicht bereits 0, dann +1
-    if (randomNumber===noGoIndex) {
-        if (randomNumber===0) {
-            randomNumber++;
-        } else {
-            randomNumber--;
-        }
-    }
-    //ID des Partners in partnerId Attribut schreiben
-    selectedStudent.partnerId = studentIds[randomNumber];
-    //Gerade zugewiesenen Schüler aus Array entfernen, um Neuzuweisung zu verhindern
-    studentIds.splice(randomNumber, 1);
-    //aktuellen Schüler aus Array entfernen, um Neuzuweisung zu verhindern
-    studentIds.splice(noGoIndex, 1)
-    //Partner für entgegengesetzten Schüler über Funktion setzen
-    setPartner(selectedStudent.partnerId, noGoId);
-    return selectedStudent;
-}
-
-//Partner partnerId für Schüler mit StudentId setzen
-function setPartner(studentId, partnerId) {
-    students.forEach(student => {
-        if (student.id === studentId) {
-            student.partnerId = partnerId;
-        }
-    });
-}
 
 //Änderung des Session Status
 async function setSessionStatus(sessionId, statusName) {
@@ -141,7 +178,7 @@ async function setSessionStatus(sessionId, statusName) {
 }
 
 //für Student mit studentId Partner mit partnerId über API in die Datenbank schreiben
-async function writePartnerToDatabase(studentId, partnerId) {
+async function writePartnerToDatabase(students, studentId, partnerId) {
     //Partner-Namen ermitteln
     var partnerObject = students.find(student => student.id === partnerId);
     var partnerName = partnerObject.firstName + ' ' + partnerObject.lastName;
@@ -194,5 +231,74 @@ async function writePartnerToDatabase(studentId, partnerId) {
         return console.error(err);
     }
 }
+async function getAnnotationsForSessionAndTask(sessionToGet, taskToGet) {
+    try {
+        const result = await axios.get(urlannotations + '/' + sessionToGet + '/' + taskToGet);
+        const data = result.data;
+        const annotationsToSend = data.map(annotation => ({
+            session: annotation.session,
+            student: annotation.student,
+            annotationText: annotation.annotationText,
+            annotationStartTime: annotation.annotationStartTime,
+            annotationEndTime: annotation.annotationEndTime,
+            taskId: annotation.taskId
+        }))
+        return annotationsToSend;
+        } catch (err) {
+        return console.error(err);
+        }
+}
+
+async function getAnnotationsForSession(sessionToGet) {
+    try {
+        const result = await axios.get(urlannotations + '/' + sessionToGet);
+        const data = result.data;
+        const annotationsToSend = data.map(annotation => ({
+            session: annotation.session,
+            student: annotation.student,
+            annotationText: annotation.annotationText,
+            annotationStartTime: annotation.annotationStartTime,
+            annotationEndTime: annotation.annotationEndTime,
+            taskId: annotation.taskId
+        }))
+        return annotationsToSend;
+    } catch (err) {
+        return console.error(err);
+    }
+}
+
+async function getTasksForSession(sessionToGet) {
+    try {
+        const result = await axios.get(urltasks + '/' + sessionToGet);
+        const data = result.data;
+        const tasksToSend = data.map(task => ({
+            id: task._id,
+            session: task.session,
+            text: task.text,
+            videoPath: task.videoPath,
+            videoStartTime: task.videoStartTime,
+            videoEndTime: task.videoEndTime,
+            taskNumber: task.taskNumber
+        }))
+        return tasksToSend;
+        } catch (err) {
+        return console.error(err);
+        }
+}
+//vergleicht Paar-Objekte anhand ihres Scores; wenn ScoreA>ScoreB, dann 1; sonst -1
+function compare(a, b) {
+    //Auslesen der Scores
+    const scoreA = a.score;
+    const scoreB = b.score;
+    
+    let comparison = 0;
+    if (scoreA > scoreB) {
+      comparison = 1;
+    } else if (scoreA < scoreB) {
+      comparison = -1;
+    }
+    //absteigende Sortierung -> *-1
+    return comparison * -1;
+  }
 
 module.exports = router;

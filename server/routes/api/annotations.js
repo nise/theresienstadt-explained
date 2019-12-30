@@ -19,7 +19,31 @@ const annotationSchema = new mongoose.Schema({
 //Annotation Klasse initialisieren
 const annotation = mongoose.model('annotation', annotationSchema);
 
-//GET Requests behandeln
+//GET Requests auf Session behandeln 
+router.get('/:session', async (req, res) => {
+    try {
+        //Markierungen aus Datenbank über Funktion abfragen; session ID, Student ID und Task ID als Filter
+        const annotationsFromDatabase = await loadAnnotationsFromDatabaseWithSession(req.params.session);
+        //Ergebnis zurücksenden
+        res.send(annotationsFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
+});
+
+//GET Requests auf Session und Task behandeln 
+router.get('/:session/:task', async (req, res) => {
+    try {
+        //Markierungen aus Datenbank über Funktion abfragen; session ID, Student ID und Task ID als Filter
+        const annotationsFromDatabase = await loadAnnotationsFromDatabaseWithSessionAndTask(req.params.session, req.params.task);
+        //Ergebnis zurücksenden
+        res.send(annotationsFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
+});
+
+//GET Requests auf Student und Aufgabe behandeln
 router.get('/:session/:student/:taskId', async (req, res) => {
     try {
         //Markierungen aus Datenbank über Funktion abfragen; session ID, Student ID und Task ID als Filter
@@ -92,6 +116,32 @@ async function loadAnnotationsFromDatabase(sessionFilter, studentFilter, taskIdF
         await connectDatabase();
         //alle Markierungen aus der Datenbank lesen mit der richtigen Session und vom richtigen Studenten
         var result = annotation.find({session: sessionFilter, student: studentFilter, taskId: taskIdFilter});
+        return result;
+    } catch (err) {
+        return console.error(err);
+    }
+}
+
+//laden der Markierungen aus der Datenbank; Filter sessionFilter (sessionId) als Übergabeparameter
+async function loadAnnotationsFromDatabaseWithSession(sessionFilter) {
+    try {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //alle Markierungen aus der Datenbank lesen mit der richtigen Session und vom richtigen Studenten
+        var result = annotation.find({session: sessionFilter});
+        return result;
+    } catch (err) {
+        return console.error(err);
+    }
+}
+
+//laden der Markierungen aus der Datenbank; Filter sessionFilter (sessionId) als Übergabeparameter
+async function loadAnnotationsFromDatabaseWithSessionAndTask(sessionFilter, taskFilter) {
+    try {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        //alle Markierungen aus der Datenbank lesen mit der richtigen Session und vom richtigen Studenten
+        var result = annotation.find({session: sessionFilter, taskId: taskFilter});
         return result;
     } catch (err) {
         return console.error(err);

@@ -19,7 +19,19 @@ const taskSchema = new mongoose.Schema({
 //Task Klasse initialisieren
 const task = mongoose.model('task', taskSchema);
 
-//GET Requests behandeln
+//GET Requests mit Session behandeln
+router.get('/:session', async (req, res) => {
+    try {
+    //Aufgaben aus Datenbank über Funktion abfragen; session ist pro Instanz der Videoanalyse eindeutig und wird automatisch generiert nach Start durch Lehrenden
+    const tasksFromDatabase = await loadTasksFromDatabaseWithSession(req.params.session);
+    //Ergebnis zurücksenden
+    res.send(tasksFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
+});
+
+//GET Requests mit Session und TaskNumber behandeln
 router.get('/:session/:taskNumber', async (req, res) => {
     try {
     //Aufgaben aus Datenbank über Funktion abfragen; session ist pro Instanz der Videoanalyse eindeutig und wird automatisch generiert nach Start durch Lehrenden
@@ -97,6 +109,18 @@ async function loadTasksFromDatabase(sessionFilter, taskNumberFilter) {
     //alle Aufgaben aus der Datenbank lesen mit der richtigen Session
     var result = task.find({session: sessionFilter, taskNumber: taskNumberFilter});
     return result;
+}
+
+async function loadTasksFromDatabaseWithSession(sessionFilter) {
+    try {
+        //Datenbank und Collection verbinden
+        await connectDatabase();
+        } catch (err) {
+            return console.error(err);
+        }
+        //alle Aufgaben aus der Datenbank lesen mit der richtigen Session
+        var result = task.find({session: sessionFilter});
+        return result;
 }
 
 //speichern einer neuen Aufgabe in die Datenbank; Übergabeparameter ist task Objekt
