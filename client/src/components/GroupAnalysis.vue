@@ -466,7 +466,9 @@ export default {
                             AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
                         });
                         //annotations Array leeren, damit für neue Aufgabe bereit
-                            this.annotations = [];
+                        this.annotations = [];
+                        //Marker auf Timeline löschen
+                        this.videoPlayer.markers.removeAll();
                         //Zähler auf nächste Aufgabe setzen
                         this.iteration++;
                         //nächste Aufgabe laden
@@ -477,10 +479,10 @@ export default {
                             AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
                         });
                         //in Students abspeichern, dass sie mit der Gruppenanalyse fertig sind
-                        StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
-                        StudentService.setStudentStatus(this.partnerId, 'fertig_mit_Gruppenanalyse');
+                        await StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
+                        await StudentService.setStudentStatus(this.partnerId, 'fertig_mit_Gruppenanalyse');
                         //in group abspeichern, dass sie mit der Gruppenanalyse fertig ist
-                        GroupService.setGroupStatus(this.group[0].id, 'fertig_mit_Gruppenanalyse');
+                        await GroupService.setGroupStatus(this.group[0].id, 'fertig_mit_Gruppenanalyse');
                         //zur Seite für Abschluss springen
                         this.$router.push('/debriefing');
                     }

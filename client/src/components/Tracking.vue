@@ -158,12 +158,12 @@ export default {
             }
         },
         //prüft, ob gerade Teilnehmerzahl; wenn ja, dann wird Session gestartet über Umsetzen des Status
-        startSession() {
+        async startSession() {
             //wenn gerade Teilnehmerzahl
             if (this.students.length % 2 === 0 && this.students.length !== 0) {
                 this.error = '';
                 //rufe Middleware auf und setze Status der Session mit aktueller Session ID auf "Individualanalyse"
-                SessionService.setSessionStatus(this.sessionId, 'Individualanalyse');
+                await SessionService.setSessionStatus(this.sessionId, 'Individualanalyse');
                 this.startSessionSuccess = true;
             } else { //sonst: Fehler zurückgeben
                 this.error = 'Die Anzahl der Teilnehmer ist nicht gerade. Bitte stellen Sie sicher, dass eine gerade Anzahl an Teilnehmern angemeldet ist.';

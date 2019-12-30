@@ -293,7 +293,9 @@ export default {
                             this.writeAnnotationsToDatabase(element);
                         });
                         //annotations Array leeren, damit für neue Aufgabe bereit
-                            this.annotations = [];
+                        this.annotations = [];
+                        //Marker auf Timeline löschen
+                        this.videoPlayer.markers.removeAll();
                         //Zähler auf nächste Aufgabe setzen
                         this.iteration++;
                         //nächste Aufgabe laden
