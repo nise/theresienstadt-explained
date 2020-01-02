@@ -463,7 +463,7 @@ export default {
                     if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
                         //speichere Markierungen in die Datenbank
                         this.annotations.forEach(element => {
-                            AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
+                            AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId, "Gruppenanalyse");
                         });
                         //annotations Array leeren, damit für neue Aufgabe bereit
                         this.annotations = [];
@@ -476,7 +476,7 @@ export default {
                     } else {
                         //speichere Markierungen in die Datenbank
                         this.annotations.forEach(element => {
-                            AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId);
+                            AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId, "Gruppenanalyse");
                         });
                         //in Students abspeichern, dass sie mit der Gruppenanalyse fertig sind
                         await StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
@@ -521,8 +521,8 @@ export default {
             if (this.group) {
                 //wenn Gruppenstatus auf Debriefing
                 if (this.group[0].status === "fertig_mit_Gruppenanalyse") {
-                    //leite auf Debriefing Seite weiter
-                    this.$router.push('/debriefing');
+                    //leite auf Abschluss Seite weiter
+                    this.$router.push('/analysisend');
                 }
             }
         },

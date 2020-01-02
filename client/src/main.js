@@ -10,6 +10,11 @@ import GroupAnalysis from './components/GroupAnalysis.vue';
 import Debriefing from './components/Debriefing.vue';
 import CreateTasks from './components/CreateTasks.vue';
 import Tracking from './components/Tracking.vue';
+import AnalysisEnd from './components/AnalysisEnd.vue';
+//Import für Chart-Package "highcharts-vue"
+import HighchartsVue from 'highcharts-vue'
+import Highcharts from 'highcharts'
+import heatmapInit from 'highcharts/modules/heatmap';
 //Import für Chat "vue-beautiful-chat"
 import Chat from 'vue-beautiful-chat';
 //Import für Vue-Clipboard
@@ -29,6 +34,10 @@ Vue.use(VueClipboard);
 //Einbindung von Boostrap-vue
 Vue.use(BootstrapVue);
 
+//Einbindung von Highcharts-vue
+Vue.use(HighchartsVue);
+
+heatmapInit(Highcharts);
 
 //Anlegen der Routen fürs Routing im Frontend
 const routes = [
@@ -39,7 +48,8 @@ const routes = [
   { path: '/groupanalysis', component: GroupAnalysis },
   { path: '/debriefing', component: Debriefing },
   { path: '/createtasks', component: CreateTasks },
-  { path: '/tracking', component: Tracking }
+  { path: '/tracking', component: Tracking },
+  { path: '/analysisend', component: AnalysisEnd }
 ];
 
 const router = new VueRouter({

@@ -25,7 +25,36 @@ class AnnotationService {
                         annotationText: annotation.annotationText,
                         annotationStartTime: annotation.annotationStartTime,
                         annotationEndTime: annotation.annotationEndTime,
-                        taskId: annotation.taskId
+                        taskId: annotation.taskId,
+                        phase: annotation.phase
+                    }))
+                );
+            } catch (err) {
+                reject (err);
+            }
+        });
+    }
+
+    static getAnnotationsForSession(sessionToGet) {
+        //Promise wegen async Functions
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen mit Parameter sessionToGet und studentToGet
+                const result = await axios.get(url + '/' + sessionToGet);
+                //Daten aus Rückgabe extrahieren
+                const data = result.data;
+                //Rückgabe = Objekt mit allen Annotation-Feldern als Attribute
+                resolve(
+                    data.map(annotation => ({
+                        id: annotation._id,
+                        session: annotation.session,
+                        student: annotation.student,
+                        annotationText: annotation.annotationText,
+                        annotationStartTime: annotation.annotationStartTime,
+                        annotationEndTime: annotation.annotationEndTime,
+                        taskId: annotation.taskId,
+                        phase: annotation.phase
                     }))
                 );
             } catch (err) {
@@ -34,7 +63,7 @@ class AnnotationService {
         });
     }
     //POST Aufrufe
-    static postAnnotations(sessionToPost, studentToPost, annotationTextToPost, annotationStartTimeToPost, annotationEndTimeToPost, taskIdToPost) {
+    static postAnnotations(sessionToPost, studentToPost, annotationTextToPost, annotationStartTimeToPost, annotationEndTimeToPost, taskIdToPost, phaseToPost) {
         //Promise wegen async Functions
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
@@ -46,7 +75,8 @@ class AnnotationService {
                     annotationText: annotationTextToPost,
                     annotationStartTime: annotationStartTimeToPost,
                     annotationEndTime: annotationEndTimeToPost,
-                    taskId: taskIdToPost
+                    taskId: taskIdToPost,
+                    phase: phaseToPost
                 });
                 //ID der neu erstellten Annotation zurückgeben
                 resolve(result.data);

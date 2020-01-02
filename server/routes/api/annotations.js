@@ -13,7 +13,8 @@ const annotationSchema = new mongoose.Schema({
     annotationText: String,
     annotationStartTime: Number,
     annotationEndTime: Number,
-    taskId: String
+    taskId: String,
+    phase: String
 });
 
 //Annotation Klasse initialisieren
@@ -64,7 +65,8 @@ router.post('/', async (req, res) => {
         annotationText: req.body.annotationText,
         annotationStartTime: req.body.annotationStartTime,
         annotationEndTime: req.body.annotationEndTime,
-        taskId: req.body.taskId
+        taskId: req.body.taskId,
+        phase: req.body.phase
     });
     try {
     //neue Annotation über Post Funktion in Datenbank einfügen und _id zurückgeben

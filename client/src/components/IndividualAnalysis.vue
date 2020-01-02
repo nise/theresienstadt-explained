@@ -353,7 +353,7 @@ export default {
         },
         async writeAnnotationsToDatabase(annotation) {
             try {
-                AnnotationService.postAnnotations(annotation.session, annotation.student, annotation.annotationText, annotation.annotationStartTime, annotation.annotationEndTime, annotation.taskId);
+                AnnotationService.postAnnotations(annotation.session, annotation.student, annotation.annotationText, annotation.annotationStartTime, annotation.annotationEndTime, annotation.taskId, "Individualanalyse");
             } catch (err) {
                 this.error = err.message;
             }
