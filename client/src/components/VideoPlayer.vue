@@ -1,6 +1,6 @@
 <template>
     <div>
-        <video ref="videoPlayer" class="video-js vjs-big-play-centered"></video>
+        <video ref="videoPlayer" class="video-js vjs-big-play-centered" ><track kind="chapters" src="/scenes.vtt" srclang="en" label="Kapitel" default></video>
     </div>
 </template>
 

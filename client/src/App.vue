@@ -34,4 +34,8 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+/* Breite des Kapitelfensters um 100% erhöhen -> Standard 10em ist zu klein */
+.vjs-menu-button-popup .vjs-menu {
+  width: 20em;
+}
 </style>
