@@ -7,13 +7,13 @@
     <h1>Schritt 1: Starten einer neuen Session</h1>
     <!-- Sprung zur Aufgabenpflege; wird durch v-if nur angezeigt, wenn bereits eine Session generiert wurde -->
     <div v-if="sessionId">
-      <label for="basic-url">Die Session wurde erfolgreich erstellt. Sie können nun über folgenden Knopf zur Aufgabenpflege (Schritt 2) springen:</label>
+      <p>Die Session wurde erfolgreich erstellt. Sie können nun über folgenden Knopf zur Aufgabenpflege (Schritt 2) springen:</p>
       <br>
       <button class="btn btn-primary" @click="jumpToCreateTasks">Zur Aufgabenpflege</button>
     </div>
     <div v-else>
       <!-- Session Name wird über Input eingegeben und über anschließenden Klick auf Button "Senden" wird neue Session angelegt-->
-      <label for="basic-url">Bitte geben Sie einen Session-Namen ein. Der Name ist frei wählbar und muss nicht eindeutig sein. Mit einem Klick auf Senden können Sie eine neue Session generieren.</label>
+      <p>Bitte geben Sie einen Session-Namen ein. Der Name ist frei wählbar und muss nicht eindeutig sein. Mit einem Klick auf Senden können Sie eine neue Session generieren.</p>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width: 100px;">Name</span>

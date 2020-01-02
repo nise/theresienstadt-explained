@@ -1,6 +1,48 @@
 <template>
   <div id="app">
+    <div class="nav-head">
+      <div class="routing" v-if="this.$route.path !== '/home' && this.$route.path !== '/'">
+      </div>
+    </div>
       <router-view></router-view>
+          <footer class="page-footer">
+      <div class="container text-center text-md-left">
+        <div hidden id="nav">
+          <router-link to="/pages/map">Karte</router-link>|
+          <router-link to="/pages/scenes">Szenen</router-link>|
+          <router-link to="/pages/persons">Personen</router-link>|
+          <router-link to="/pages/history">Entstehungsgeschichte</router-link>|
+        </div>
+        <div class="row">
+          <div class="col-md-8 mt-md-0 mt-8">
+            <img
+              class="footer-logo"
+              alt="Logo Theresienstadt Explained"
+              src="./assets/logo-black.png"
+            >
+          </div>
+          <div class="col-md-4 mb-md-0 mb-4">
+            <ul class="list-unstyled">
+              <li>
+                <a href="/about">Über Theresienstadt explained</a>
+              </li>
+              <li>
+                <a href="/imprint">Impressum</a>
+              </li>
+              <li hidden>
+                <a href="/privacy">Datenschutzerklärung</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright text-center">
+        © 2019 Copyright:
+        <a
+          href="https://jugendbegegnung.de/dresden/"
+        >Förderverein Jugendbegegnung in Theresienstadt/Terezin</a>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -32,10 +74,145 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 /* Breite des Kapitelfensters um 100% erhöhen -> Standard 10em ist zu klein */
 .vjs-menu-button-popup .vjs-menu {
   width: 20em;
 }
+
+/*Style für Footer*/
+footer {
+  background-color: #fff;
+  padding-top: 100px;
+}
+
+footer ul li a {
+  font-size: 1.2em;
+  color: #000;
+  text-decoration: none;
+}
+footer ul li a:hover {
+  color: #000;
+  text-decoration: none;
+}
+footer ul {
+  margin-top: 47px;
+}
+footer ul li {
+  margin-bottom: 25px;
+}
+
+footer .footer-logo {
+  width: 50%;
+  height: auto;
+}
+
+.footer-copyright {
+  color: #4b4a4a;
+  margin-top: 50px;
+  font-size: 10px;
+}
+
+.footer-copyright a {
+  color: #4b4a4a;
+  text-decoration: none;
+}
+.footer-copyright a:hover {
+  color: #4b4a4a;
+  text-decoration: none;
+}
+
+/*Styles für dunkles Design analog Theresienstadt Explained*/
+#app  {
+    background-color: #000;
+}
+body p {
+  color: #fff;
+}
+h1{
+  display: inline-block;
+  position: relative;
+  margin-top: 23px;
+  margin-bottom: 23px;
+  margin-left:0px;
+  align-content: left;
+  text-align: left;
+  padding: 20px 47px 27px 47px;
+  background-color:#C10000;
+  color:white;
+  font-family: Jost;
+  font-size:2em;
+  font-weight:bold;
+  text-transform: uppercase;
+}
+h4{
+  display: inline-block;
+  position: relative;
+  margin-top: 23px;
+  margin-bottom: 23px;
+  margin-left:0px;
+  align-content: left;
+  text-align: left;
+  padding: 20px 47px 27px 47px;
+  background-color:#C10000;
+  color:white;
+  font-family: Jost;
+  font-size:1em;
+  font-weight:bold;
+  text-transform: uppercase;
+}
+.table {
+  color: white;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+.nav-head {
+  height: 28px;
+  background-color: #fff;
+  text-align: left;
+}
+.nav-head a {
+  color: black;
+  text-decoration: none;
+  padding: 4px 6px;
+}
+.nav-head a:hover {
+  color: black;
+  text-decoration: none;
+}
+
+button {
+  margin-bottom: 20px;
+}
+
+.inputbutton {
+  margin-bottom: 0px;
+}
+
+hr {
+  color: white;
+  border-color: white;
+  background-color: white;
+}
+
+.chart {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.typcn {
+  color: white;
+}
+
 </style>

@@ -8,7 +8,7 @@ export default new Vuex.Store({
         //Storage für Attribute
         //Student-Id und Session als permanenter Speicher für alle Komponenten -> wird in GetStudents initial befüllt
         studentId: '',
-        sessionId: '5e09e622b9641132149ec1ac',
+        sessionId: '',
         partnerId: '',
         partnerName: '',
     },

@@ -5,15 +5,14 @@
             Fehler: {{this.error}}
         </div>
         <h1>Schritt 2: Aufgabenpflege</h1>
-        <label for="basic-url">Bitte erstellen Sie nun unten die Aufgaben, die die Lernenden bearbeiten sollen. Mit dem Knopf "Neue Aufgabe erstellen" legen Sie eine neue Aufgabe an. Über das ? vor jedem Textfeld erhalten Sie mehr Informationen, wenn Sie Hilfe benötigen. Wenn Sie alle Aufgaben eingetragen haben, dann klicken Sie auf "Abschließen"</label>
+        <p>Bitte erstellen Sie nun unten die Aufgaben, die die Lernenden bearbeiten sollen. Mit dem Knopf "Neue Aufgabe erstellen" legen Sie eine neue Aufgabe an. Über das ? vor jedem Textfeld erhalten Sie mehr Informationen, wenn Sie Hilfe benötigen. Wenn Sie alle Aufgaben eingetragen haben, dann klicken Sie auf "Abschließen"</p>
         <!-- Button Neue Aufgabe erstellen fügt neuen Input hinzu; Aufgabennr. wird automatisch eingetragen -->
-        <br>
         <hr>
         <div v-for="(task, index) in tasks" v-bind:key="index">
             <!-- Input Group wird über v-for so oft eingefügt, wie es Aufgaben in tasks Array gibt -> über neue Aufgabe erstellen wird Array Element hinzugefügt -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <b-button v-b-popover.hover.top="'Hier brauchen Sie keine Eingabe vornehmen. Die Aufgabennummer wird beim Anlegen vorbefüllt. Die Nummer ist ausschlaggebend dafür, in welcher Reihenfolge die Aufgaben den Lernenden angezeigt werden. Zuerst wird Aufgabe 1 angezeigt, dann Aufgabe 2, usw.'" title="Hilfe" class="btn btn-info">
+                    <b-button v-b-popover.hover.top="'Hier brauchen Sie keine Eingabe vornehmen. Die Aufgabennummer wird beim Anlegen vorbefüllt. Die Nummer ist ausschlaggebend dafür, in welcher Reihenfolge die Aufgaben den Lernenden angezeigt werden. Zuerst wird Aufgabe 1 angezeigt, dann Aufgabe 2, usw.'" title="Hilfe" class="btn btn-info inputbutton">
                         ?
                     </b-button>
                 </div>
@@ -23,7 +22,7 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <b-button v-b-popover.hover.top="'Hier geben Sie einen Wert in Sekunden an. Der Wert wird verwendet, um für eine Aufgabe nur einen Ausschnitt aus dem Theresienstadt Film zu verwenden. Wenn der Ausschnitt bei Sekunde zwanzig startet, dann tragen Sie 20 ein. Wenn Sie keine Einschränkung vornehmen wollen, dann tragen Sie bitte 0 ein.'" title="Hilfe" class="btn btn-info">
+                    <b-button v-b-popover.hover.top="'Hier geben Sie einen Wert in Sekunden an. Der Wert wird verwendet, um für eine Aufgabe nur einen Ausschnitt aus dem Theresienstadt Film zu verwenden. Wenn der Ausschnitt bei Sekunde zwanzig startet, dann tragen Sie 20 ein. Wenn Sie keine Einschränkung vornehmen wollen, dann tragen Sie bitte 0 ein.'" title="Hilfe" class="btn btn-info inputbutton">
                         ?
                     </b-button>
                 </div>
@@ -37,7 +36,7 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <b-button v-b-popover.hover.top="'Hier geben Sie einen Wert in Sekunden an. Der Wert wird verwendet, um für eine Aufgabe nur einen Ausschnitt aus dem Theresienstadt Film zu verwenden. Wenn der Ausschnitt bei Sekunde vierzig endet, dann tragen Sie 40 ein. Wenn Sie keine Einschränkung vornehmen wollen, dann tragen Sie bitte 0 ein.'" title="Hilfe" class="btn btn-info">
+                    <b-button v-b-popover.hover.top="'Hier geben Sie einen Wert in Sekunden an. Der Wert wird verwendet, um für eine Aufgabe nur einen Ausschnitt aus dem Theresienstadt Film zu verwenden. Wenn der Ausschnitt bei Sekunde vierzig endet, dann tragen Sie 40 ein. Wenn Sie keine Einschränkung vornehmen wollen, dann tragen Sie bitte 0 ein.'" title="Hilfe" class="btn btn-info inputbutton">
                         ?
                     </b-button>
                 </div>
@@ -51,7 +50,7 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <b-button v-b-popover.hover.top="'Hier handelt es sich um ein Freitextfeld. Ihre Eingabe in diesem Feld wird den Lernenden als Aufgabenstellung angezeigt.'" title="Hilfe" class="btn btn-info">
+                    <b-button v-b-popover.hover.top="'Hier handelt es sich um ein Freitextfeld. Ihre Eingabe in diesem Feld wird den Lernenden als Aufgabenstellung angezeigt.'" title="Hilfe" class="btn btn-info inputbutton">
                         ?
                     </b-button>
                 </div>

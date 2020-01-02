@@ -7,13 +7,13 @@
         <h1>Überwachung</h1>
         <div v-if="startSessionSuccess !== true">
             <h4>Schritt 3: Weitergabe der URL an die Teilnehmer</h4>
-            <label for="basic-url">Die Session wurde gestartet. Bitte geben Sie untenstehende URL an die Teilnehmer weiter. Die Teilnehmer erhalten unter dem Link die Möglichkeit zur Registrierung.</label>
+            <p>Die Session wurde gestartet. Bitte geben Sie untenstehende URL an die Teilnehmer weiter. Die Teilnehmer erhalten unter dem Link die Möglichkeit zur Registrierung.</p>
             <!-- Anzeige der URL für die Schüler zum Registrieren; nur solange, bis Session gestartet -->
             <div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend" style="margin: auto">
                         <!-- Nutzung des Packages vue-clipboard2 zum Kopieren: v-clipboard -->
-                        <button class="btn btn-outline-primary" type="button" v-clipboard:copy="url">Kopieren</button>
+                        <button class="btn btn-outline-primary inputbutton" type="button" v-clipboard:copy="url">Kopieren</button>
                         <span class="input-group-text">{{url}}</span>
                     </div>
                 </div>

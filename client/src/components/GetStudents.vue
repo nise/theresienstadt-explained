@@ -12,7 +12,7 @@
     </div>
     <!-- Input Gruppe zur Eingabe von Vor- und Nachmame; wird über v-model jeweils mit der Variable synchronisiert -->
     <div v-if="this.id===''">
-      <label for="basic-url">Bitte geben Sie Ihren Vor- und Nachnamen ein. Mit einem Klick auf Senden nehmen Sie an der Videoanalyse teil.</label>
+      <p>Bitte geben Sie Ihren Vor- und Nachnamen ein. Mit einem Klick auf Senden nehmen Sie an der Videoanalyse teil.</p>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width: 100px;">Vorname</span>
@@ -31,7 +31,7 @@
     </div>
     <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
     <div v-if="this.sessionStatus !== 'Individualanalyse'">
-    <h2 class="display-6">Aktuell registrierte Teilnehmer</h2>
+    <h4 class="display-6">Aktuell registrierte Teilnehmer</h4>
       <div class="row">
         <div class="col-sm-4"
           v-for="student in students"
