@@ -1,5 +1,5 @@
 <template>
-<div class="app">
+<div class="container">
     <h1>Ende der Analyse</h1>
     <p style="font-size: x-large;">Die Videoanalyse ist beendet. Bitte warten Sie nun, bis Ihr Lehrer die Schlussbesprechung durchführt.</p>
 </div>

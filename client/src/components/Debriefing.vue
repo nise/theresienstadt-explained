@@ -3,11 +3,13 @@
         <h1>Schlussbesprechung</h1>
         <p>Unten sind die Veränderungen der Markierungen von der Individualanalyse zur Gruppenanalyse dargestellt. Diese sollten in der Klasse besprochen werden. Beim Schweben über den Daten der Grafik erscheint ein Fenster. Über dieses Fenster kann zur jeweiligen Stelle im Video gesprungen werden.</p>
         <hr>
+        <!-- Videoplayer oberes Ende der Seite -->
         <div class="row">
             <div class="video col-md-12 d-flex justify-content-center">
                 <video-player ref="videoPlayer" :options="videoOptions"/>
             </div>
         </div>
+        <!-- Chart mit Darstellung Markierungen im Zeitverlauf für Gruppen- und Individualanalyse -->
         <div class="row">
             <div class="chart col-md-12">
                 <highcharts :options="chartOptions" ref="heatmap"></highcharts>
@@ -38,6 +40,7 @@ export default {
             //Optionen für Heatmap
             chartOptions: {
                 chart: {
+                    //Typ des Charts festlegen
                     type: 'heatmap'
                 },
                 title: {
@@ -48,9 +51,11 @@ export default {
                         cursor: 'pointer',
                         point: {
                             events: {
-                            helper: {
-                                functionHelper: this.jumpToTimeInVideo
-                            },
+                                //Helper, um auf this Objekt zuzugreifen fürs Springen zur Zeit im Video
+                                helper: {
+                                    functionHelper: this.jumpToTimeInVideo
+                                },
+                                //ausgelöst, wenn Datensatz angeklickt wird
                                 click() {
                                     //bei Klick auf Datenpunkt zur Stelle im Video springen
                                     //Umrechnen X zu Zeitpunkt im Video -> geteilt durch 1000, weil this.x in Milisekunden
@@ -63,7 +68,9 @@ export default {
                 },
                 xAxis: {
                     title: 'Videolaufzeit',
+                    //Typ datetime zur Darstellung in MM:SS
                     type: 'datetime',
+                    //Anzeige in MM:SS und ohne Jahr, etc.
                     dateTimeLabelFormats: {
 						year:  '%M:%S',
 						month:  '%M:%S',
@@ -71,18 +78,23 @@ export default {
                     },           
                 },
                 yAxis: {
+                    //Kategorien Gruppen- und Individualanalyse -> Individualanalyse ist y = 0 und Gruppenanalyse y = 1
                     categories: ['Individualanalyse', 'Gruppenanalyse'],
                     title: null,
+                    //Darstellung Individualanalyse oben statt unten
                     reversed: true
                 },
                 colorAxis: {
+                    //Festlegen der Farben der Farbachse
                     min: 0,
                     minColor: '#DFF3F9',
                     maxColor: '#5bc0de'
                 },
                 series: [{
+                    //Anzeige in Minuten = 1/3600 eines Tages = 36e5
                     colsize: (1/3600)*36e5,
                     name: 'Anzahl der Markierungen',
+                    //Daten werden in der Funktion befüllt
                     data: [],
                 }],
                 subtitle: {
@@ -91,6 +103,7 @@ export default {
                     x: 40
                 },
                 tooltip: {
+                    //Nutzung von HTML in Tooltip für erweiterte Darstellungsunktionen
                     useHTML: true,
                     formatter: function () {
                         //"Umrechnen" der Zeit in Milisekunden zur Anzeige in (HH:)MM:SS
@@ -106,8 +119,10 @@ export default {
                         } else {
                             timeInMMSS = minutes+':'+seconds;
                         }
+                        //wenn Punkt gleich 1, dann Anzeige Markierung
                         if (this.point.value === 1) {
                             return 'Zeit im Video: <b>' + timeInMMSS + '</b><br>'+ '<b>' + this.point.value +  '</b> Markierung<br>Auf Datenpunkt klicken, um zur Stelle im Video zu gelangen';
+                        //wenn Punkt größer 1, dann Anzeige Markierungen
                         } else {
                             return 'Zeit im Video: <b>' + timeInMMSS + '</b><br>'+ '<b>' + this.point.value +  '</b> Markierungen<br>Auf Datenpunkt klicken, um zur Stelle im Video zu gelangen';
                         }
@@ -141,7 +156,6 @@ export default {
     },
     mounted() {
         this.videoPlayer = this.$refs.videoPlayer.player;
-        this.heatmap = this.$refs.heatmap;
     },
     async created() {
         //hole alle Markierungen der Session aus der Datenbank
@@ -202,35 +216,25 @@ export default {
             })
             return feedback;
         },
+        //erhält Zeit in Sekunden und gibt Stunden zurück
         showTimeInHours(time) {
             var hours   = Math.floor(time / 3600);
             return hours;
         },
+        //erhält Zeit in Sekunden und gibt Minuten nach Abzug Stunden zurück
         showTimeInMinutes(time, hours) {
             var minutes = Math.floor((time - (hours * 3600)) / 60);
             return minutes;
         },
+        //erhält Zeit in Sekunden und gibt Sekunden nach Abzug Stunden und Minuten zurück
         showTimeInSeconds(time, hours, minutes) {
             var seconds = time - (hours * 3600) - (minutes * 60);
             return seconds;
         },
+        //springt zu Stelle in Video; Übergabeparameter time ist Spielzeit in Sekunden
         jumpToTimeInVideo(time) {
             this.videoPlayer.currentTime(time);
             this.videoPlayer.play();
-        },
-        //erhält eine Zahl in Sekunden und rechnet sie um in hh:mm:ss, wenn größer 1 Stunde oder mm:ss, wenn kleiner 1 Stunde
-        showTimeInMMSS(time) {
-            var hours   = Math.floor(time / 3600);
-            var minutes = Math.floor((time - (hours * 3600)) / 60);
-            var seconds = time - (hours * 3600) - (minutes * 60);
-            if (hours   < 10) {hours   = "0"+hours;}
-            if (minutes < 10) {minutes = "0"+minutes;}
-            if (seconds < 10) {seconds = "0"+seconds;}
-            if (hours > 0) {
-                return hours+':'+minutes+':'+seconds;
-            } else {
-            return minutes+':'+seconds;
-            }
         }
     },
 }
