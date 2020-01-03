@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 //URL der API festlegen
-const url = 'http://localhost:5000/api/annotations';
+const url = 'api/annotations';
 
 //Klasse zur Behandlung der Annotation-Aufrufe erstellen
 class AnnotationService {

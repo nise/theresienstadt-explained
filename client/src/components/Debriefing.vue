@@ -1,5 +1,9 @@
 <template>
     <div class="container">
+        <!-- Anzeige eines Fehlers, falls vorhanden -->
+        <div class="alert alert-danger" role="alert" v-if="error">
+            Fehler: {{this.error}}
+        </div>
         <h1>Schlussbesprechung</h1>
         <p>Unten sind die Veränderungen der Markierungen von der Individualanalyse zur Gruppenanalyse dargestellt. Diese sollten in der Klasse besprochen werden. Beim Schweben über den Daten der Grafik erscheint ein Fenster. Über dieses Fenster kann zur jeweiligen Stelle im Video gesprungen werden.</p>
         <hr>
@@ -34,6 +38,7 @@ export default {
     data() {
         return {
             annotations: null,
+            error: null,
             heatmap: null,
             videoPlayer: null,
             heatmap: null,
@@ -158,8 +163,12 @@ export default {
         this.videoPlayer = this.$refs.videoPlayer.player;
     },
     async created() {
+        try {
         //hole alle Markierungen der Session aus der Datenbank
         this.annotations = await AnnotationService.getAnnotationsForSession(this.sessionId);
+        } catch (err) {
+            this.error = err.message;
+        }
         //befülle aus den Markierungen die Heatmap -> erstelle pro markierter Sekunde einen Datensatz oder erhöhe ihn für Individualanalyse oder Gruppenanalyse
         this.fillHeatmap(this.annotations);
     },

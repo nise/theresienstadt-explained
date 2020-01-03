@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 //URL der API festlegen
-const url = 'http://localhost:5000/api/students';
+const url = 'api/students';
 
 //Klasse zur Behandlung der Studentaufrufe erstellen
 class StudentService {

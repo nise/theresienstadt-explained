@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 //URL der API festlegen
-const url = 'http://localhost:5000/api/sessions';
+const url = 'api/sessions';
 
 //Klasse zur Behandlung der Sessionaufrufe erstellen
 class SessionService {

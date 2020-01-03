@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 //URL der API festlegen
-const url = 'http://localhost:5000/api/groups';
+const url = 'api/groups';
 
 //Klasse zur Behandlung der Gruppenaufrufe erstellen
 class GroupService {

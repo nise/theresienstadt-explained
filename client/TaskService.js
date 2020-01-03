@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 //URL der API festlegen
-const url = 'http://localhost:5000/api/tasks';
+const url = 'api/tasks';
 
 //Klasse zur Behandlung der Task-Aufrufe erstellen
 class TaskService {

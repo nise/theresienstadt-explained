@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 //URL der API festlegen
-const url = 'http://localhost:5000/api/chatmessages';
+const url = 'api/chatmessages';
 
 //Klasse zur Behandlung der Gruppenaufrufe erstellen
 class ChatMessageService {

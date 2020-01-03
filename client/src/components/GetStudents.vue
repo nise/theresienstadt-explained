@@ -4,46 +4,51 @@
     <div class="alert alert-danger" role="alert" v-if="error">
       Fehler: {{this.error}}
     </div>
-    <h1>Registrierung</h1>
-    <div>
-      <p style="font-size:large;" v-if="this.id && this.sessionStatus !== 'Individualanalyse'">Sie haben sich erfolgreich registriert. Bitte warten Sie noch, bis sich alle anderen Teilnehmer registriert haben.</p>
-      <p style="font-size: large" v-if="this.sessionStatus === 'Individualanalyse'">Nun können Sie fortfahren, indem Sie auf den Knopf unten drücken. Sie gelangen zur Einzelanalyse des Videos.</p>
-      <button class="btn btn-primary" v-if="this.sessionStatus==='Individualanalyse'" v-on:click="navigateToIndividualAnalysis">Starten</button>
-    </div>
-    <!-- Input Gruppe zur Eingabe von Vor- und Nachmame; wird über v-model jeweils mit der Variable synchronisiert -->
-    <div v-if="this.id===''">
-      <p>Bitte geben Sie Ihren Vor- und Nachnamen ein. Mit einem Klick auf Senden nehmen Sie an der Videoanalyse teil.</p>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" style="width: 100px;">Vorname</span>
-        </div>
-        <input type="text" v-model="firstName" class="form-control" placeholder="z.B. Max" aria-label="z.B. Max" aria-describedby="basic-addon1">
+    <div v-if="this.session">
+      <h1>Registrierung</h1>
+      <div>
+        <p style="font-size:large;" v-if="this.id && this.sessionStatus !== 'Individualanalyse'">Sie haben sich erfolgreich registriert. Bitte warten Sie noch, bis sich alle anderen Teilnehmer registriert haben.</p>
+        <p style="font-size: large" v-if="this.sessionStatus === 'Individualanalyse'">Nun können Sie fortfahren, indem Sie auf den Knopf unten drücken. Sie gelangen zur Einzelanalyse des Videos.</p>
+        <button class="btn btn-primary" v-if="this.sessionStatus==='Individualanalyse'" v-on:click="navigateToIndividualAnalysis">Starten</button>
       </div>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" style="width: 100px;">Nachname</span>
+      <!-- Input Gruppe zur Eingabe von Vor- und Nachmame; wird über v-model jeweils mit der Variable synchronisiert -->
+      <div v-if="this.id===''">
+        <p>Bitte geben Sie Ihren Vor- und Nachnamen ein. Mit einem Klick auf Senden nehmen Sie an der Videoanalyse teil.</p>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 100px;">Vorname</span>
+          </div>
+          <input type="text" v-model="firstName" class="form-control" placeholder="z.B. Max" aria-label="z.B. Max" aria-describedby="basic-addon1">
         </div>
-        <input type="text" v-model="lastName" class="form-control" placeholder="z.B. Mustermann" aria-label="z.B. Mustermann" aria-describedby="basic-addon1">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 100px;">Nachname</span>
+          </div>
+          <input type="text" v-model="lastName" class="form-control" placeholder="z.B. Mustermann" aria-label="z.B. Mustermann" aria-describedby="basic-addon1">
+        </div>
+        <!-- Button zum Absenden der Eingaben; mit onklick Event werden Daten zur Middleware und anschließend in die Datenbank gesendet -->
+        <button class="btn btn-primary" v-on:click="createStudent">Senden</button>
+        <hr>
       </div>
-      <!-- Button zum Absenden der Eingaben; mit onklick Event werden Daten zur Middleware und anschließend in die Datenbank gesendet -->
-      <button class="btn btn-primary" v-on:click="createStudent">Senden</button>
-      <hr>
-    </div>
-    <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
-    <div v-if="this.sessionStatus !== 'Individualanalyse'">
-    <h4 class="display-6">Aktuell registrierte Teilnehmer</h4>
-      <div class="row">
-        <div class="col-sm-4"
-          v-for="student in students"
-          v-bind:key="student._id">
-          <div class="card border-dark mb-3" style="width: 18rem;">
-            <ul class = "list-group list-group-flush">
-              <li class="list-group-item">{{student.firstName}}</li>
-              <li class="list-group-item">{{student.lastName}}</li>
-            </ul>
+      <!-- Anzeige der aktuell für diese Session registrierten Schüler -->
+      <div v-if="this.sessionStatus !== 'Individualanalyse'">
+      <h4 class="display-6">Aktuell registrierte Teilnehmer</h4>
+        <div class="row">
+          <div class="col-sm-4"
+            v-for="student in students"
+            v-bind:key="student._id">
+            <div class="card border-dark mb-3" style="width: 18rem;">
+              <ul class = "list-group list-group-flush">
+                <li class="list-group-item">{{student.firstName}}</li>
+                <li class="list-group-item">{{student.lastName}}</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div v-else>
+      <p style="font-size:x-large">Fehler. Bitte nutzen Sie den Link, den Sie von Ihrem Lehrer erhalten.</p>
     </div>
   </div>
 </template>
@@ -129,7 +134,7 @@ export default {
           try {
             //Aufruf der Middleware zum Anlegen eines Studenten; firstName aus Nutzereingabe, lastName aus Nutzereingabe, session aus Funktion zum Session auslesen
             //ID des neuen Studenten wird in Variable id hinterlegt
-            this.id = await StudentService.postStudent(this.firstName, this.lastName, this.session, 'inRegistration');
+            this.id = await StudentService.postStudent(this.firstName, this.lastName, this.session, 'in_Registrierung');
             //studentId im Vuex Store aktualisieren, damit bei späteren Komponenten verwendbar
             this.changeStudentId();
             this.changeSessionId();
