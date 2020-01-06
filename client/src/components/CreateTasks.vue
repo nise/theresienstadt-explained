@@ -60,9 +60,9 @@
                 <input type="text" class="form-control" placeholder="z.B. Markieren Sie die Stelle, bei der Sie am auffäligsten Propaganda identifizieren" aria-label="z.B. Markieren Sie die Stelle, bei der Sie am auffäligsten Propaganda identifizieren" aria-describedby="basic-addon1" v-model="task.text">
             </div>
             <button class="btn btn-secondary" @click="deleteTask(index)">Aufgabe löschen</button>
-            <hr>
         </div>
         <button class="btn btn-success" @click="createNewTask">Neue Aufgabe erstellen</button>
+        <hr>
         <button class="btn btn-primary" @click="jumpToTracking">Abschließen</button>
     </div>
 </template>

@@ -138,9 +138,14 @@ footer .footer-logo {
 #app  {
     background-color: #000;
 }
-body p {
+p {
   color: #fff;
 }
+
+p.sc-message--text-content {
+  color:black;
+}
+
 h1{
   display: inline-block;
   position: relative;
