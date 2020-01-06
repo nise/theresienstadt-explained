@@ -105,10 +105,10 @@ router.post('/changegroup', async (req, res) => {
 });
 
 //DELETE Requests behandeln
-router.delete('/', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
     //Studenten über _id aus der Datenbank löschen -> Funktionsaufruf, siehe unten
-    await deleteStudentFromDatabase(req.body.id);
+    await deleteStudentFromDatabase(req.params.id);
     res.status(201).send();
     } catch (err) {
         return console.error(err);

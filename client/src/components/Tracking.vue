@@ -50,6 +50,10 @@
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"       
         >
+        <!-- Anzeige eines Löschbuttons für die Schüler, wenn Status vor Gruppenanalyse --> 
+        <template v-slot:cell(actions)="data">
+            <button class="btn btn-secondary" v-if="groupBuildingStarted !== true" @click="removeStudent(data.item.id)">Schüler entfernen</button>
+        </template>
         </b-table>
     </div>
 </template>
@@ -103,6 +107,10 @@ export default {
                     label: 'Partner',
                     sortable: true
                 },
+                {
+                    key: 'actions',
+                    label: 'Aktionen',
+                }
             ]
         }
     },
@@ -174,14 +182,20 @@ export default {
         async startBuildingGroups() {
             //nur Gruppenbildung erlauben, wenn alle Schüler im richtigen Status, sonst Fehlermeldung
             if (this.checkIfReadyForGroupBuilding()) {
-                try {
                 this.error = '';
-                this.groupBuildingStarted = true;
-                await GroupBuildingService.getGroupBuilding(this.sessionId);
-                this.groupBuildingSuccess = true;
-                this.refresh();
-                } catch (err) {
-                    this.error = err.message;
+                //wenn Teilnehmerzahl gerade
+                if (this.students.length % 2 === 0 && this.students.length !== 0) {
+                    try {
+                    this.error = '';
+                    this.groupBuildingStarted = true;
+                    await GroupBuildingService.getGroupBuilding(this.sessionId);
+                    this.groupBuildingSuccess = true;
+                    this.refresh();
+                    } catch (err) {
+                        this.error = err.message;
+                    }
+                } else {
+                    this.error = 'Die Anzahl der Teilnehmer ist nicht gerade. Bitte stellen Sie sicher, dass eine gerade Anzahl an Teilnehmern angemeldet ist.';
                 }
             } else {
                 this.error = "Bitte warten Sie, bis alle Teilnehmer die Individualanalyse vollendet haben";
@@ -229,6 +243,20 @@ export default {
             this.$asyncComputed.showStep3And4.update();
             this.$asyncComputed.showStep5.update();
             this.$asyncComputed.showStep6.update();
+        },
+        //entfernt einen Schüler aus der Session nach einer Sicherheitsabfrage
+        async removeStudent(studentIdToRemove) {
+            if (confirm('Wollen Sie den Schüler wirklich endgültig löschen?')) {
+                //Student aus Datenbank entfernen
+                await StudentService.deleteStudent(studentIdToRemove);
+                var thisHelper = this;
+                //Student in lokalem Array finden und entfernen
+                this.students.find(function (student, index) {
+                    if (student.id === studentIdToRemove) {
+                        thisHelper.students.splice(index);
+                    }
+                })
+            }
         }
     }
 }

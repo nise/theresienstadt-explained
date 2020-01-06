@@ -101,8 +101,15 @@ class StudentService {
     }
     //DELETE Aufrufe: Student-ID ist ID, die aus POST Aufruf zurückgegeben wird
     static deleteStudent(studentId) {
-        return axios.delete(url, {
-            id: studentId
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen mit Delete
+                await axios.delete(url + '/' + studentId);
+                resolve();
+            } catch (err) {
+                reject (err);
+            }
         });
     }
 }
