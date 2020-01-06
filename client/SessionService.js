@@ -62,7 +62,8 @@ class SessionService {
                 //API mit Axios aufrufen mit Parametern name, date; Rückgabe abspeichern
                 const result = await axios.post(url, {
                     name: nameToPost,
-                    date: dateToPost
+                    date: dateToPost,
+                    status: 'neue_Session'
                 });
                 //ID der neu erstellten Session zurückgeben
                 resolve(result.data);
@@ -91,8 +92,15 @@ class SessionService {
     }
     //DELETE Aufrufe: Session-ID ist ID, die aus POST Aufruf zurückgegeben wird
     static deleteSessions(sessionId) {
-        return axios.delete(url, {
-            id: sessionId
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen mit Delete
+                await axios.delete(url + '/' + sessionId);
+                resolve();
+            } catch (err) {
+                reject (err);
+            }
         });
     }
 }

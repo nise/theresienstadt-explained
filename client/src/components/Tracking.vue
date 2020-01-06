@@ -5,7 +5,7 @@
             Fehler: {{this.error}}
         </div>
         <h1>Überwachung</h1>
-        <div v-if="startSessionSuccess !== true">
+        <div v-if="showStep3And4">
             <h4>Schritt 3: Weitergabe der URL an die Teilnehmer</h4>
             <p>Die Session wurde gestartet. Bitte geben Sie untenstehende URL an die Teilnehmer weiter. Die Teilnehmer erhalten unter dem Link die Möglichkeit zur Registrierung.</p>
             <!-- Anzeige der URL für die Schüler zum Registrieren; nur solange, bis Session gestartet -->
@@ -20,23 +20,23 @@
             </div>
             <hr>
         </div>
-        <div v-if="startSessionSuccess !== true">
+        <div v-if="showStep3And4">
             <!-- Button zum Starten der Session, wenn gerade Teilnehmerzahl; wird nur solange angezeigt, bis Session gestartet -->
             <h4>Schritt 4: Start der Individualphase</h4>
             <p>Bitte warten Sie nun, bis sich alle Teilnehmer registriert haben. Unten erhalten Sie einen Überblick, welche Teilnehmer bereits registriert sind. Immer, wenn eine gerade Anzahl an Teilnehmern registriert ist, erscheint hier ein Knopf zum Starten der Individualphase. Bitte drücken Sie den Knopf erst, wenn alle Teilnehmer angemeldet sind. Nach dem Start der Individualphase wird den Teilnehmern automatisch ein Knopf angezeigt, um zur Individualanalyse zu navigieren.</p>
             <button class="btn btn-primary" @click="startSession">Start der Individualphase</button>
             <hr>
         </div>
-        <div v-if="groupBuildingSuccess !== true && startSessionSuccess === true">
+        <div v-if="showStep5">
             <!-- Button zum Auslösen der Gruppenbildung der Schüler; wird nur solange angezeigt, bis Gruppen gebildet -->
             <h4>Schritt 5: Start der Gruppenphase</h4>
             <p>Der Start der Individualphase war erfolgreich. Bitte warten Sie nun, bis alle Teilnehmer die Individualanalyse des Videomaterials abgeschlossen haben. Unten erhalten Sie einen Überblick, welche Teilnehmer bereits mit der Individualanalyse fertig sind. Wenn alle Teilnehmer fertig sind, erscheint unten ein Knopf zum Start der Gruppenphase. Bitte drücken Sie den Knopf, wenn Sie die Gruppenphase starten möchten. Die Teilnehmer werden automatisch Zweiergruppen zugeordnet. Nach der Betätigung des Knopfes wird den Teilnehmern ihr jeweiliger Partner angezeigt. Außerdem wird ihnen ein Knopf angezeigt, um zur Gruppenanalyse zu navigieren.</p>
             <button class="btn btn-primary" @click="startBuildingGroups">Start der Gruppenphase</button>
-            <p v-if="this.groupBuildingStartet">Bitte warten. Die Gruppenbildung wird durchgeführt</p>
+            <p v-if="this.groupBuildingStarted">Bitte warten. Die Gruppenbildung wird durchgeführt</p>
             <hr>
         </div>
         <!-- Button zur Navigation zum Debriefing; wird erst dann angezeigt, wenn Gruppen gebildet -->
-        <div v-if="groupBuildingSuccess === true">
+        <div v-if="showStep6">
             <h4>Navigation zu Schritt 6: Nachbearbeitung</h4>
             <p>Der Start der Gruppenphase war erfolgreich. Sobald alle Teilnehmer die Gruppenphase abgeschlossen haben, erscheint hier ein Knopf zur Navigation zur Nachbearbeitung. Bitte drücken Sie den Knopf, wenn Sie die Nachbearbeitung starten möchten.</p>
             <button class="btn btn-primary" v-if="allParticipantsFinished === true" @click="navigateToDebriefing">Navigation zur Nachbearbeitung</button>
@@ -73,10 +73,11 @@ export default {
             error: '',
             url: '',
             students: new Array,
-            groupBuildingStartet: '',
+            groupBuildingStarted: '',
             partnerObject: null,
             groupBuildingSuccess: '',
             startSessionSuccess: '',
+            session: null,
             allParticipantsFinished: false,
             //Steuerung der Tabelle
             sortDesc: false,
@@ -103,6 +104,43 @@ export default {
                     sortable: true
                 },
             ]
+        }
+    },
+    asyncComputed: {
+       //sollen Schritt 3 und 4 angezeigt werden? Ja, wenn Session noch nicht gestartet
+        async showStep3And4() {
+        //Session holen, um Status auszulesen
+        this.session = await SessionService.getSessionsWithId(this.sessionId);
+            if (this.session[0].status === 'Aufgaben_gepflegt') {
+                return true;
+            } //sonst false
+            return false;
+        },
+        //soll Schritt 5 angezeigt werden? Ja, wenn Gruppenbildung noch nicht durchgeführt und Session gestartet wurde oder wenn Session bereits in dieser Phase
+        async showStep5() {
+        //Session holen, um Status auszulesen
+        this.session = await SessionService.getSessionsWithId(this.sessionId);
+            if (this.groupBuildingSuccess !== true) {
+                if (this.startSessionSuccess === true) {
+                    return true;
+                }
+            }
+            if (this.session[0].status === 'Individualanalyse') {
+                return true;
+            }
+            return false;
+        },
+        //soll Schritt 6 angezeigt werden? Ja, wenn Gruppenbildung durchgeführt, oder wenn Session bereits in dieser Phase
+        async showStep6() {
+            //Session holen, um Status auszulesen
+            this.session = await SessionService.getSessionsWithId(this.sessionId);
+            if (this.groupBuildingSuccess === true) {
+                return true;
+            }
+            if (this.session[0].status === 'Gruppenanalyse') {
+                return true;
+            }
+            return false;
         }
     },
     //Vuex Store
@@ -138,9 +176,10 @@ export default {
             if (this.checkIfReadyForGroupBuilding()) {
                 try {
                 this.error = '';
-                this.groupBuildingStartet = true;
+                this.groupBuildingStarted = true;
                 await GroupBuildingService.getGroupBuilding(this.sessionId);
                 this.groupBuildingSuccess = true;
+                this.refresh();
                 } catch (err) {
                     this.error = err.message;
                 }
@@ -165,6 +204,7 @@ export default {
                 //rufe Middleware auf und setze Status der Session mit aktueller Session ID auf "Individualanalyse"
                 await SessionService.setSessionStatus(this.sessionId, 'Individualanalyse');
                 this.startSessionSuccess = true;
+                this.refresh();
             } else { //sonst: Fehler zurückgeben
                 this.error = 'Die Anzahl der Teilnehmer ist nicht gerade. Bitte stellen Sie sicher, dass eine gerade Anzahl an Teilnehmern angemeldet ist.';
                 return this.error;
@@ -184,6 +224,11 @@ export default {
         //navigiert zur Komponente "Debriefing"
         navigateToDebriefing() {
             this.$router.push("/Debriefing");
+        },
+        refresh() {
+            this.$asyncComputed.showStep3And4.update();
+            this.$asyncComputed.showStep5.update();
+            this.$asyncComputed.showStep6.update();
         }
     }
 }

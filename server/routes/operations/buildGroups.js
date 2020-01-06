@@ -12,11 +12,11 @@ const axios = require('axios');
 const IntervalTree =  require('@flatten-js/interval-tree').default;
 
 //URL der API festlegen, auf die zugegriffen wird = students, sessions, groups, annotations
-const urlstudents = 'api/students';
-const urlsessions = 'api/sessions';
-const urlgroups = 'api/groups';
-const urlannotations = 'api/annotations';
-const urltasks = 'api/tasks';
+const urlstudents = 'http://localhost:5000/api/students';
+const urlsessions = 'http://localhost:5000/api/sessions';
+const urlgroups = 'http://localhost:5000/api/groups';
+const urlannotations = 'http://localhost:5000/api/annotations';
+const urltasks = 'http://localhost:5000/api/tasks';
 
 students = new Array;
 

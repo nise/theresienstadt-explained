@@ -79,10 +79,10 @@ router.post('/change', async (req, res) => {
 });
 
 //DELETE Requests behandeln
-router.delete('/', async (req, res) => {
+router.delete('/:sessionId', async (req, res) => {
     try {
     //Aufgaben über _id aus der Datenbank löschen -> Funktionsaufruf, siehe unten
-    await deleteTaskFromDatabase(req.body.id);
+    await deleteTaskFromDatabase(req.params.sessionId);
     res.status(201).send();
     } catch (err) {
         return console.error(err);
@@ -158,8 +158,8 @@ async function changeTaskInDatabase(idToUpdate, attributesToChange) {
     });
 }
 
-//Löschen einer Aufgabe aus der Datenbank; Übergabeparameter taskToDelete ist _id der zu löschenden Aufgabe
-async function deleteTaskFromDatabase(taskToDelete) {
+//Löschen aller Aufgaben einer Session aus der Datenbank
+async function deleteTaskFromDatabase(sessionToDelete) {
     try {
     //Datenbank und Collection verbinden
     await connectDatabase();
@@ -167,7 +167,7 @@ async function deleteTaskFromDatabase(taskToDelete) {
         return console.error(err);
     }
     //Aufgabe finden und löschen
-    task.findByIdAndDelete(taskToDelete, function (err, res) {
+    task.deleteMany({session: sessionToDelete}, function (err, res) {
         if (err) return console.error(err);
     });
 }

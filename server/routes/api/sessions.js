@@ -46,7 +46,8 @@ router.post('/', async (req, res) => {
     //neues Session Objekt initialisieren
     var newSession = new session({
         name: req.body.name,
-        date: new Date(req.body.date)
+        date: new Date(req.body.date),
+        status: req.body.status
     });
     try {
     //neue Session über Post Funktion in Datenbank einfügen und _id zurückgeben
@@ -72,10 +73,10 @@ router.post('/change', async (req, res) => {
 });
 
 //DELETE Requests behandeln
-router.delete('/', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
     //Sessions über _id aus der Datenbank löschen -> Funktionsaufruf, siehe unten
-    await deleteSessionFromDatabase(req.body.id);
+    await deleteSessionFromDatabase(req.params.id);
     res.status(201).send();
     } catch (err) {
         return console.error(err);

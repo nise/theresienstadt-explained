@@ -1,7 +1,11 @@
 import Vue from 'vue';
+//Vue Router
 import VueRouter from 'vue-router';
+//Import für App
 import App from './App.vue';
+//Vuex Import
 import store from './store';
+//Imports für Komponenten
 import Session from './components/StartSession.vue';
 import GetStudents from './components/GetStudents.vue';
 import IndividualAnalysis from './components/IndividualAnalysis.vue';
@@ -11,6 +15,7 @@ import Debriefing from './components/Debriefing.vue';
 import CreateTasks from './components/CreateTasks.vue';
 import Tracking from './components/Tracking.vue';
 import AnalysisEnd from './components/AnalysisEnd.vue';
+import ModifySession from './components/ModifySession.vue';
 //Import für Chart-Package "highcharts-vue"
 import HighchartsVue from 'highcharts-vue'
 import Highcharts from 'highcharts'
@@ -21,6 +26,8 @@ import Chat from 'vue-beautiful-chat';
 import VueClipboard from 'vue-clipboard2'
 //Import für Bootstrap-vue
 import BootstrapVue from 'bootstrap-vue'
+//Import für AsyncComputed
+import AsyncComputed from 'vue-async-computed'
 
 //Einbindung des Vue Router
 Vue.use(VueRouter);
@@ -37,7 +44,11 @@ Vue.use(BootstrapVue);
 //Einbindung von Highcharts-vue
 Vue.use(HighchartsVue);
 
+//Init für Heatmap Plugin für Highcharts
 heatmapInit(Highcharts);
+
+//vue-async-computed Use
+Vue.use(AsyncComputed);
 
 //Anlegen der Routen fürs Routing im Frontend
 const routes = [
@@ -49,7 +60,8 @@ const routes = [
   { path: '/debriefing', component: Debriefing },
   { path: '/createtasks', component: CreateTasks },
   { path: '/tracking', component: Tracking },
-  { path: '/analysisend', component: AnalysisEnd }
+  { path: '/analysisend', component: AnalysisEnd },
+  { path: '/modifysession', component: ModifySession }
 ];
 
 const router = new VueRouter({

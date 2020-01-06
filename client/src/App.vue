@@ -47,16 +47,24 @@
 </template>
 
 <script>
+//Popper für Bootstrap Popups, etc.
 import 'popper.js/dist/popper.min.js';
+//Bootstrap
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+//Bootstrap Vue
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+//Jquery für Bootstrap
 import 'jquery/dist/jquery.min.js';
+//Typicons Symbole
 import 'typicons.font/src/font/typicons.css';
+//Video.js
 import 'video.js/dist/video-js.css';
 import 'video.js/dist/video.min.js';
+//Video.js Markers
 import 'videojs-markers/dist/videojs-markers.js';
 import 'videojs-markers/dist/videojs.markers.css';
+//GetStudents = Default bei Aufruf root URL
 import GetStudents from './components/GetStudents.vue';
 
 export default {

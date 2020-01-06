@@ -36,6 +36,31 @@ class TaskService {
             }
         });
     }
+    //GET Aufrufe nur mit Session ID
+    static getTasksWithId(sessionToGet) {
+        //Promise wegen async Functions
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen mit Parameter sessionToGet und taskNumberToGet
+                const result = await axios.get(url + '/' + sessionToGet);
+                const data = result.data;
+                resolve(
+                    data.map(task => ({
+                        id: task._id,
+                        session: task.session,
+                        text: task.text,
+                        videoPath: task.videoPath,
+                        videoStartTime: task.videoStartTime,
+                        videoEndTime: task.videoEndTime,
+                        taskNumber: task.taskNumber
+                    }))
+                );
+            } catch (err) {
+                reject (err);
+            }
+        });
+    }
     //POST Aufrufe
     static postTasks(sessionToPost, textToPost, videoPathToPost, videoStartTimeToPost, videoEndTimeToPost, taskNumberToPost) {
         //Promise wegen async Functions
@@ -73,10 +98,17 @@ class TaskService {
             }
         });
     } 
-    //DELETE Aufrufe: Task-ID ist ID, die aus POST Aufruf zurückgegeben wird
-    static deleteTasks(taskId) {
-        return axios.delete(url, {
-            id: taskId
+    //DELETE Aufrufe für alle Tasks einer Session
+    static deleteAllTasksForSession(sessionId) {
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen mit Delete
+                await axios.delete(url + '/' + sessionId);
+                resolve();
+            } catch (err) {
+                reject (err);
+            }
         });
     }
 }
