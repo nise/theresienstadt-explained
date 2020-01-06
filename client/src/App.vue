@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <div class="nav-head">
-      <div class="routing" v-if="this.$route.path !== '/home' && this.$route.path !== '/'">
+      <img src="/navbar_icon.ico" id="navbar-image">
+      <!-- Navbar anzeigen, wenn in keiner Schüler Ansicht -->
+      <div class="routing" v-if="this.$route.path !== '/home' && this.$route.path !== '/' && this.$route.path !== '/groupanalysis' && this.$route.path !== '/individualanalysis' && this.$route.path !== '/showpartners'">
+        <router-link to="/createsession">Neue Session starten</router-link>
+        <router-link to="/modifysession">Sessions bearbeiten</router-link>
       </div>
     </div>
       <router-view></router-view>
@@ -186,18 +190,30 @@ h4{
   color: #42b983;
 }
 .nav-head {
-  height: 28px;
+  height: 40px;
   background-color: #fff;
   text-align: left;
 }
 .nav-head a {
   color: black;
+  font-size: 15px;
   text-decoration: none;
-  padding: 4px 6px;
+  font-weight: bold;
+  padding: 10px;
+  margin-left: 10px;
+  vertical-align: -6px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 .nav-head a:hover {
   color: black;
   text-decoration: none;
+}
+
+.nav-head img {
+  padding: 5px;
+  margin-left: 10px;
+  float: left;
 }
 
 button {

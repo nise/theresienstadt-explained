@@ -47,6 +47,10 @@ export default {
     sessionId: "sessionId"
     })
   },
+  created() {
+    //Session ID zurücksetzen, wenn von anderer Seite gekommen
+    this.CHANGE_SESSION_ID(null);
+  },
   methods: {
     ...mapMutations([
     "CHANGE_SESSION_ID"

@@ -1,4 +1,5 @@
 .DS_Store
+.VSCodeCounter
 /node_modules
 /client/node_modules
 /client/public/theresienstadt.mp4

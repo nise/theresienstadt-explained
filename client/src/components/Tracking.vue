@@ -44,7 +44,7 @@
         </div>
         <h4>Status der Teilnehmer</h4>
         <!-- Anzeige der Schüler mit Namen und Status; Anzeige basierend auf laufend befülltem Student Array -->
-        <b-table fixed responsive="sm" small
+        <b-table fixed bordered responsive="sm" small
         :items="students" 
         :fields="fields"
         :sort-by.sync="sortBy"
@@ -52,7 +52,7 @@
         >
         <!-- Anzeige eines Löschbuttons für die Schüler, wenn Status vor Gruppenanalyse --> 
         <template v-slot:cell(actions)="data">
-            <button class="btn btn-secondary" v-if="groupBuildingStarted !== true" @click="removeStudent(data.item.id)">Schüler entfernen</button>
+            <button class="btn btn-secondary" v-if="showStep3And4 || showStep5" @click="removeStudent(data.item.id)">Schüler entfernen</button>
         </template>
         </b-table>
     </div>
