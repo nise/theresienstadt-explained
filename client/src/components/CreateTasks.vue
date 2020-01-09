@@ -22,34 +22,6 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <b-button v-b-popover.hover.top="'Hier geben Sie einen Wert in Sekunden an. Der Wert wird verwendet, um für eine Aufgabe nur einen Ausschnitt aus dem Theresienstadt Film zu verwenden. Wenn der Ausschnitt bei Sekunde zwanzig startet, dann tragen Sie 20 ein. Wenn Sie keine Einschränkung vornehmen wollen, dann tragen Sie bitte 0 ein.'" title="Hilfe" class="btn btn-info inputbutton">
-                        ?
-                    </b-button>
-                </div>
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="width: 150px;">Szenenstartzeit</span>
-                </div>
-                <input type="number" class="form-control" placeholder="z.B. 20" aria-label="z.B. 20" aria-describedby="basic-addon1" v-model="task.videoStartTime">
-                <div class="input-group-append">
-                    <span class="input-group-text">Sekunden</span>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <b-button v-b-popover.hover.top="'Hier geben Sie einen Wert in Sekunden an. Der Wert wird verwendet, um für eine Aufgabe nur einen Ausschnitt aus dem Theresienstadt Film zu verwenden. Wenn der Ausschnitt bei Sekunde vierzig endet, dann tragen Sie 40 ein. Wenn Sie keine Einschränkung vornehmen wollen, dann tragen Sie bitte 0 ein.'" title="Hilfe" class="btn btn-info inputbutton">
-                        ?
-                    </b-button>
-                </div>
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="width: 150px;">Szenenendzeit</span>
-                </div>
-                <input type="number" class="form-control" placeholder="z.B. 40" aria-label="z.B. 40" aria-describedby="basic-addon1" v-model="task.videoEndTime">
-                <div class="input-group-append">
-                    <span class="input-group-text">Sekunden</span>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
                     <b-button v-b-popover.hover.top="'Hier handelt es sich um ein Freitextfeld. Ihre Eingabe in diesem Feld wird den Lernenden als Aufgabenstellung angezeigt.'" title="Hilfe" class="btn btn-info inputbutton">
                         ?
                     </b-button>
@@ -133,8 +105,8 @@ export default {
                     text: '',
                     videoPath: '/theresienstadt.mp4',
                     //VideoStartTime und VideoEndTime sind Zeitangaben in einem Video -> so kann ein einzelnes Video in mehrere Sequenzen aufgeteilt werden, aber es muss nur eine Videodatei abgelegt werden
-                    videoStartTime: null,
-                    videoEndTime: null,
+                    videoStartTime: 1,
+                    videoEndTime: 1,
                     taskNumber: this.taskNumber
                 }
                 this.tasks.push(newTask);

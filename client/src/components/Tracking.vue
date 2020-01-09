@@ -25,6 +25,7 @@
             <h4>Schritt 4: Start der Individualphase</h4>
             <p>Bitte warten Sie nun, bis sich alle Teilnehmer registriert haben. Unten erhalten Sie einen Überblick, welche Teilnehmer bereits registriert sind. Immer, wenn eine gerade Anzahl an Teilnehmern registriert ist, erscheint hier ein Knopf zum Starten der Individualphase. Bitte drücken Sie den Knopf erst, wenn alle Teilnehmer angemeldet sind. Nach dem Start der Individualphase wird den Teilnehmern automatisch ein Knopf angezeigt, um zur Individualanalyse zu navigieren.</p>
             <button class="btn btn-primary" @click="startSession">Start der Individualphase</button>
+            <p v-if="this.individualPhaseStarted">Bitte warten. Die Individualphase wird gestartet.</p>
             <hr>
         </div>
         <div v-if="showStep5">
@@ -78,6 +79,7 @@ export default {
             url: '',
             students: new Array,
             groupBuildingStarted: '',
+            individualPhaseStarted: '',
             partnerObject: null,
             groupBuildingSuccess: '',
             startSessionSuccess: '',
@@ -214,6 +216,7 @@ export default {
         async startSession() {
             //wenn gerade Teilnehmerzahl
             if (this.students.length % 2 === 0 && this.students.length !== 0) {
+                this.individualPhaseStarted = true;
                 this.error = '';
                 //rufe Middleware auf und setze Status der Session mit aktueller Session ID auf "Individualanalyse"
                 await SessionService.setSessionStatus(this.sessionId, 'Individualanalyse');
