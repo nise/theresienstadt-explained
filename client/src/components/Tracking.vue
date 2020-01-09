@@ -24,7 +24,7 @@
             <!-- Button zum Starten der Session, wenn gerade Teilnehmerzahl; wird nur solange angezeigt, bis Session gestartet -->
             <h4>Schritt 4: Start der Individualphase</h4>
             <p>Bitte warten Sie nun, bis sich alle Teilnehmer registriert haben. Unten erhalten Sie einen Überblick, welche Teilnehmer bereits registriert sind. Immer, wenn eine gerade Anzahl an Teilnehmern registriert ist, erscheint hier ein Knopf zum Starten der Individualphase. Bitte drücken Sie den Knopf erst, wenn alle Teilnehmer angemeldet sind. Nach dem Start der Individualphase wird den Teilnehmern automatisch ein Knopf angezeigt, um zur Individualanalyse zu navigieren.</p>
-            <button class="btn btn-primary" @click="startSession">Start der Individualphase</button>
+            <button class="btn btn-primary" @click="startSession" v-if="evenNumberOfStudentsRegistered">Start der Individualphase</button>
             <p v-if="this.individualPhaseStarted">Bitte warten. Die Individualphase wird gestartet.</p>
             <hr>
         </div>
@@ -32,7 +32,7 @@
             <!-- Button zum Auslösen der Gruppenbildung der Schüler; wird nur solange angezeigt, bis Gruppen gebildet -->
             <h4>Schritt 5: Start der Gruppenphase</h4>
             <p>Der Start der Individualphase war erfolgreich. Bitte warten Sie nun, bis alle Teilnehmer die Individualanalyse des Videomaterials abgeschlossen haben. Unten erhalten Sie einen Überblick, welche Teilnehmer bereits mit der Individualanalyse fertig sind. Wenn alle Teilnehmer fertig sind, erscheint unten ein Knopf zum Start der Gruppenphase. Bitte drücken Sie den Knopf, wenn Sie die Gruppenphase starten möchten. Die Teilnehmer werden automatisch Zweiergruppen zugeordnet. Nach der Betätigung des Knopfes wird den Teilnehmern ihr jeweiliger Partner angezeigt. Außerdem wird ihnen ein Knopf angezeigt, um zur Gruppenanalyse zu navigieren.</p>
-            <button class="btn btn-primary" @click="startBuildingGroups">Start der Gruppenphase</button>
+            <button class="btn btn-primary" v-if="allParticipantsFinishedIndividualAnalysis" @click="startBuildingGroups">Start der Gruppenphase</button>
             <p v-if="this.groupBuildingStarted">Bitte warten. Die Gruppenbildung wird durchgeführt</p>
             <hr>
         </div>
@@ -78,13 +78,16 @@ export default {
             error: '',
             url: '',
             students: new Array,
+            intervalIds: new Array,
             groupBuildingStarted: '',
             individualPhaseStarted: '',
             partnerObject: null,
             groupBuildingSuccess: '',
             startSessionSuccess: '',
             session: null,
+            evenNumberOfStudentsRegistered: false,
             allParticipantsFinished: false,
+            allParticipantsFinishedIndividualAnalysis: false,
             //Steuerung der Tabelle
             sortDesc: false,
             sortBy: "status",
@@ -163,9 +166,13 @@ export default {
         //URL zum Kopieren erstellen
         this.createStudentUrl();
         //laufende Aktualisierung des Studentenstatus -> alle 3s
-        setInterval(() => {this.getStudentsWithStatus()}, 3000);
+        this.intervalIds.push(setInterval(() => {this.getStudentsWithStatus()}, 3000));
         //laufende Überprüfung, ob alle Teilnehmer mit der Gruppenanalyse fertig sind
-        setInterval(() => {this.checkIfAllStudentsHaveFinished()}, 3000);
+        this.intervalIds.push(setInterval(() => {this.checkIfAllStudentsHaveFinished()}, 3000));
+        //laufende Überprüfung, ob alle Teilnehmer mit der Individualanalyse fertig sind
+        this.intervalIds.push(setInterval(() => {this.checkIfAllStudentsHaveFinishedIndividualAnalysis()}, 3000));
+        //laufende Überprüfung, ob gerade Teilnehmerzahl registriert ist
+        this.intervalIds.push(setInterval(() => {this.checkIfEvenStudentNumberRegistered()}, 3000));
     },
     methods: {
         //erzeugt die URL für die Studenten zum Registrieren
@@ -238,8 +245,31 @@ export default {
         this.allParticipantsFinished = true;
         return;
         },
+        //Überprüft, ob bei allen Studenten Status "wartend_auf_Gruppenanalyse" vorliegt; wenn ja, dann Schreiben von "true" in Variable allParticipantsFinishedIndividualAnalysis
+        checkIfAllStudentsHaveFinishedIndividualAnalysis() {
+            for (var i = 0; i < this.students.length; i++) {
+                if (this.students[i].status !== 'wartend_auf_Gruppenanalyse') {
+                    this.allParticipantsFinishedIndividualAnalysis = false;
+                    return;
+            }
+        }
+        this.allParticipantsFinishedIndividualAnalysis = true;
+        return;
+        },
+        //Überprüft, ob eine gerade Zahl von Teilnehmern registriert ist
+        checkIfEvenStudentNumberRegistered() {
+            if (this.students.length % 2 === 0 && this.students.length !== 0) {
+                this.evenNumberOfStudentsRegistered = true;
+            } else {
+                this.evenNumberOfStudentsRegistered = false;
+            }
+        },
         //navigiert zur Komponente "Debriefing"
         navigateToDebriefing() {
+            //Beenden der in Intervallen ausgeführten Funktionen
+            this.intervalIds.forEach(element => {
+                clearInterval(element);
+            });
             this.$router.push("/Debriefing");
         },
         refresh() {

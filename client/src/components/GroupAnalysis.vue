@@ -89,6 +89,7 @@
         </div>
         <hr>
         <button class="btn btn-primary" @click="jumpToNextTaskOrComplete">Absenden</button>
+        <p v-if="jumpingStarted">Bitte warten</p>
     </div>
 </template>
 
@@ -128,6 +129,8 @@ export default {
             task: {},
             error: '',
             iteration: 1,
+            jumpingStarted: false,
+            intervalIds: new Array,
             videoPlayer: null,
             student: null,
             group: null,
@@ -314,12 +317,13 @@ export default {
         } catch (err) {
             this.error = err.message;
         }
+        //Speichern der Intervall-Ids für Clear Interval Befehl
         //Gruppe Objekt des aktuellen Studenten aus Datenbank holen und laufend aktualisieren -> wegen Statusänderungen
-        setInterval(() => {this.getGroup()}, 3000);
+        this.intervalIds.push(setInterval(() => {this.getGroup()}, 3000));
         //jede Sekunde prüfen, ob Gruppenarbeit erledigt ist
-        setInterval(() => {this.jumpToDebriefingIfGroupFinished()}, 1000);
+        this.intervalIds.push(setInterval(() => {this.jumpToDebriefingIfGroupFinished()}, 1000));
         //jede Sekunde auf neue Chat Nachrichten des Partners prüfen
-        setInterval(() => {this.getNewPartnerMessages()}, 1000);
+        this.intervalIds.push(setInterval(() => {this.getNewPartnerMessages()}, 1000));
     },
     methods: {
         //schreibt die Daten der dem Studenten zugeordneten Gruppe in Objekt this.group
@@ -476,9 +480,14 @@ export default {
                         //nächste Aufgabe laden
                         this.task = await TaskService.getTasks(this.sessionId, this.iteration)
                     } else {
+                        this.jumpingStarted = true;
                         //speichere Markierungen in die Datenbank
                         this.annotations.forEach(element => {
                             AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId, "Gruppenanalyse");
+                        });
+                        //Beenden der in Intervallen ausgeführten Funktionen
+                        this.intervalIds.forEach(element => {
+                            clearInterval(element);
                         });
                         //in Students abspeichern, dass sie mit der Gruppenanalyse fertig sind
                         await StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
@@ -486,7 +495,7 @@ export default {
                         //in group abspeichern, dass sie mit der Gruppenanalyse fertig ist
                         await GroupService.setGroupStatus(this.group[0].id, 'fertig_mit_Gruppenanalyse');
                         //zur Seite für Abschluss springen
-                        this.$router.push('/debriefing');
+                        this.$router.push('/analysisend');
                     }
                     } catch (er) {
                         this.error = err.message;

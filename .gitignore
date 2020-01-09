@@ -3,7 +3,7 @@
 /node_modules
 /client/node_modules
 /client/public/theresienstadt.mp4
-/dist
+/client/dist
 
 # local env files
 .env.local

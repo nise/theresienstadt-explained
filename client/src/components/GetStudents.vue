@@ -76,7 +76,8 @@ export default {
       students: [],
       error: '',
       sessions: [],
-      sessionStatus: ''
+      sessionStatus: '',
+      intervalIds: new Array
     }
   },
   //Vuex Store
@@ -89,8 +90,9 @@ export default {
   },
   //bei Seitenaufruf ausführen
   async created() {
-    setInterval(()=>{this.writeStudentsToArray()}, 3000);
-    setInterval(()=>{this.getSessionStatus()}, 3000);
+    //Speichern der Intervall-Ids für Clear Interval Befehl
+    this.intervalIds.push(setInterval(()=>{this.writeStudentsToArray()}, 3000));
+    this.intervalIds.push(setInterval(()=>{this.getSessionStatus()}, 3000));
     try {
       //Studenten Array zur Anzeige befüllen
       this.students = await StudentService.getStudents(this.session);
@@ -166,7 +168,11 @@ export default {
       this.sessionStatus = filteredSession.status;
     },
     //Funktion zum Navigieren zu Komponente "IndividualAnalysis"
+    //Beenden der in Intervallen ausgeführten Funktionen
     async navigateToIndividualAnalysis() {
+      this.intervalIds.forEach(element => {
+        clearInterval(element);
+      });
       //in student abspeichern, dass er mit der Anmeldung fertig ist
       StudentService.setStudentStatus(this.studentId, 'Individualanalyse')
       //Navigieren zu IndividualAnalysis

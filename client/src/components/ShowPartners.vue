@@ -59,6 +59,7 @@
             students: [],
             session: null,
             sessionStatus: '',
+            intervalIds: new Array,
             partner: null
             }
         },
@@ -74,9 +75,9 @@
         //bei Seitenaufruf ausführen
         async created() {
             //Befüllen des Student Arrays mit Studenten, die bereits mit Individualanalyse fertig sind; Wiederholung alle 3s
-            setInterval(()=>{this.getReadyStudents()}, 3000);
+            this.intervalIds.push(setInterval(()=>{this.getReadyStudents()}, 3000));
             //Befüllen der Session Status Variable mit dem aktuellen Session Status; Wiederholung alle 3s
-            setInterval(() => {this.getSessionStatus()}, 3000);
+            this.intervalIds.push(setInterval(() => {this.getSessionStatus()}, 3000));
         },
         async mounted() {
 
@@ -113,6 +114,10 @@
 
             //leitet weiter zur Komponente GroupAnalysis und schreibt neuen Status in student; speichert Partner in VueX Store
             navigateToGroupAnalysis: function() {
+                //Beenden der in Intervallen ausgeführten Funktionen
+                this.intervalIds.forEach(element => {
+                    clearInterval(element);
+                });
                 //Partnername für GroupAnalysis in Vuex Store schreiben
                 this.CHANGE_PARTNER_NAME(this.partner.firstName + ' ' + this.partner.lastName);
                 this.CHANGE_PARTNER_ID(this.partner.id);
