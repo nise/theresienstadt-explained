@@ -38,3 +38,8 @@ Auf die Videoanalyse übertragen verfolgt das Modul folgende Vorgehensweise:
 - auf der Überwachungsseite ist im Vergleich dargestellt, welche Zeitpunkte im Video in Gruppen- und Individualanalyse markiert wurden
 - mit einem Klick auf einen Zeitpunkt im Diagramm springt man zur entsprechenden Stelle im Video
 - der Lehrende hat die Möglichkeit, bestehende Sessions zu bearbeiten über den Link "Sessions bearbeiten" in der Navigationsleiste. Die Funktionalität hängt davon ab, in welcher Phase sich die Session befindet. Es können je nach Status die Aufgaben bearbeitet werden, die Session gelöscht werden und zur Session abgesprungen werden
+
+# Vorbereitung für build
+Vor dem Build der produktiven Applikation müssen in folgenden Dateien noch Pfade angepasst werden:
+- /server/index.js: bei global.dbPath den localhost durch Pfad zur Datenbank ersetzen; bei global.backendPath den localhost durch Pfad zum Backend ersetzen
+- /client/vue.config.js: bei beiden Proxies den localhost durch Pfad zum Backend ersetzen
