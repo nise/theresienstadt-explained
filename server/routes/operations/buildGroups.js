@@ -73,33 +73,21 @@ router.get('/:session', async (req, res) => {
                             //wenn nicht gleich, dann reduziere Score um 100 und ziehe von den 100 pro Sekunde, die sich nicht überschneidet wieder 2 ab bis maximal 0 erreicht ist (soll nicht schlechter als Ausgangslage werden)
                             if (positive[0] === pair.student2Id) {
                                 pair.score = pair.score - 100;
-                                console.log('Score nach teilidentischer Markierung: ' + pair.score);
                                 //wenn die Markierungen mit Toleranz 2 ungleich sind
-                                console.log(positive[1] !== annotation.annotationStartTime && positive[1] !== annotation.annotationStartTime + 1 && positive[1] !== annotation.annotationStartTime - 1 && positive[1] !== annotation.annotationStartTime + 2)
                                 if (positive[1] !== annotation.annotationStartTime && positive[1] !== annotation.annotationStartTime + 1 && positive[1] !== annotation.annotationStartTime - 1 && positive[1] !== annotation.annotationStartTime + 2 && positive[1] !== annotation.annotationStartTime - 2 ) {
                                     //dann addiere pro Sekunde, die sich nicht überschneidet, wieder zwei
-                                    console.log('ist nicht identisch');
                                     let differenceStartTime = Math.abs(positive[1] - annotation.annotationStartTime);
-                                    console.log('Differenz Startzeit: ' + differenceStartTime);
                                     let differenceEndTime = Math.abs(positive[2] - annotation.annotationEndTime);
-                                    console.log('Endzeit Schüler: ' + annotation.annotationEndTime + '; Endzeit Partner: ' + positive[2]);
-                                    console.log('Differenz Endzeit: ' + differenceEndTime);
                                     pair.score = pair.score + (differenceStartTime * 2) + (differenceEndTime * 2);
-                                    console.log('neuer Score');
                                     if (pair.score < 0) {
                                         pair.score = 0;
                                     }
                                 } else {
                                     if (positive[2] !== annotation.annotationEndTime && positive[2] !== annotation.annotationEndTime + 1 && positive[2] !== annotation.annotationEndTime - 1 && positive[2] !== annotation.annotationEndTime + 2 && positive[2] !== annotation.annotationEndTime - 2) {
                                         //dann addiere pro Sekunde, die sich nicht überschneidet, wieder zwei
-                                        console.log('ist nicht identisch');
                                         let differenceStartTime = Math.abs(positive[1] - annotation.annotationStartTime);
-                                        console.log('Differenz Startzeit: ' + differenceStartTime);
                                         let differenceEndTime = Math.abs(positive[2] - annotation.annotationEndTime);
-                                        console.log('Endzeit Schüler: ' + annotation.annotationEndTime + '; Endzeit Partner: ' + positive[2]);
-                                        console.log('Differenz Endzeit: ' + differenceEndTime);
                                         pair.score = pair.score + (differenceStartTime * 2) + (differenceEndTime * 2);
-                                        console.log('neuer Score: ' + pair.score);
                                         if (pair.score < 0) {
                                             pair.score = 0;
                                         }

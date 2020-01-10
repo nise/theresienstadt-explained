@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <!-- Anzeige eines Fehlers, falls vorhanden -->
         <div class="alert alert-danger" role="alert" v-if="error">
             Fehler: {{this.error}}
@@ -246,7 +246,7 @@ export default {
             videoOptions: {
                 autoplay: false,
                 controls: true,
-                width: "640",
+                width: "900",
                 controlBar: {
                     //kein Vollbild-Button
                     fullscreenToggle: false
@@ -359,7 +359,7 @@ export default {
                     //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
                     if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
                         this.annotations.splice(i, 0, newAnnotation);
-                        this.latestAnnotationIndex = i + 1;
+                        this.latestAnnotationIndex = i;
                         break;
                     }
                     //wenn letztes Element erreicht, dann einfach am Ende einfügen
