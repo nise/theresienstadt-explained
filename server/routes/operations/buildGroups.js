@@ -46,10 +46,10 @@ router.get('/:session', async (req, res) => {
             const annotations = await getAnnotationsForSessionAndTask(session, tasks[i].id);
             //neuen IntervalTree anlegen zur Auswertung Markierungen
             let annotationTree = new IntervalTree();
-            //Intervalle mit Referenz auf jeweiligen Studenten in IntervalTree schreiben; jeweils + 5 Sekunden, um Ungenauigkeiten bei der Markierung auszugleichen
+            //Intervalle mit Referenz auf jeweiligen Studenten in IntervalTree schreiben;
             for (let i=0; i < annotations.length; i++) {
                 let newAnnotation = {
-                    interval: [annotations[i].annotationStartTime - 5, annotations[i].annotationEndTime + 5],
+                    interval: [annotations[i].annotationStartTime, annotations[i].annotationEndTime],
                     studentId: annotations[i].student
                 }
                 annotationTree.insert(newAnnotation.interval, newAnnotation.studentId);
@@ -60,14 +60,51 @@ router.get('/:session', async (req, res) => {
                 let annotationsStudent1 = annotations.filter(annotation => annotation.student === pair.student1Id);
                 //ermittle für jede Markierung von Student 1 die Übereinstimmungen im IntervalTree
                 annotationsStudent1.forEach(annotation => {
-                    let positives = annotationTree.search([annotation.annotationStartTime, annotation.annotationEndTime]);
+                    let positives = annotationTree.search([annotation.annotationStartTime, annotation.annotationEndTime], (idOfStudent, index) => {
+                        //gebe Array zurück mit ID des Studenten und markierter Stelle
+                        return [idOfStudent, index.low, index.high];
+                    });
                     //wenn Übereinstimmungen gefunden
                     if (positives.length > 0) {
                         //dann prüfe, ob es sich bei der Übereinstimmung um eine Übereinstimmung mit Student 2 handelt
                         positives.forEach(positive => {
-                            //wenn Übereinstimmung mit Student 2, dann reduziere Score um 100
-                            if (positive === pair.student2Id) {
+                            //wenn Übereinstimmung mit Student 2, dann prüfe, ob die Markierungen gleich sind mit Toleranz 2 Sekunden für Ungenauigkeiten bei der Markierung
+                            //wenn gleich, dann reduziere Score um 100
+                            //wenn nicht gleich, dann reduziere Score um 100 und ziehe von den 100 pro Sekunde, die sich nicht überschneidet wieder 2 ab bis maximal 0 erreicht ist (soll nicht schlechter als Ausgangslage werden)
+                            if (positive[0] === pair.student2Id) {
                                 pair.score = pair.score - 100;
+                                console.log('Score nach teilidentischer Markierung: ' + pair.score);
+                                //wenn die Markierungen mit Toleranz 2 ungleich sind
+                                console.log(positive[1] !== annotation.annotationStartTime && positive[1] !== annotation.annotationStartTime + 1 && positive[1] !== annotation.annotationStartTime - 1 && positive[1] !== annotation.annotationStartTime + 2)
+                                if (positive[1] !== annotation.annotationStartTime && positive[1] !== annotation.annotationStartTime + 1 && positive[1] !== annotation.annotationStartTime - 1 && positive[1] !== annotation.annotationStartTime + 2 && positive[1] !== annotation.annotationStartTime - 2 ) {
+                                    //dann addiere pro Sekunde, die sich nicht überschneidet, wieder zwei
+                                    console.log('ist nicht identisch');
+                                    let differenceStartTime = Math.abs(positive[1] - annotation.annotationStartTime);
+                                    console.log('Differenz Startzeit: ' + differenceStartTime);
+                                    let differenceEndTime = Math.abs(positive[2] - annotation.annotationEndTime);
+                                    console.log('Endzeit Schüler: ' + annotation.annotationEndTime + '; Endzeit Partner: ' + positive[2]);
+                                    console.log('Differenz Endzeit: ' + differenceEndTime);
+                                    pair.score = pair.score + (differenceStartTime * 2) + (differenceEndTime * 2);
+                                    console.log('neuer Score');
+                                    if (pair.score < 0) {
+                                        pair.score = 0;
+                                    }
+                                } else {
+                                    if (positive[2] !== annotation.annotationEndTime && positive[2] !== annotation.annotationEndTime + 1 && positive[2] !== annotation.annotationEndTime - 1 && positive[2] !== annotation.annotationEndTime + 2 && positive[2] !== annotation.annotationEndTime - 2) {
+                                        //dann addiere pro Sekunde, die sich nicht überschneidet, wieder zwei
+                                        console.log('ist nicht identisch');
+                                        let differenceStartTime = Math.abs(positive[1] - annotation.annotationStartTime);
+                                        console.log('Differenz Startzeit: ' + differenceStartTime);
+                                        let differenceEndTime = Math.abs(positive[2] - annotation.annotationEndTime);
+                                        console.log('Endzeit Schüler: ' + annotation.annotationEndTime + '; Endzeit Partner: ' + positive[2]);
+                                        console.log('Differenz Endzeit: ' + differenceEndTime);
+                                        pair.score = pair.score + (differenceStartTime * 2) + (differenceEndTime * 2);
+                                        console.log('neuer Score: ' + pair.score);
+                                        if (pair.score < 0) {
+                                            pair.score = 0;
+                                        }
+                                    }
+                                }
                             }
                         })
                     }
