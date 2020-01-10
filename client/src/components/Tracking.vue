@@ -24,7 +24,7 @@
             <!-- Button zum Starten der Session, wenn gerade Teilnehmerzahl; wird nur solange angezeigt, bis Session gestartet -->
             <h4>Schritt 4: Start der Individualphase</h4>
             <p>Bitte warten Sie nun, bis sich alle Teilnehmer registriert haben. Unten erhalten Sie einen Überblick, welche Teilnehmer bereits registriert sind. Immer, wenn eine gerade Anzahl an Teilnehmern registriert ist, erscheint hier ein Knopf zum Starten der Individualphase. Bitte drücken Sie den Knopf erst, wenn alle Teilnehmer angemeldet sind. Nach dem Start der Individualphase wird den Teilnehmern automatisch ein Knopf angezeigt, um zur Individualanalyse zu navigieren.</p>
-            <button class="btn btn-primary" @click="startSession" v-if="evenNumberOfStudentsRegistered">Start der Individualphase</button>
+            <button class="btn btn-primary" @click="startSession" v-if="evenNumberOfStudentsRegistered">Start der Individualphase mit {{students.length}} Teilnehmern</button>
             <p v-if="this.individualPhaseStarted">Bitte warten. Die Individualphase wird gestartet.</p>
             <hr>
         </div>

@@ -33,7 +33,7 @@
                         </template>
                         <!-- AnnotationText als Input Feld -->
                         <template v-slot:cell(annotationText)="data">
-                            <b-form-input type="text" v-model="annotations[data.index].annotationText"></b-form-input>
+                            <textarea v-model="annotations[data.index].annotationText"></textarea>
                         </template>
                         <!-- Aktionen Löschen und zur Stelle im Video springen -->
                         <template v-slot:cell(actions)="data">
@@ -41,7 +41,7 @@
                         </template>
                     </b-table>
                 </div>
-                <button @click="startAnnotation" class="btn btn-success" v-if="isAnnotationRunning!==true">Starte Markierung</button>
+                <button @click="startAnnotation" class="btn btn-success" v-if="isAnnotationRunning!==true">Neue Markierung beginnen</button>
                 <button @click="stopAnnotation" class="btn btn-info" v-if="isAnnotationRunning===true">Stoppe Markierung</button>
             </div>
         </div>

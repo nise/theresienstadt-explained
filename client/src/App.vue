@@ -165,13 +165,12 @@ h1{
 h4{
   display: inline-block;
   position: relative;
-  margin-top: 23px;
-  margin-bottom: 23px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   margin-left:0px;
   align-content: left;
   text-align: left;
-  padding: 20px 47px 27px 47px;
-  background-color:#C10000;
+  padding: 10px 10px 10px 10px;
   color:white;
   font-family: Jost;
   font-size:1em;
