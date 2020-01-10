@@ -55,5 +55,11 @@ app.use('/operations/buildGroups', buildGroups);
 //Port Definition für Backend
 const port = process.env.PORT || 5000;
 
+//Pfad zum Backend global hinterlegen
+global.backendPath = 'http://localhost:5000';
+
+//Pfad zur Datenbank global hinterlegen
+global.dbPath = 'mongodb://localhost:27017';
+
 //API auf oben definierten Port lauschen lassen
 app.listen(port, () => console.log(`Server started on port ${port}`));

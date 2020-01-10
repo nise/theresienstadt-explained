@@ -86,7 +86,7 @@ router.delete('/:id', async (req, res) => {
 //Funktion zum Verbinden der Datenbank und der Collection "sessions"
 async function connectDatabase() {
     try {
-        await mongoose.connect('mongodb://localhost:27017/sessions', {useNewUrlParser: true});
+        await mongoose.connect(dbPath + '/sessions', {useNewUrlParser: true});
     } catch (err) {
         return console.error(err);
     }

@@ -105,7 +105,7 @@ router.delete('/', async (req, res) => {
 //Funktion zum Verbinden der Datenbank und der Collection "annotations"
 async function connectDatabase() {
     try {
-        await mongoose.connect('mongodb://localhost:27017/annotations', {useNewUrlParser: true});
+        await mongoose.connect(dbPath + '/annotations', {useNewUrlParser: true});
     } catch (err) {
         return console.error(err);
     }

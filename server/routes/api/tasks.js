@@ -92,7 +92,7 @@ router.delete('/:sessionId', async (req, res) => {
 //Funktion zum Verbinden der Datenbank und der Collection "tasks"
 async function connectDatabase() {
     try {
-    await mongoose.connect('mongodb://localhost:27017/tasks', {useNewUrlParser: true});
+    await mongoose.connect(dbPath + '/tasks', {useNewUrlParser: true});
     } catch (err) {
         return console.error(err);
     }

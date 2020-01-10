@@ -74,7 +74,7 @@ router.delete('/', async (req, res) => {
 //Funktion zum Verbinden der Datenbank und der Collection "groups"
 async function connectDatabase() {
     try {
-    await mongoose.connect('mongodb://localhost:27017/groups', {useNewUrlParser: true});
+    await mongoose.connect(dbPath + '/groups', {useNewUrlParser: true});
     } catch (err) {
         return console.error(err);
     }

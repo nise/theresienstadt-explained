@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
 //Funktion zum Verbinden der Datenbank und der Collection "chatmessages"
 async function connectDatabase() {
     try {
-    await mongoose.connect('mongodb://localhost:27017/chatmessages', {useNewUrlParser: true});
+    await mongoose.connect(dbPath + '/chatmessages', {useNewUrlParser: true});
     } catch (err) {
         return console.error(err);
     }

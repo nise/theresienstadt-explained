@@ -42,7 +42,7 @@
             <h4>Markierungen der Einzelanalyse</h4>
                 <div class="row">
                     <!-- Zeige die alten Markierungen in einer Tabelle an; so viele Markierungen wie es Einträge im Array gibt -->
-                    <b-table class="col-md-12" bordered striped hover small :items="oldAnnotations" :fields="fieldsOld" responsive="sm">
+                    <b-table class="col-md-12" bordered striped small :items="oldAnnotations" :fields="fieldsOld" responsive="sm">
                         <!-- Anzeige, von wem die Markierung ist --> 
                         <template v-slot:cell(annotationOf)="data">
                             {{getAnnotationSource(oldAnnotations[data.index].student)}}

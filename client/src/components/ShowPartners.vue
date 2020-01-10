@@ -91,11 +91,12 @@
             async getReadyStudents() {
                 try {
                 this.students = await StudentService.getStudentsWithStatus(this.sessionId, 'wartend_auf_Gruppenanalyse');
-                if (this.students.find(element => element.id === this.studentId)) {
-                    const currentStudent = this.students.find(element => element.id === this.studentId);
+                this.studentsAll = await StudentService.getStudents(this.sessionId);
+                if (this.studentsAll.find(element => element.id === this.studentId)) {
+                    const currentStudent = this.studentsAll.find(element => element.id === this.studentId);
                     if (currentStudent.partner) {
-                        const partnerId = currentStudent.partner;
-                        this.partner = this.students.find(element => element.id === partnerId);
+                        this.CHANGE_PARTNER_ID(currentStudent.partner);
+                        this.partner = this.studentsAll.find(element => element.id === this.partnerId);
                     }
                 }
                 } catch (err) {
@@ -120,7 +121,6 @@
                 });
                 //Partnername für GroupAnalysis in Vuex Store schreiben
                 this.CHANGE_PARTNER_NAME(this.partner.firstName + ' ' + this.partner.lastName);
-                this.CHANGE_PARTNER_ID(this.partner.id);
                 StudentService.setStudentStatus(this.studentId, 'Gruppenanalyse')
                 this.$router.push('/groupanalysis')
             }
