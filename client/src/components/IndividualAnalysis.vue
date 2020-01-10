@@ -171,60 +171,58 @@ export default {
         },
         //Start einer neuen Markierung; neues Markierungs-Objekt anlegen; an der richtigen Position im annotations Array einfügen; neuen Start Marker in Video Timeline einfügen; laufendes Beschreiben der Endtime, bis Stop gedrückt wird
         startAnnotation() {
-            //nur durchführen, wenn Video auch gerade läuft
-            if (this.videoPlayer.paused() !== true) {
-                this.error = '';
-                //neues Markierungsobjekt anlegen
-                const newAnnotation = {
-                    session: this.sessionId,
-                    student: this.studentId,
-                    annotationText: null,
-                    //auf volle Sekunden runden
-                    annotationStartTime: Math.round(this.videoPlayer.currentTime()),
-                    annotationEndTime: 0,
-                    taskId: this.task.id
-                }
-                //an der richtigen Stelle im Array einfügen mit Splice Methode
-                //dafür ermitteln, wo sich sich das Element einordnet
-                //wenn Array schon mindestens ein Element enthält
-                if (this.annotations.length > 0) {
-                    for (var i = 0; i < this.annotations.length; i++) {
-                        //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
-                        if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
-                            this.annotations.splice(i, 0, newAnnotation);
-                            this.latestAnnotationIndex = i + 1;
-                            break;
-                        }
-                        //wenn letztes Element erreicht, dann einfach am Ende einfügen
-                        if (i === this.annotations.length-1) {
-                            this.annotations.push(newAnnotation);
-                            this.latestAnnotationIndex = i + 1;
-                            break;
-                        }
-                    }
-                //wenn Array bisher leer, dann einfach am Ende einfügen
-                } else {
-                    this.annotations.push(newAnnotation);
-                    this.latestAnnotationIndex = 0;
-                }
-                //neuen Start-Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
-                this.videoPlayer.markers.add([{
-                    time: Math.round(this.videoPlayer.currentTime()),
-                    text: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime())),
-                    overlayText: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime()))
-                }]);
-                var vm = this;
-                //Statusindikator umsetzen, dass gerade Markierung läuft
-                this.isAnnotationRunning = true;
-                //Listener hinzufügen für timeupdate Event des Videoplayers, dass AnnotationEndTime aktualisiert wird
-                this.videoPlayer.on('timeupdate', function(e) {
-                    //aktuelle Laufzeit des Players in annotationEndTime des Objekts des zuletzt hinzugefügten Indizes schreiben
-                    vm.annotations[vm.latestAnnotationIndex].annotationEndTime = Math.round(vm.videoPlayer.currentTime());
-                    return;
-                }); 
-            } else {
-                this.error = 'Bitte starten Sie das Video, bevor Sie eine Markierung beginnen';
+            //wenn Video gerade pausiert, dann abspielen
+            if (this.videoPlayer.paused() === true) {
+                this.videoPlayer.play();
             }
+            //neues Markierungsobjekt anlegen
+            const newAnnotation = {
+                session: this.sessionId,
+                student: this.studentId,
+                annotationText: null,
+                //auf volle Sekunden runden
+                annotationStartTime: Math.round(this.videoPlayer.currentTime()),
+                annotationEndTime: 0,
+                taskId: this.task.id
+            }
+            //an der richtigen Stelle im Array einfügen mit Splice Methode
+            //dafür ermitteln, wo sich sich das Element einordnet
+            //wenn Array schon mindestens ein Element enthält
+            if (this.annotations.length > 0) {
+                for (var i = 0; i < this.annotations.length; i++) {
+                    //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
+                    if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
+                        this.annotations.splice(i, 0, newAnnotation);
+                        this.latestAnnotationIndex = i + 1;
+                        break;
+                    }
+                    //wenn letztes Element erreicht, dann einfach am Ende einfügen
+                    if (i === this.annotations.length-1) {
+                        this.annotations.push(newAnnotation);
+                        this.latestAnnotationIndex = i + 1;
+                        break;
+                    }
+                }
+            //wenn Array bisher leer, dann einfach am Ende einfügen
+            } else {
+                this.annotations.push(newAnnotation);
+                this.latestAnnotationIndex = 0;
+            }
+            //neuen Start-Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
+            this.videoPlayer.markers.add([{
+                time: Math.round(this.videoPlayer.currentTime()),
+                text: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime())),
+                overlayText: this.showTimeInMMSS(Math.round(this.videoPlayer.currentTime()))
+            }]);
+            var vm = this;
+            //Statusindikator umsetzen, dass gerade Markierung läuft
+            this.isAnnotationRunning = true;
+            //Listener hinzufügen für timeupdate Event des Videoplayers, dass AnnotationEndTime aktualisiert wird
+            this.videoPlayer.on('timeupdate', function(e) {
+                //aktuelle Laufzeit des Players in annotationEndTime des Objekts des zuletzt hinzugefügten Indizes schreiben
+                vm.annotations[vm.latestAnnotationIndex].annotationEndTime = Math.round(vm.videoPlayer.currentTime());
+                return;
+            }); 
         },
         //Stop einer Markierung; Event Listener wird beendet; aktuelle Endzeit bleibt in AnnotationEndTime stehen
         stopAnnotation() {
