@@ -245,8 +245,8 @@ export default {
             //Optionen für video.js VideoPlayer
             videoOptions: {
                 autoplay: false,
+                fluid: true,
                 controls: true,
-                width: "900",
                 controlBar: {
                     //kein Vollbild-Button
                     fullscreenToggle: false
@@ -329,7 +329,7 @@ export default {
         //schreibt die Daten der dem Studenten zugeordneten Gruppe in Objekt this.group
         async getGroup() {
             try {
-                this.group = await GroupService.getGroups(this.student.group);
+                this.group = await GroupService.getGroups(this.sessionId, this.student.group);
             } catch (err) {
                 this.error = err.message;
             }

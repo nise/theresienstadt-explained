@@ -105,7 +105,7 @@ export default {
         videoOptions: {
 			autoplay: false,
             controls: true,
-            width: "900",
+            fluid: true,
             controlBar: {
                 //kein Vollbild-Button
                 fullscreenToggle: false

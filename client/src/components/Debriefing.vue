@@ -29,6 +29,10 @@ import { mapState } from 'vuex';
 import VideoPlayer from "./VideoPlayer.vue";
 //Annotation Service Import
 import AnnotationService from '../../AnnotationService';
+//Student Service Import zur Anzeige der Namen der markierenden Schüler
+import StudentService from '../../StudentService';
+//Group Service Import zur Anzeige der Namen der markierenden Schüler
+import GroupService from '../../GroupService';
 
 export default {
     name: "Debriefing",
@@ -42,6 +46,9 @@ export default {
             heatmap: null,
             videoPlayer: null,
             heatmap: null,
+            groups: new Array,
+            students: new Array,
+            studentNamesOfAnnotation: new Array,
             //Optionen für Heatmap
             chartOptions: {
                 chart: {
@@ -58,7 +65,8 @@ export default {
                             events: {
                                 //Helper, um auf this Objekt zuzugreifen fürs Springen zur Zeit im Video
                                 helper: {
-                                    functionHelper: this.jumpToTimeInVideo
+                                    functionHelper: this.jumpToTimeInVideo,
+                                    annotationNameHelper: this.getStudentNames
                                 },
                                 //ausgelöst, wenn Datensatz angeklickt wird
                                 click() {
@@ -124,12 +132,13 @@ export default {
                         } else {
                             timeInMMSS = minutes+':'+seconds;
                         }
+                        //Anzeige der Zeit im Video, Anzahl der Markierungen und wer diese vorgenommen hat; durch Klick auf Element springt man zur Stelle im Video
                         //wenn Punkt gleich 1, dann Anzeige Markierung
                         if (this.point.value === 1) {
-                            return 'Zeit im Video: <b>' + timeInMMSS + '</b><br>'+ '<b>' + this.point.value +  '</b> Markierung<br>Auf Datenpunkt klicken, um zur Stelle im Video zu gelangen';
+                            return 'Zeit im Video: <b>' + timeInMMSS + '</b><br>'+ '<b>' + this.point.value +  '</b> Markierung<br>Auf Datenpunkt klicken, um zur Stelle im Video zu gelangen<br>Markierung von:<br>' + this.series.options.point.events.helper.annotationNameHelper(this.point.x, this.point.y);
                         //wenn Punkt größer 1, dann Anzeige Markierungen
                         } else {
-                            return 'Zeit im Video: <b>' + timeInMMSS + '</b><br>'+ '<b>' + this.point.value +  '</b> Markierungen<br>Auf Datenpunkt klicken, um zur Stelle im Video zu gelangen';
+                            return 'Zeit im Video: <b>' + timeInMMSS + '</b><br>'+ '<b>' + this.point.value +  '</b> Markierungen<br>Auf Datenpunkt klicken, um zur Stelle im Video zu gelangen<br>Markierungen von:<br>' + this.series.options.point.events.helper.annotationNameHelper(this.point.x, this.point.y);
                         }
                     }
                 }
@@ -137,8 +146,8 @@ export default {
             //Optionen für video.js VideoPlayer
             videoOptions: {
                 autoplay: false,
+                fluid:true,
                 controls: true,
-                width: "480",
                 controlBar: {
                     //kein Vollbild-Button
                     fullscreenToggle: false
@@ -166,6 +175,10 @@ export default {
         try {
         //hole alle Markierungen der Session aus der Datenbank
         this.annotations = await AnnotationService.getAnnotationsForSession(this.sessionId);
+        //alle Schüler der Session aus der DB holen
+        this.students = await StudentService.getStudents(this.sessionId);
+        //alle Gruppen der Session aus der DB holen
+        this.groups = await GroupService.getGroupsWithId(this.sessionId);
         } catch (err) {
             this.error = err.message;
         }
@@ -192,12 +205,68 @@ export default {
                         //Nutzung des Standard UTC Datetime Formats, damit im Format mm:ss angezeigt
                         let newData = [Date.UTC(1970,0,1, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)), this.showTimeInSeconds(i, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)))), groupAnalysisCheck, 1]
                         this.chartOptions.series[0].data.push(newData);
+                        //ermittle, ob es sich um eine Gruppe handelt
+                        let nameToDisplay;
+                        if (groupAnalysisCheck === 1) {
+                            //ermittle ID der Gruppe
+                            let groupId = annotation.student;
+                            //ermittle Studenten-IDs anhand Gruppen-ID
+                            let group = this.groups.find(group => group.id === groupId);
+                            let student1Id = group.student1;
+                            let student2Id = group.student2;
+                            //hole Studentenobjekte
+                            let student1 = this.students.find(student => student.id === student1Id);
+                            let student2 = this.students.find(student => student.id === student2Id);
+                            //setze anzuzeigenden Namen zusammen
+                            nameToDisplay = student1.firstName + ' ' + student1.lastName + ' und ' + student2.firstName + ' ' + student2.lastName;
+                        } else {
+                            //ermittle ID des Studenten
+                            let studentId = annotation.student;
+                            //hole Student-Objekt
+                            let student = this.students.find(student => student.id === studentId);
+                            //setze anzuzeigenden Namen zusammen
+                            nameToDisplay = student.firstName + ' ' + student.lastName;
+                        }
+                        //lege neues Objekt an
+                        this.studentNamesOfAnnotation.push({
+                            second: Date.UTC(1970,0,1, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)), this.showTimeInSeconds(i, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)))),
+                            name: nameToDisplay,
+                            groupAnalysis: groupAnalysisCheck
+                        });
                     } else { //wenn bereits Datensatz vorhanden ist
                         //ermittle Index des gesuchten Datensatzes
                         let index = this.getDataIndex(Date.UTC(1970,0,1, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)), this.showTimeInSeconds(i, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)))), groupAnalysisCheck);
                         //erhöhe Anzahl der Vorkomnisse um 1
                         let dataToIncrease = this.chartOptions.series[0].data[index];
                         this.chartOptions.series[0].data[index] = [dataToIncrease[0], dataToIncrease[1], dataToIncrease[2] + 1];
+                        //ermittle, ob es sich um eine Gruppe handelt
+                        let nameToDisplay;
+                        if (groupAnalysisCheck === 1) {
+                            //ermittle ID der Gruppe
+                            let groupId = annotation.student;
+                            //ermittle Studenten-IDs anhand Gruppen-ID
+                            let group = this.groups.find(group => group.id === groupId);
+                            let student1Id = group.student1;
+                            let student2Id = group.student2;
+                            //hole Studentenobjekte
+                            let student1 = this.students.find(student => student.id === student1Id);
+                            let student2 = this.students.find(student => student.id === student2Id);
+                            //setze anzuzeigenden Namen zusammen
+                            nameToDisplay = student1.firstName + ' ' + student1.lastName + ' und ' + student2.firstName + ' ' + student2.lastName;
+                        } else {
+                            //ermittle ID des Studenten
+                            let studentId = annotation.student;
+                            //hole Student-Objekt
+                            let student = this.students.find(student => student.id === studentId);
+                            //setze anzuzeigenden Namen zusammen
+                            nameToDisplay = student.firstName + ' ' + student.lastName;
+                        }
+                        //lege neues Objekt an
+                        this.studentNamesOfAnnotation.push({
+                            second: Date.UTC(1970,0,1, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)), this.showTimeInSeconds(i, this.showTimeInHours(i), this.showTimeInMinutes(i, this.showTimeInHours(i)))),
+                            name: nameToDisplay,
+                            groupAnalysis: groupAnalysisCheck
+                        });
                     }
                 }
             });
@@ -244,6 +313,17 @@ export default {
         jumpToTimeInVideo(time) {
             this.videoPlayer.currentTime(time);
             this.videoPlayer.play();
+        },
+        getStudentNames(timeInUtc, groupAnalysis) {
+            let studentNames = new Array;
+            this.studentNamesOfAnnotation.forEach(student => {
+                if (student.second === timeInUtc) {
+                    if (student.groupAnalysis === groupAnalysis) {
+                        studentNames.push(student.name);
+                    }
+                }
+            })
+            return studentNames;
         }
     },
 }

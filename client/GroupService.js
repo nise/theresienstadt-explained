@@ -7,13 +7,37 @@ const url = 'api/groups';
 //Klasse zur Behandlung der Gruppenaufrufe erstellen
 class GroupService {
     //GET Aufrufe
-    static getGroups(groupId) {
+    static getGroups(sessionId, groupId) {
         //Promise wegen async Functions
         return new Promise(async (resolve, reject) => {
             //Fehlerbehandlung
             try {
                 //API mit Axios aufrufen und zu holende GruppenId übergeben
-                const result = await axios.get(url + '/' + groupId);
+                const result = await axios.get(url + '/' + sessionId + '/' + groupId);
+                //Daten aus Rückgabe extrahieren
+                const data = result.data;
+                //Rückgabe = Objekt mit allen Gruppenfeldern als Attribute
+                resolve(
+                    data.map(group => ({
+                        student1: group.student1,
+                        student2: group.student2,
+                        status: group.status,
+                        id: group._id
+                    }))
+                );
+            } catch (err) {
+                reject (err);
+            }
+        });
+    }
+    //GET Aufrufe mit Session-ID
+    static getGroupsWithId(sessionId) {
+        //Promise wegen async Functions
+        return new Promise(async (resolve, reject) => {
+            //Fehlerbehandlung
+            try {
+                //API mit Axios aufrufen und zu holende GruppenId übergeben
+                const result = await axios.get(url + '/' + sessionId);
                 //Daten aus Rückgabe extrahieren
                 const data = result.data;
                 //Rückgabe = Objekt mit allen Gruppenfeldern als Attribute

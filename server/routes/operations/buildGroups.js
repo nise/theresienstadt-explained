@@ -134,7 +134,7 @@ router.get('/:session', async (req, res) => {
         writePartnerToDatabase(students, pairs[0].student1Id, pairs[0].student2Id);
         writePartnerToDatabase(students, pairs[0].student2Id, pairs[0].student1Id);
         //erstelle Gruppe mit den zwei Studenten als Attributen und speichere Gruppen-ID in die jeweiligen Studenten als Attribut
-        await createNewGroup(pairs[0].student1Id, pairs[0].student2Id);
+        await createNewGroup(pairs[0].student1Id, pairs[0].student2Id, session);
         //entferne alle Paare, die einen der beiden Studenten als Mitglied hatten, aus dem Array
         let pairsToDelete = new Array;
         pairs.forEach(function (pair, index) {
@@ -212,13 +212,14 @@ async function writePartnerToDatabase(students, studentId, partnerId) {
 }
 
 //erstellt neue Gruppe mit student1Id und student2Id als Attribute und schreibt die GruppenId als Attribut in die zwei Students
-    async function createNewGroup(student1Id, student2Id) {
+    async function createNewGroup(student1Id, student2Id, session) {
         try {
     //neue Gruppe anlegen und zwei Studenten als Attribute setzen
     const groupId = await axios.post(backendPath + '/api/groups', {
         student1: student1Id,
         student2: student2Id,
-        status: 'Gruppenanalyse'
+        status: 'Gruppenanalyse',
+        session: session
     });
     //Gruppen-ID bei Student 1 als Attribut setzen (lokal)
     this.students.find(function(student, index) {

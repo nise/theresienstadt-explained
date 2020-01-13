@@ -10,18 +10,33 @@ const router = express.Router();
 const groupSchema = new mongoose.Schema({
     student1: String,
     student2: String,
-    status: String
+    status: String,
+    session: String
 });
 
 //Gruppen Klasse initialisieren
 const group = mongoose.model('group', groupSchema);
 
-//GET Requests behandeln
-router.get('/:groupId', async (req, res) => {
+//GET Requests nur mit Session ID behandeln
+router.get('/:sessionId', async (req, res) => {
+    const sessionId = req.params.sessionId;
+    try {
+    //Gruppe aus Datenbank über Funktion abfragen
+    const groupFromDatabase = await loadGroupsFromDatabase(sessionId);
+    //Ergebnis zurücksenden
+    res.send(groupFromDatabase);
+    } catch (err) {
+        return console.error(err);
+    }
+});
+
+//GET Requests mit Session ID und Gruppen-ID behandeln
+router.get('/:sessionId/:groupId', async (req, res) => {
+    const sessionId = req.params.sessionId;
     const groupId = req.params.groupId;
     try {
     //Gruppe aus Datenbank über Funktion abfragen
-    const groupFromDatabase = await loadGroupsFromDatabase(groupId);
+    const groupFromDatabase = await loadGroupsFromDatabaseWithGroupId(groupId);
     //Ergebnis zurücksenden
     res.send(groupFromDatabase);
     } catch (err) {
@@ -35,7 +50,8 @@ router.post('/', async (req, res) => {
     var newGroup = new group({
         student1: req.body.student1,
         student2: req.body.student2,
-        status: req.body.status
+        status: req.body.status,
+        session: req.body.session
     });
     try {
     //neue Gruppe über Post Funktion in Datenbank einfügen und _id zurückgeben
@@ -80,14 +96,26 @@ async function connectDatabase() {
     }
 }
 
-async function loadGroupsFromDatabase(groupIdToGet) {
+async function loadGroupsFromDatabase(sessionIdToGet) {
     try {
     //Datenbank und Collection verbinden
     await connectDatabase();
     } catch (err) {
         return console.error(err);
     }
-    //alle Gruppen aus der Datenbank lesen mit groupId Filter
+    //alle Gruppen aus der Datenbank lesen mit sessionId Filter
+    var result = group.find({session: sessionIdToGet});
+    return result;
+}
+
+async function loadGroupsFromDatabaseWithGroupId(groupIdToGet) {
+    try {
+    //Datenbank und Collection verbinden
+    await connectDatabase();
+    } catch (err) {
+        return console.error(err);
+    }
+    //alle Gruppen aus der Datenbank lesen mit sessionId Filter
     var result = group.find({_id: groupIdToGet});
     return result;
 }
