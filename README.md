@@ -32,7 +32,7 @@ Auf die Videoanalyse übertragen verfolgt das Modul folgende Vorgehensweise:
 - es wird nun automtatisch die Bildung von Zweiergruppen vorgenommen. Kriterien für die Bildung der Gruppen sind die Zeitpunkte der Markierungen und die Länge des Begründungstexts. Haben Lernende zu unterschiedlichen Zeitpunkten Markierungen vorgenommen und unterscheidet sich die Länge der Begründungstexte stark, dann wird der Algorithmus sie einer Gruppe zuweisen
 - wenn die Gruppenbildung abgeschlossen ist, dann erscheint bei den Lernenden automatisch ein Knopf zum Starten der Gruppenanalyse
 - die Funktionsweise der Gruppenanalyse ist ähnlich der Individualanalyse. Die Lernenden haben über den runden Knopf rechts unten zusätzlich die Möglichkeit, miteinander zu chatten
-- hat sich die Gruppe auf eine Antwort geeinigt, führt ein Gruppenmitglied die Markierung durch und sendet die Eingaben ab
+- jedes Gruppenmitglied kann Markierungen vornehmen; die Markierungen der Gruppenmitglieder werden der Gruppe zugeordnet
 - nach Abschluss der Gruppenanalyse erhalten die Lernenden eine Meldung, dass die Videoanalyse nun abgeschlossen ist
 - der Lehrende hat nach Abschluss der Gruppenanalyse durch alle Lernenden die Möglichkeit, eine Nachbesprechung durchzuführen. Der Knopf erscheint auf der Überwachungsseite, wenn alle Lernenden die Gruppenanalyse abgeschlossen haben
 - auf der Überwachungsseite ist im Vergleich dargestellt, welche Zeitpunkte im Video in Gruppen- und Individualanalyse markiert wurden
@@ -43,3 +43,4 @@ Auf die Videoanalyse übertragen verfolgt das Modul folgende Vorgehensweise:
 Vor dem Build der produktiven Applikation müssen in folgenden Dateien noch Pfade angepasst werden:
 - /server/index.js: bei global.dbPath den localhost durch Pfad zur Datenbank ersetzen; bei global.backendPath den localhost durch Pfad zum Backend ersetzen
 - /client/vue.config.js: bei beiden Proxies den localhost durch Pfad zum Backend ersetzen
+- /client/src/main.js: unter VueSocketIO bei connection den localhost durch Pfad zum Backend ersetzen
