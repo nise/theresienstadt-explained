@@ -118,6 +118,8 @@ import AnnotationService from '../../AnnotationService';
 import ChatMessageService from '../../ChatMessageService';
 //Import der Middleware für Socket.io Annotations
 import AnnotationSocketService from '../../AnnotationSocketService';
+//Import der Middleware fürs Logging des Videos
+import LoggingService from '../../LoggingService';
 
 //Import der Icons für vue-beautiful-chat
 import CloseIcon from 'vue-beautiful-chat/src/assets/close-icon.png'
@@ -291,6 +293,81 @@ export default {
             //Initialisierung des Arrays für die Marker; befüllt über markers.add Funktion
             markers: []
         });
+        //Logging der VideoPlayer Aktionen
+        this.videoPlayer.eventTracking({});
+        //beim ersten Abspielen Meldung erstellen
+        this.videoPlayer.on('tracking:firstplay', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Erstes_Abspielen',
+                Student: this.studentId,
+                Gruppe: this.group[0].id,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Chat_Nachrichten: this.messageList.length,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+            }
+            LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
+        })
+        //beim Pausieren Meldung erstellen
+        this.videoPlayer.on('tracking:pause', (e, data) => {
+            let newLoggingMessage = {
+            Meldung: 'Pausiert',
+            Student: this.studentId,
+            Gruppe: this.group[0].id,
+            Zeitpunkt: new Date,
+            Aufgabe: this.task.taskNumber,
+            Anzahl_der_Chat_Nachrichten: this.messageList.length,
+            Anzahl_der_Markierungen: this.annotations.length,
+            Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime(),
+            Anzahl_der_Pausierungen_inklusive_dieser: data.pauseCount
+        }
+        LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
+        })
+        //beim Fortsetzen nach Pause Meldung erstellen
+        this.videoPlayer.on('play', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Nach Pause fortgesetzt',
+                Student: this.studentId,
+                Gruppe: this.group[0].id,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Chat_Nachrichten: this.messageList.length,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+            }
+            LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
+        })
+        //beim Spulen Meldung erstellen
+        this.videoPlayer.on('tracking:seek', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Gespult',
+                Student: this.studentId,
+                Gruppe: this.group[0].id,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Chat_Nachrichten: this.messageList.length,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime(),
+                Anzahl_der_Spulvorgaenge_inklusive_diesem: data.seekCount,
+                Gespult_zu: data.seekTo
+            }
+            LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
+        })
+        //beim Ankommen am Ende des Videos Meldung erstellen
+        this.videoPlayer.on('ended', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Ende des Videos erreicht',
+                Student: this.studentId,
+                Gruppe: this.group[0].id,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Chat_Nachrichten: this.messageList.length,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+            }
+            LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
+        })
     },
     //Vuex Store
     computed: {

@@ -75,7 +75,6 @@ router.post('/', async (req, res) => {
     } catch (err) {
         return console.error(err);
     }
-    io.emit('annotation', newAnnotation);
 });
 
 //Requests für Änderungen behandeln; Anfragen mit /change

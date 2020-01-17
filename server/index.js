@@ -31,6 +31,9 @@ const groups = require('./routes/api/groups');
 //Pfad zu chatMessages API in Konstante speichern
 const chatMessages = require('./routes/api/chatMessages');
 
+//Pfad zu logging API in Konstante speichern
+const logging = require('./routes/api/logging');
+
 //Pfad zu buildGroups Operation in Konstante speichern
 const buildGroups = require('./routes/operations/buildGroups');
 
@@ -55,6 +58,9 @@ app.use('/api/groups', groups);
 //URL /api/chatmessages zu internem Pfad umleiten
 app.use('/api/chatmessages', chatMessages);
 
+//api/logging zu internem Pfad umleiten
+app.use('/api/logging', logging)
+
 //URL /operations/buildGroups zu internem Pfad umleiten
 app.use('/operations/buildGroups', buildGroups);
 
@@ -67,5 +73,6 @@ global.backendPath = 'http://localhost:5000';
 //Pfad zur Datenbank global hinterlegen
 global.dbPath = 'mongodb://localhost:27017';
 
+//Starten des Servers und Initialisierung socket.io
 global.io = require('socket.io').listen(app.listen(port, () => console.log(`Server started on port ${port}`)));
 

@@ -66,6 +66,8 @@ import TaskService from '../../TaskService';
 import StudentService from '../../StudentService';
 //Import der Middleware für Annotations
 import AnnotationService from '../../AnnotationService';
+//Import der Middleware fürs Logging des Videos
+import LoggingService from '../../LoggingService';
 
 export default {
   name: "IndividualAnalysis",
@@ -156,6 +158,71 @@ export default {
             //Initialisierung des Arrays für die Marker; befüllt über markers.add Funktion
             markers: []
         });
+        //Logging der VideoPlayer Aktionen
+        this.videoPlayer.eventTracking({});
+        //beim ersten Abspielen Meldung erstellen
+        this.videoPlayer.on('tracking:firstplay', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Erstes_Abspielen',
+                Student: this.studentId,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+            }
+            LoggingService.postLogs(newLoggingMessage, 1, this.sessionId);
+        })
+        //beim Pausieren Meldung erstellen
+        this.videoPlayer.on('tracking:pause', (e, data) => {
+            let newLoggingMessage = {
+            Meldung: 'Pausiert',
+            Student: this.studentId,
+            Zeitpunkt: new Date,
+            Aufgabe: this.task.taskNumber,
+            Anzahl_der_Markierungen: this.annotations.length,
+            Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime(),
+            Anzahl_der_Pausierungen_inklusive_dieser: data.pauseCount
+        }
+        LoggingService.postLogs(newLoggingMessage, 1, this.sessionId);
+        })
+        //beim Fortsetzen nach Pause Meldung erstellen
+        this.videoPlayer.on('play', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Nach Pause fortgesetzt',
+                Student: this.studentId,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+            }
+            LoggingService.postLogs(newLoggingMessage, 1, this.sessionId);
+        })
+        //beim Spulen Meldung erstellen
+        this.videoPlayer.on('tracking:seek', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Gespult',
+                Student: this.studentId,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime(),
+                Anzahl_der_Spulvorgaenge_inklusive_diesem: data.seekCount,
+                Gespult_zu: data.seekTo
+            }
+            LoggingService.postLogs(newLoggingMessage, 1, this.sessionId);
+        })
+        //beim Ankommen am Ende des Videos Meldung erstellen
+        this.videoPlayer.on('ended', (e, data) => {
+            let newLoggingMessage = {
+                Meldung: 'Ende des Videos erreicht',
+                Student: this.studentId,
+                Zeitpunkt: new Date,
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+            }
+            LoggingService.postLogs(newLoggingMessage, 1, this.sessionId);
+        })
     },
     methods: {
         //Iteration um 1 erhöhen und Task neu laden -> nächster Task wird aus Datenbank geladen und in task Variable gespeichert -> Felder aktualisieren sich automatisch

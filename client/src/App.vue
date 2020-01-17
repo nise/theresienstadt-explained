@@ -68,6 +68,8 @@ import 'video.js/dist/video.min.js';
 //Video.js Markers
 import 'videojs-markers/dist/videojs-markers.js';
 import 'videojs-markers/dist/videojs.markers.css';
+//Video.js Logging
+import 'videojs-event-tracking/dist/videojs-event-tracking.js';
 //GetStudents = Default bei Aufruf root URL
 import GetStudents from './components/GetStudents.vue';
 

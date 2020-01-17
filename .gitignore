@@ -4,6 +4,7 @@
 /client/node_modules
 /client/public/theresienstadt.mp4
 /client/dist
+/logging
 
 # local env files
 .env.local

@@ -19,6 +19,7 @@
     "socket.io": "^2.3.0",
     "typicons.font": "^2.0.9",
     "video.js": "^7.6.6",
+    "videojs-event-tracking": "^1.0.1",
     "videojs-markers": "^1.0.1",
     "vue-async-computed": "^3.8.2",
     "vue-beautiful-chat": "^2.3.1",
