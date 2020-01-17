@@ -71,10 +71,11 @@ router.post('/', async (req, res) => {
     try {
     //neue Annotation über Post Funktion in Datenbank einfügen und _id zurückgeben
         const annotationId = await postAnnotationToDatabase(newAnnotation);
-            res.send(annotationId);
+        res.sendStatus(200);
     } catch (err) {
         return console.error(err);
     }
+    io.emit('annotation', newAnnotation);
 });
 
 //Requests für Änderungen behandeln; Anfragen mit /change

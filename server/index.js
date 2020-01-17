@@ -22,6 +22,9 @@ const tasks = require('./routes/api/tasks');
 //Pfad zu annotations API in Konstante speichern
 const annotations = require('./routes/api/annotations');
 
+//Pfad zu annotationSocket API in Konstante speichern
+const annotationSocket = require('./routes/api/annotationSocket');
+
 //Pfad zu groups API in Konstante speichern
 const groups = require('./routes/api/groups');
 
@@ -43,6 +46,9 @@ app.use('/api/tasks', tasks);
 //URL /api/annotations zu internem Pfad umleiten
 app.use('/api/annotations', annotations);
 
+//URL /api/annotationSocket zu internem Pfad umleiten
+app.use('/api/annotationsocket', annotationSocket);
+
 //URL /api/groups zu internem Pfad umleiten
 app.use('/api/groups', groups);
 
@@ -61,5 +67,5 @@ global.backendPath = 'http://localhost:5000';
 //Pfad zur Datenbank global hinterlegen
 global.dbPath = 'mongodb://localhost:27017';
 
-//API auf oben definierten Port lauschen lassen
-app.listen(port, () => console.log(`Server started on port ${port}`));
+global.io = require('socket.io').listen(app.listen(port, () => console.log(`Server started on port ${port}`)));
+

@@ -69,7 +69,7 @@ class AnnotationService {
             //Fehlerbehandlung
             try {
                 //API mit Axios aufrufen mit Parametern; Rückgabe abspeichern
-                const result = await axios.post(url, {
+                await axios.post(url, {
                     session: sessionToPost,
                     student: studentToPost,
                     annotationText: annotationTextToPost,
@@ -78,8 +78,7 @@ class AnnotationService {
                     taskId: taskIdToPost,
                     phase: phaseToPost
                 });
-                //ID der neu erstellten Annotation zurückgeben
-                resolve(result.data);
+                resolve();
             } catch (err) {
                 reject (err);
             }

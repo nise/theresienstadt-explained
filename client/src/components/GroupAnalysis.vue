@@ -6,7 +6,7 @@
         </div>
         <h1>Gruppenanalyse</h1>
         <p style="font-size:large; text-align:justify">
-        Bitte bearbeiten Sie die Aufgaben nun mit Ihrem Partner. Sie können über ein Chat-Fenster mit Ihrem Partner kommunizieren. Dieses öffnen Sie über den runden Knopf am unteren rechten Ende der Seite. Einigen Sie sich mit Ihrem Partner auf eine gemeinsame Antwort durch Diskussion Ihrer Standpunkte. Als Grundlage der Diskussion werden Ihnen die Antworten von Ihnen und Ihrem Partner auf die Aufgabe angezeigt. Haben Sie sich auf eine gemeinsame Antwort geeinigt, dann bearbeitet bitte ein Mitglied Ihrer Gruppe die Aufgabe und drückt auf "Absenden"</p>
+        Bitte bearbeiten Sie die Aufgaben nun mit Ihrem Partner. Sie können über ein Chat-Fenster mit Ihrem Partner kommunizieren. Dieses öffnen Sie über den runden Knopf am unteren rechten Ende der Seite. Einigen Sie sich mit Ihrem Partner auf Markierungen durch Diskussion Ihrer Standpunkte. Als Grundlage der Diskussion werden Ihnen die Antworten von Ihnen und Ihrem Partner auf die Aufgabe aus der Individualanalyse angezeigt. Sie und Ihr Partner können beide Markierungen vornehmen. Sie bekommen alle Markierungen angezeigt, können aber nur Ihre eigenen Markierungen bearbeiten. Bitte achten Sie darauf, dass Sie und Ihr Partner keine Markierungen doppelt vornehmen.</p>
         <hr>
         <!-- Anzeigen der Aufgabenstellung -->
         <h4>Aufgabe {{task.taskNumber}}</h4>
@@ -65,6 +65,10 @@
                 <div class="row">
                     <!-- Zeige die neuen Markierungen in einer Tabelle an; so viele Markierungen wie es Einträge im Array gibt -->
                     <b-table class="col-md-12" bordered small striped :items="annotations" :fields="fieldsNew" responsive="sm">
+                        <!-- Anzeige, von wem die Markierung ist --> 
+                        <template v-slot:cell(annotationOf)="data">
+                            {{getAnnotationSource(data.item.annotationOwner)}}
+                        </template>
                         <!-- Anzeige der Startzeit im Format (hh:)mm:ss --> 
                         <template v-slot:cell(annotationStartTime)="data">
                             {{showTimeInMMSS(data.value)}}
@@ -73,13 +77,14 @@
                         <template v-slot:cell(annotationEndTime)="data">
                             {{showTimeInMMSS(data.value)}}
                         </template>
-                        <!-- AnnotationText als Input Feld -->
+                        <!-- AnnotationText als Input Feld, Readonly, wenn Annotation vom Partner ist; wenn Textfeld verlassen wird, dann wird aktualisierter Text an den Partner gesendet -->
                         <template v-slot:cell(annotationText)="data">
-                            <textarea v-model="annotations[data.index].annotationText"></textarea>
+                            <textarea v-if="data.item.annotationOwner === studentId" v-model="annotations[data.index].annotationText" @blur="sendAnnotationToPartner(annotations[data.index], data.index)"></textarea>
+                            <textarea readonly v-else v-model="annotations[data.index].annotationText"></textarea>
                         </template>
-                        <!-- Buttons für Aktionen -->
+                        <!-- Buttons für Aktionen, Löschen Button nur sichtbar, wenn eigene Markierung -->
                         <template v-slot:cell(actions)="data">
-                            <button v-b-tooltip.hover title="Spiele markierte Passage ab" style="font-size:large;" class="btn btn-sm typcn typcn-media-play" @click="jumpToAnnotationTime(annotations[data.index].annotationStartTime, annotations[data.index].annotationEndTime)"></button><button v-b-tooltip.hover title="Lösche Markierung" style="font-size:large;" class="btn btn-sm typcn typcn-trash" @click="removeAnnotation(data.index)"></button>
+                            <button v-b-tooltip.hover title="Spiele markierte Passage ab" style="font-size:large;" class="btn btn-sm typcn typcn-media-play" @click="jumpToAnnotationTime(annotations[data.index].annotationStartTime, annotations[data.index].annotationEndTime)"></button><button v-if="data.item.annotationOwner === studentId" v-b-tooltip.hover title="Lösche Markierung" style="font-size:large;" class="btn btn-sm typcn typcn-trash" @click="removeAnnotation(data.index, data.item.annotationIdForDeletion)"></button>
                         </template>
                     </b-table>
                 </div>
@@ -111,6 +116,8 @@ import GroupService from '../../GroupService';
 import AnnotationService from '../../AnnotationService';
 //Import der Middleware für Chat-Nachrichten
 import ChatMessageService from '../../ChatMessageService';
+//Import der Middleware für Socket.io Annotations
+import AnnotationSocketService from '../../AnnotationSocketService';
 
 //Import der Icons für vue-beautiful-chat
 import CloseIcon from 'vue-beautiful-chat/src/assets/close-icon.png'
@@ -137,8 +144,11 @@ export default {
             iteration: 1,
             latestAnnotationIndex: null,
             isAnnotationRunning: false,
+            annotationIdForDeletion: 1,
             annotations: [],
+            annotationStore: [],
             oldAnnotations: [],
+            oldAnnotationsUnfiltered: [],
             //Felder für Markierungstabelle
             fieldsOld: [
             {
@@ -164,8 +174,8 @@ export default {
             ],
             fieldsNew: [
                 {
-                    key: 'annotationStartTime',
-                    label: 'Zeitpunkt'
+                    key: 'annotationOf',
+                    label: 'Markierung von'
                 },
                 {
                     key: 'annotationStartTime',
@@ -294,36 +304,122 @@ export default {
     //bei Seitenaufruf ausführen
     async created() {
         try {
+            const studentsTemp = await StudentService.getStudents(this.sessionId);
+            this.student = studentsTemp.find(element => element.id === this.studentId);
+            //Gruppe ermitteln
+            this.getGroup()
             //Aufgabe 1 (iteration vorbefüllt mit 1) über getTasks Funktion in Array tasks schreiben
             this.task = await TaskService.getTasks(this.sessionId, this.iteration);
         } catch (err) {
             this.error = err.message;
         }
         try {
-            //Student Objekt des aktuellen Studenten aus Datenbank holen
-            const studentsTemp = await StudentService.getStudents(this.sessionId);
-            this.student = studentsTemp.find(element => element.id === this.studentId);
-        } catch (err) {
-            this.error = err.message;
-        }
-        try {
             //vorherige Markierungen des aktuellen Studenten aus Datenbank holen
-            this.oldAnnotations = await AnnotationService.getAnnotations(this.sessionId, this.studentId, this.task.id);
+            this.oldAnnotationsUnfiltered = await AnnotationService.getAnnotations(this.sessionId, this.studentId, this.task.id);
+            //nur Hinzufügen, wenn die Phase der Individualanalyse entspricht und die Aufgabe der aktuellen Aufgabe entspricht
+            this.oldAnnotationsUnfiltered.forEach(annotation => {
+                if (annotation.phase === "Individualanalyse") {
+                    if (annotation.taskId === this.task.id) {
+                        this.oldAnnotations.push(annotation);
+                    }
+                }
+            })
             //vorherige Markierungen des anderen Studenten der Gruppe aus der Datenbank holen -> dem Array hinzufügen
             const oldAnnotationsStudent2 = await AnnotationService.getAnnotations(this.sessionId, this.partnerId, this.task.id);
             oldAnnotationsStudent2.forEach(element => {
-                this.oldAnnotations.push(element);
+                if (element.phase === "Individualanalyse") {
+                    if (element.taskId === this.task.id) {
+                        //nur Hinzufügen, wenn die Phase der Individualanalyse entspricht und die aktuelle Aufgabe die richtige ist
+                        this.oldAnnotations.push(element);
+                    }
+
+                }
             });
         } catch (err) {
             this.error = err.message;
         }
         //Speichern der Intervall-Ids für Clear Interval Befehl
-        //Gruppe Objekt des aktuellen Studenten aus Datenbank holen und laufend aktualisieren -> wegen Statusänderungen
-        this.intervalIds.push(setInterval(() => {this.getGroup()}, 3000));
-        //jede Sekunde prüfen, ob Gruppenarbeit erledigt ist
-        this.intervalIds.push(setInterval(() => {this.jumpToDebriefingIfGroupFinished()}, 1000));
         //jede Sekunde auf neue Chat Nachrichten des Partners prüfen
         this.intervalIds.push(setInterval(() => {this.getNewPartnerMessages()}, 1000));
+    },
+    sockets: {
+        annotation: function (data) {
+            //Wenn Markierung von Partner stammt
+            if (data.annotationOwner === this.partnerId) {
+                //wenn die Markierung von derselben Aufgabe stammt, wie gerade bearbeitet wird
+                if (data.taskId === this.task.id) {
+                    let newAnnotation = data;
+                    //wenn nur Änderung einer bestehenden Markierung
+                    for (let i = 0; i<this.annotations.length; i++) {
+                        if (this.annotations[i].annotationIdForDeletion === newAnnotation.annotationIdForDeletion && this.annotations[i].annotationOwner === this.partnerId) {
+                            //dann Update des Texts der bestehenden Markierung
+                            this.annotations[i].annotationText = newAnnotation.annotationText;
+                            //und Funktion verlassen
+                            return;
+                        }
+                    }
+                    //an der richtigen Stelle im Array einfügen mit Splice Methode
+                    //dafür ermitteln, wo sich sich das Element einordnet
+                    //wenn Array schon mindestens ein Element enthält
+                    if (this.annotations.length > 0) {
+                        for (var i = 0; i < this.annotations.length; i++) {
+                            //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
+                            if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
+                                this.annotations.splice(i, 0, newAnnotation);
+                                this.latestAnnotationIndex = i;
+                                break;
+                            }
+                            //wenn letztes Element erreicht, dann einfach am Ende einfügen
+                            if (i === this.annotations.length-1) {
+                                this.annotations.push(newAnnotation);
+                                this.latestAnnotationIndex = i + 1;
+                                break;
+                            }
+                        }
+                    //wenn Array bisher leer, dann einfach am Ende einfügen
+                    } else {
+                        this.annotations.push(newAnnotation);
+                        this.latestAnnotationIndex = 0;
+                    }
+                    //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
+                    this.videoPlayer.markers.add([{
+                        time: newAnnotation.annotationStartTime,
+                        text: this.showTimeInMMSS(newAnnotation.annotationStartTime),
+                        overlayText: this.showTimeInMMSS(newAnnotation.annotationStartTime)
+                    }]);
+                } else {
+                    //wenn Änderung einer bestehenden Markierung
+                    let newAnnotation = data;
+                    for (let i = 0; i<this.annotationStore.length; i++) {
+                        if (this.annotationStore[i].annotationIdForDeletion === newAnnotation.annotationIdForDeletion && this.annotationStore[i].annotationOwner === this.partnerId && this.annotationStore[i].taskId === newAnnotation.taskId) {
+                            //dann Update des Texts der bestehenden Markierung
+                            this.annotationStore[i].annotationText = newAnnotation.annotationText;
+                            //und Funktion verlassen
+                            return;
+                        };
+                    }
+                    //sonst einfach in Array hinzufügen
+                    this.annotationStore.push(newAnnotation)
+                }
+            }
+        },
+        //Markierung des Partners wird gelöscht -> Markierung wieder entfernen
+        annotationDelete: function (data) {
+            const annotationIndexToDelete = data;
+            for (let i=0; i<this.annotations.length; i++) {
+                if (this.annotations[i].annotationOwner === this.partnerId && parseInt(this.annotations[i].annotationIdForDeletion) === parseInt(annotationIndexToDelete)) {
+                    this.annotations.splice(i, 1);
+                    //Marker entfernen
+                    this.videoPlayer.markers.remove([i]);
+                }
+            }
+            //das Gleiche für für später gespeicherte Markierungen
+            for (let i=0; i<this.annotationStore.length; i++) {
+                if (this.annotationStore[i].annotationOwner === this.partnerId && this.annotationStore[i].annotationIdForDeletion === annotationIndexToDelete) {
+                    this.annotationStore.splice(i, 1);
+                }
+            }
+        },
     },
     methods: {
         //schreibt die Daten der dem Studenten zugeordneten Gruppe in Objekt this.group
@@ -349,8 +445,11 @@ export default {
                 //auf volle Sekunden runden
                 annotationStartTime: Math.round(this.videoPlayer.currentTime()),
                 annotationEndTime: 0,
-                taskId: this.task.id
+                taskId: this.task.id,
+                annotationOwner: this.studentId,
+                annotationIdForDeletion: this.annotationIdForDeletion
             }
+            this.annotationIdForDeletion++;
             //an der richtigen Stelle im Array einfügen mit Splice Methode
             //dafür ermitteln, wo sich sich das Element einordnet
             //wenn Array schon mindestens ein Element enthält
@@ -400,6 +499,8 @@ export default {
                 this.videoPlayer.off("timeupdate");
                 //Statusindikator zurücksetzen
                 this.isAnnotationRunning = false;
+                //Markierung an den Partner senden
+                this.sendAnnotationToPartner(this.annotations[this.latestAnnotationIndex], this.latestAnnotationIndex);
             } else {
                 this.error = 'Bitte stellen Sie sicher, dass der Endzeitpunkt Ihrer Markierung hinter dem Startzeitpunkt liegt';
             }
@@ -436,11 +537,12 @@ export default {
             }
         },
         //bestehende Markierung löschen
-        removeAnnotation (annotationId) {
+        async removeAnnotation (annotationIndex, annotationId) {
             if (confirm('Wollen Sie die Markierung wirklich endgültig löschen?')) {
-                this.annotations.splice(annotationId, 1);
+                this.annotations.splice(annotationIndex, 1);
                 //Marker entfernen
-                this.videoPlayer.markers.remove([annotationId]);
+                this.videoPlayer.markers.remove([annotationIndex]);
+                await AnnotationSocketService.deleteAnnotationSocket(annotationId);
             }
         },
 
@@ -467,21 +569,81 @@ export default {
                     if (await TaskService.getTasks(this.sessionId, this.iteration+1)) {
                         //speichere Markierungen in die Datenbank
                         this.annotations.forEach(element => {
-                            AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId, "Gruppenanalyse");
+                            //wenn Annotation vom aktuellen Schüler ist -> nur Annotations des aktuellen Schülers in die DB schreiben, nicht die synchronisierten
+                            if (element.annotationOwner === this.studentId) {
+                                AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId, "Gruppenanalyse");
+                            }
                         });
                         //annotations Array leeren, damit für neue Aufgabe bereit
                         this.annotations = [];
+                        //oldAnnotations Array leeren, damit für neue Aufgabe bereit
+                        this.oldAnnotations = [];
                         //Marker auf Timeline löschen
                         this.videoPlayer.markers.removeAll();
                         //Zähler auf nächste Aufgabe setzen
                         this.iteration++;
                         //nächste Aufgabe laden
                         this.task = await TaskService.getTasks(this.sessionId, this.iteration)
+                        //die Markierungen aus der Individualanalyse des Partners ins Array schreiben
+                        this.oldAnnotationsUnfiltered = await AnnotationService.getAnnotations(this.sessionId, this.studentId, this.task.id);
+                        this.oldAnnotationsUnfiltered.forEach(annotation => {
+                            if (annotation.phase === "Individualanalyse") {
+                                if (annotation.taskId === this.task.id) {
+                                    this.oldAnnotations.push(annotation);
+                                }
+                            }
+                        })
+                        const oldAnnotationsStudent2 = await AnnotationService.getAnnotations(this.sessionId, this.partnerId, this.task.id);
+                        oldAnnotationsStudent2.forEach(element => {
+                            if (element.phase === "Individualanalyse") {
+                                if (element.taskId === this.task.id) {
+                                    //nur Hinzufügen, wenn die Phase der Individualanalyse entspricht und die aktuelle Aufgabe die richtige ist
+                                    this.oldAnnotations.push(element);
+                                }
+                            }
+                        });
+                        //Markierungen des Partners aus Store in Annotations Array schreiben
+                        this.annotationStore.forEach(annotation => {
+                            if (annotation.taskId === this.task.id) {
+                                let newAnnotation = annotation;
+                                //an der richtigen Stelle im Array einfügen mit Splice Methode
+                                //dafür ermitteln, wo sich sich das Element einordnet
+                                //wenn Array schon mindestens ein Element enthält
+                                if (this.annotations.length > 0) {
+                                    for (var i = 0; i < this.annotations.length; i++) {
+                                        //wenn das aktuelle Element eine größere oder gleiche Startzeit hat, wie das neue, dann davor einfügen
+                                        if (this.annotations[i].annotationStartTime >= newAnnotation.annotationStartTime) {
+                                            this.annotations.splice(i, 0, newAnnotation);
+                                            this.latestAnnotationIndex = i;
+                                            break;
+                                        }
+                                        //wenn letztes Element erreicht, dann einfach am Ende einfügen
+                                        if (i === this.annotations.length-1) {
+                                            this.annotations.push(newAnnotation);
+                                            this.latestAnnotationIndex = i + 1;
+                                            break;
+                                        }
+                                    }
+                                //wenn Array bisher leer, dann einfach am Ende einfügen
+                                } else {
+                                    this.annotations.push(newAnnotation);
+                                    this.latestAnnotationIndex = 0;
+                                }
+                                //neuen Marker auf Video-Zeitleiste einfügen mithilfe von Videojs-markers
+                                this.videoPlayer.markers.add([{
+                                    time: newAnnotation.annotationStartTime,
+                                    text: this.showTimeInMMSS(newAnnotation.annotationStartTime),
+                                    overlayText: this.showTimeInMMSS(newAnnotation.annotationStartTime)
+                                }]);
+                            }
+                        })
                     } else {
                         this.jumpingStarted = true;
                         //speichere Markierungen in die Datenbank
                         this.annotations.forEach(element => {
+                            if (element.annotationOwner === this.studentId) {
                             AnnotationService.postAnnotations(element.session, element.student, element.annotationText, element.annotationStartTime, element.annotationEndTime, element.taskId, "Gruppenanalyse");
+                            }
                         });
                         //Beenden der in Intervallen ausgeführten Funktionen
                         this.intervalIds.forEach(element => {
@@ -489,7 +651,6 @@ export default {
                         });
                         //in Students abspeichern, dass sie mit der Gruppenanalyse fertig sind
                         await StudentService.setStudentStatus(this.studentId, 'fertig_mit_Gruppenanalyse');
-                        await StudentService.setStudentStatus(this.partnerId, 'fertig_mit_Gruppenanalyse');
                         //in group abspeichern, dass sie mit der Gruppenanalyse fertig ist
                         await GroupService.setGroupStatus(this.group[0].id, 'fertig_mit_Gruppenanalyse');
                         //zur Seite für Abschluss springen
@@ -510,30 +671,23 @@ export default {
             var feedback = false;
             //Durchlaufen der Annotations
             this.annotations.forEach(element => {
-                //wenn Text vorhanden, dann weiter
-                if (element.annotationText) {
-                    this.error = '';
+                //wenn eigene Annotation -> Annotationen des Partners werden nicht überprüft
+                if (element.annotationOwner === this.studentId) {
+                    //wenn Text vorhanden, dann weiter
+                    if (element.annotationText) {
+                        this.error = '';
+                        feedback = true;
+                    } else { //wenn kein Text vorhanden dann Fehler setzen und beenden (false zurückgeben)
+                        this.error = 'Bitte begründen Sie Ihre Markierungen.'
+                        //false zurückgeben -> weitere Ausführung verhindern
+                        return false;
+                    }
+                } else {
                     feedback = true;
-                } else { //wenn kein Text vorhanden dann Fehler setzen und beenden (false zurückgeben)
-                    this.error = 'Bitte begründen Sie Ihre Markierungen.'
-                    //false zurückgeben -> weitere Ausführung verhindern
-                    return false;
                 }
             });
             //Rückgabevariable weitergeben
             return feedback;
-        },
-        
-        //wenn der Status der Gruppe auf Debriefing steht, dann automatisch dorthin weiterspringen -> wenn ein Schüler die Antwort absendet, dann kommt der zweite Schüler auch ins Debriefing
-        jumpToDebriefingIfGroupFinished() {
-            //wenn Gruppe Variable bereits befüllt
-            if (this.group) {
-                //wenn Gruppenstatus auf Debriefing
-                if (this.group[0].status === "fertig_mit_Gruppenanalyse") {
-                    //leite auf Abschluss Seite weiter
-                    this.$router.push('/analysisend');
-                }
-            }
         },
 
         //Methoden für vue-beautiful-chat
@@ -610,12 +764,17 @@ export default {
             return minutes+':'+seconds;
             }
         },
+        //ermittelt, ob es sich um eine Markierung des aktuellen Studenten oder des Partners handelt
         getAnnotationSource (studentId) {
             if (studentId === this.studentId) {
                 return "Ihnen";
             } else {
                 return this.partnerName;
             }
+        },
+        //sendet Annotation über socket.io an Partner
+        sendAnnotationToPartner (annotationToSend, annotationId) {
+            AnnotationSocketService.postAnnotationSocket(annotationToSend);   
         }
     }
 }

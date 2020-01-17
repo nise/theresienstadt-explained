@@ -17,17 +17,19 @@ import Tracking from './components/Tracking.vue';
 import AnalysisEnd from './components/AnalysisEnd.vue';
 import ModifySession from './components/ModifySession.vue';
 //Import für Chart-Package "highcharts-vue"
-import HighchartsVue from 'highcharts-vue'
-import Highcharts from 'highcharts'
+import HighchartsVue from 'highcharts-vue';
+import Highcharts from 'highcharts';
 import heatmapInit from 'highcharts/modules/heatmap';
 //Import für Chat "vue-beautiful-chat"
 import Chat from 'vue-beautiful-chat';
 //Import für Vue-Clipboard
-import VueClipboard from 'vue-clipboard2'
+import VueClipboard from 'vue-clipboard2';
 //Import für Bootstrap-vue
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue';
 //Import für AsyncComputed
-import AsyncComputed from 'vue-async-computed'
+import AsyncComputed from 'vue-async-computed';
+//Import Vue-socket.io
+import VueSocketIO from '../node_modules/vue-socket.io/dist/vue-socketio.js';
 
 //Einbindung des Vue Router
 Vue.use(VueRouter);
@@ -49,6 +51,20 @@ heatmapInit(Highcharts);
 
 //vue-async-computed Use
 Vue.use(AsyncComputed);
+
+
+//vue-socket.io init
+Vue.use(new VueSocketIO({
+  debug: true,
+  //api proxy, siehe vue.config.js
+  connection: 'http://localhost:5000',
+  vuex: {
+      store,
+      actionPrefix: 'SOCKET_',
+      mutationPrefix: 'SOCKET_'
+  },
+  options: {} //Optional options
+}))
 
 //Anlegen der Routen fürs Routing im Frontend
 const routes = [

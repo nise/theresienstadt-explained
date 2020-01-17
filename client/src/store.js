@@ -10,7 +10,7 @@ export default new Vuex.Store({
         studentId: '',
         sessionId: '',
         partnerId: '',
-        partnerName: '',
+        partnerName: ''
     },
     getters: {
         //gibt berechnete Werte aufgrund der Attribute zurück

@@ -3,7 +3,7 @@
     <div class="nav-head">
       <img src="/navbar_icon.ico" id="navbar-image">
       <!-- Navbar anzeigen, wenn in keiner Schüler Ansicht -->
-      <div class="routing" v-if="this.$route.path !== '/home' && this.$route.path !== '/' && this.$route.path !== '/groupanalysis' && this.$route.path !== '/individualanalysis' && this.$route.path !== '/showpartners'">
+      <div class="routing" v-if="this.$route.path !== '/home' && this.$route.path !== '/' && this.$route.path !== '/groupanalysis' && this.$route.path !== '/individualanalysis' && this.$route.path !== '/showpartners' && this.$route.path !== '/individualanalysis' && this.$route.path !== '/analysisend'">
         <router-link to="/createsession">Neue Session starten</router-link>
         <router-link to="/modifysession">Sessions bearbeiten</router-link>
       </div>
@@ -70,6 +70,7 @@ import 'videojs-markers/dist/videojs-markers.js';
 import 'videojs-markers/dist/videojs.markers.css';
 //GetStudents = Default bei Aufruf root URL
 import GetStudents from './components/GetStudents.vue';
+
 
 export default {
   name: 'app',
