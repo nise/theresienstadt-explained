@@ -9,7 +9,7 @@
         <hr>
         <!-- Videoplayer oberes Ende der Seite -->
         <div class="row">
-            <div class="video col-md-12 d-flex justify-content-center">
+            <div class="video col-md-12 justify-content-center">
                 <video-player ref="videoPlayer" :options="videoOptions"/>
             </div>
         </div>
