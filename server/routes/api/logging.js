@@ -11,28 +11,18 @@ const router = express.Router();
 //POST Requests behandeln
 router.post('/:phase/:session', async (req, res) => {
     const newLoggingMessage = req.body;
-    const phase = req.params.phase;
-    const session = req.params.session;
-    let newLoggingString = '';
-    if (phase == 1) {
-        //wenn 1, dann Individualanalyse
-        //für jedes Attribut Zeile einfügen
-        for (var attribute in newLoggingMessage) {
-            newLoggingString = newLoggingString + attribute + ': ' + newLoggingMessage[attribute] + '\n';
-        }
-        fs.appendFile('./logging/Individualanalyse_' + session + '.txt', newLoggingString + '\n', function (err) {
-            if (err) throw err;
-            });
+    let phase;
+    if (req.params.phase == 1) {
+        phase = 'Individualanalyse';
     } else {
-        //wenn 2, dann Gruppenanalyse
-        //für jedes Attribut Zeile einfügen
-        for (var attribute in newLoggingMessage) {
-            newLoggingString = newLoggingString + attribute + ': ' + newLoggingMessage[attribute] + '\n';
-        }
-        fs.appendFile('./logging/Gruppenanalyse_' + session + '.txt', newLoggingString + '\n', function (err) {
+        phase = 'Gruppenanalyse'
+    }
+    const session = req.params.session;
+    let newLoggingString = newLoggingMessage.Zeitpunkt+';'+phase+';'+session+';'+newLoggingMessage.Meldung+';'+newLoggingMessage.Student+';'+newLoggingMessage.Gruppe+';'+newLoggingMessage.Aufgabe+';'+newLoggingMessage.Anzahl_der_Markierungen+';'+newLoggingMessage.Anzahl_der_Chatnachrichten+';'+newLoggingMessage.Aktueller_Video_Zeitpunkt+';'+newLoggingMessage.Gespult_zu;
+        fs.appendFile('./logging/Videologging.csv', newLoggingString + '\n', function (err) {
             if (err) throw err;
             });
-      }
+
       res.sendStatus(200); 
 });
 

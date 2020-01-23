@@ -301,11 +301,11 @@ export default {
                 Meldung: 'Erstes_Abspielen',
                 Student: this.studentId,
                 Gruppe: this.group[0].id,
-                Zeitpunkt: new Date,
+                Zeitpunkt: Date.now(),
                 Aufgabe: this.task.taskNumber,
                 Anzahl_der_Chat_Nachrichten: this.messageList.length,
                 Anzahl_der_Markierungen: this.annotations.length,
-                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
             }
             LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
         })
@@ -315,12 +315,11 @@ export default {
             Meldung: 'Pausiert',
             Student: this.studentId,
             Gruppe: this.group[0].id,
-            Zeitpunkt: new Date,
+            Zeitpunkt: Date.now(),
             Aufgabe: this.task.taskNumber,
             Anzahl_der_Chat_Nachrichten: this.messageList.length,
             Anzahl_der_Markierungen: this.annotations.length,
-            Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime(),
-            Anzahl_der_Pausierungen_inklusive_dieser: data.pauseCount
+            Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
         }
         LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
         })
@@ -330,11 +329,11 @@ export default {
                 Meldung: 'Nach Pause fortgesetzt',
                 Student: this.studentId,
                 Gruppe: this.group[0].id,
-                Zeitpunkt: new Date,
+                Zeitpunkt: Date.now(),
                 Aufgabe: this.task.taskNumber,
                 Anzahl_der_Chat_Nachrichten: this.messageList.length,
                 Anzahl_der_Markierungen: this.annotations.length,
-                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
             }
             LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
         })
@@ -344,12 +343,11 @@ export default {
                 Meldung: 'Gespult',
                 Student: this.studentId,
                 Gruppe: this.group[0].id,
-                Zeitpunkt: new Date,
+                Zeitpunkt: Date.now(),
                 Aufgabe: this.task.taskNumber,
                 Anzahl_der_Chat_Nachrichten: this.messageList.length,
                 Anzahl_der_Markierungen: this.annotations.length,
-                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime(),
-                Anzahl_der_Spulvorgaenge_inklusive_diesem: data.seekCount,
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime()),
                 Gespult_zu: data.seekTo
             }
             LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
@@ -360,11 +358,11 @@ export default {
                 Meldung: 'Ende des Videos erreicht',
                 Student: this.studentId,
                 Gruppe: this.group[0].id,
-                Zeitpunkt: new Date,
+                Zeitpunkt: Date.now(),
                 Aufgabe: this.task.taskNumber,
                 Anzahl_der_Chat_Nachrichten: this.messageList.length,
                 Anzahl_der_Markierungen: this.annotations.length,
-                Aktueller_Video_Zeitpunkt: this.videoPlayer.currentTime()
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
             }
             LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
         })
