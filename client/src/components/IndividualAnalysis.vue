@@ -302,6 +302,16 @@ export default {
             } else {
                 this.error = 'Bitte stellen Sie sicher, dass der Endzeitpunkt Ihrer Markierung hinter dem Startzeitpunkt liegt';
             }
+            //beim Erstellen einer Markierung Logging Meldung erstellen
+            let newLoggingMessage = {
+                Meldung: 'Markierung erstellt',
+                Student: this.studentId,
+                Zeitpunkt: Date.now(),
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
+            }
+            LoggingService.postLogs(newLoggingMessage, 1, this.sessionId);
 
         },
         //Text der Markierung ändern
@@ -315,6 +325,16 @@ export default {
                 //Marker entfernen
                 this.videoPlayer.markers.remove([annotationId]);
             }
+            //beim Löschen einer Markierung Logging Meldung erstellen
+            let newLoggingMessage = {
+                Meldung: 'Markierung geloescht',
+                Student: this.studentId,
+                Zeitpunkt: Date.now(),
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
+            }
+            LoggingService.postLogs(newLoggingMessage, 1, this.sessionId);
         },
         //zu übergebener Sektion im Videoplayer springen und Video wieder stoppen, wenn Player an Ende der Markierung ankommt
         jumpToAnnotationTime(timeToJump, endTime) {

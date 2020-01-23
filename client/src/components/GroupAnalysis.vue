@@ -579,6 +579,18 @@ export default {
             } else {
                 this.error = 'Bitte stellen Sie sicher, dass der Endzeitpunkt Ihrer Markierung hinter dem Startzeitpunkt liegt';
             }
+            //beim Starten einer Markierung Logging Meldung erstellen
+            let newLoggingMessage = {
+                Meldung: 'Markierung erstellt',
+                Student: this.studentId,
+                Gruppe: this.group[0].id,
+                Zeitpunkt: Date.now(),
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Chat_Nachrichten: this.messageList.length,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
+            }
+            LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
         },
         //Text der Markierung ändern
         changeAnnotationText(text, annotationId) {
@@ -619,6 +631,18 @@ export default {
                 this.videoPlayer.markers.remove([annotationIndex]);
                 await AnnotationSocketService.deleteAnnotationSocket(annotationId);
             }
+            //beim Löschen einer Markierung Logging Meldung erstellen
+            let newLoggingMessage = {
+                Meldung: 'Markierung geloescht',
+                Student: this.studentId,
+                Gruppe: this.group[0].id,
+                Zeitpunkt: Date.now(),
+                Aufgabe: this.task.taskNumber,
+                Anzahl_der_Chat_Nachrichten: this.messageList.length,
+                Anzahl_der_Markierungen: this.annotations.length,
+                Aktueller_Video_Zeitpunkt: Math.round(this.videoPlayer.currentTime())
+            }
+            LoggingService.postLogs(newLoggingMessage, 2, this.sessionId);
         },
 
         async getStudentName(studentIdToLookFor) {
