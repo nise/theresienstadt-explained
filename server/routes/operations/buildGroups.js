@@ -79,7 +79,7 @@ router.get('/:session', async (req, res) => {
                                     let differenceStartTime = Math.abs(positive[1] - annotation.annotationStartTime);
                                     let differenceEndTime = Math.abs(positive[2] - annotation.annotationEndTime);
                                     pair.score = pair.score + (differenceStartTime * 2) + (differenceEndTime * 2);
-                                    if (pair.score < 0) {
+                                    if (pair.score > 0) {
                                         pair.score = 0;
                                     }
                                 } else {
@@ -88,7 +88,7 @@ router.get('/:session', async (req, res) => {
                                         let differenceStartTime = Math.abs(positive[1] - annotation.annotationStartTime);
                                         let differenceEndTime = Math.abs(positive[2] - annotation.annotationEndTime);
                                         pair.score = pair.score + (differenceStartTime * 2) + (differenceEndTime * 2);
-                                        if (pair.score < 0) {
+                                        if (pair.score > 0) {
                                             pair.score = 0;
                                         }
                                     }
