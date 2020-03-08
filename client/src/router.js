@@ -12,17 +12,18 @@ export default new Router({
     {
       path: '/',
       name: 'intro',
-      component: Intro,
+      component: Home, // Intro,
     },
     {
       path: '/home',
       name: 'home',
       component: Home,
     },
-    { 
-      path: '/film', 
-      name: 'film', 
-      component: () => import(/* webpackChunkName: "imprint" */ './views/Video.vue') },
+    {
+      path: '/film',
+      name: 'film',
+      component: () => import(/* webpackChunkName: "imprint" */ './views/Video.vue')
+    },
     {
       path: '/about',
       name: 'about',
@@ -39,27 +40,52 @@ export default new Router({
     {
       path: '/privacy',
       name: 'privacy',
-      component: () => import(/* webpackChunkName: "imprint" */ './views/Privacy.vue'),
+      component: () => import(/* webpackChunkName: "privacy" */ './views/Privacy.vue'),
     },
     {
       path: '/pages/persons',
       name: 'imprint',
-      component: () => import(/* webpackChunkName: "about" */ './views/Persons.vue'),
+      component: () => import(/* webpackChunkName: "persons" */ './views/Persons.vue'),
     },
     {
       path: '/pages/scenes',
       name: 'scenes',
-      component: () => import(/* webpackChunkName: "about" */ './views/Scenes.vue'),
+      component: () => import(/* webpackChunkName: "scenes" */ './views/Scenes.vue'),
     },
     {
       path: '/pages/map',
       name: 'pages/map',
-      component: () => import(/* webpackChunkName: "about" */ './views/Map.vue'),
+      component: () => import(/* webpackChunkName: "map" */ './views/Map.vue'),
     },
     {
       path: '/pages/history',
       name: 'imprint',
-      component: () => import(/* webpackChunkName: "about" */ './views/History.vue'),
+      component: () => import(/* webpackChunkName: "history" */ './views/History.vue'),
+    },
+    {
+      path: '/pages/fake-video',
+      name: 'imprint',
+      component: () => import(/* webpackChunkName: "fakevideo" */ './views/FakeVideo.vue'),
+    },
+    {
+      path: '/pages/references',
+      name: 'imprint',
+      component: () => import(/* webpackChunkName: "references" */ './views/References.vue'),
+    },
+    {
+      path: '/pages/video-analyses',
+      name: 'imprint',
+      component: () => import(/* webpackChunkName: "analysis" */ './views/VideoAnalyses.vue'),
+    },
+    {
+      path: '/pages/guided-video',
+      name: 'imprint',
+      component: () => import(/* webpackChunkName: "guidedvideo" */ './views/GuidedVideo.vue'),
+    },
+    {
+      path: '/pages/propaganda',
+      name: 'imprint',
+      component: () => import(/* webpackChunkName: "propaganda" */ './views/Propaganda.vue'),
     },
   ],
 })

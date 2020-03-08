@@ -10,12 +10,6 @@
 
     <footer class="page-footer">
       <div class="container text-center text-md-left">
-        <div hidden id="nav">
-          <router-link to="/pages/map">Karte</router-link>|
-          <router-link to="/pages/scenes">Szenen</router-link>|
-          <router-link to="/pages/persons">Personen</router-link>|
-          <router-link to="/pages/history">Entstehungsgeschichte</router-link>|
-        </div>
         <div class="row">
           <div class="col-md-8 mt-md-0 mt-8">
             <img
@@ -32,7 +26,7 @@
               <li>
                 <a href="/imprint">Impressum</a>
               </li>
-              <li hidden>
+              <li>
                 <a href="/privacy">Datenschutzerklärung</a>
               </li>
             </ul>
