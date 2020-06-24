@@ -5,7 +5,7 @@
 // import Video from '../js/Video.js';
 // const videovue = new Video(store);
 // const video = videovue.video;
-
+//
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import store from '../store';
