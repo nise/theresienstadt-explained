@@ -1,5 +1,98 @@
+/* eslint-disable import/no-amd */
+/* eslint-disable no-unused-vars */
+<script>
+
+// import Video from '../js/Video.js';
+// const videovue = new Video(store);
+// const video = videovue.video;
+
+import Vue from 'vue';
+import BootstrapVue from 'bootstrap-vue';
+import store from '../store';
+import Vi2 from '../js/vi2.main';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+
+Vue.use(BootstrapVue);
+
+export default {  
+  data() {
+    return {
+      vi2_player_id: 'vi2-1',
+      video_selector: 'seq',
+      video_overlay_selector: 'overlay',
+      current_video: -1,
+      showAnnotationForm: false,
+      annotationContent: '',
+      annotationTime: '',
+      showModal: false, // not used
+    };
+  },
+  mounted() {},
+  methods: {
+    toggle() {
+      this.showAnnotationForm = !this.showAnnotationForm;
+      if (this.showAnnotationForm) {
+        this.pause();
+        this.annotationTime = Vi2.getObserver().player.currentTime().toFixed(1);
+      }
+    },
+    saveAnnotation() {
+      const _this = this;
+      /*utils.get_ws('annotations', {
+        userid: user.username,
+        videoid: this.$route.params.id,
+        courseid: course.id,
+        content: this.annotationContent,
+        playbacktime: this.annotationTime,
+        created: new Date().getTime(),
+        updated: new Date().getTime(),
+        operation: 'save',
+      }, (e) => {
+        _this.play();
+        Vi2.updateAnnotations('comments');
+        _this.showAnnotationForm = false;
+      });*/
+    },
+    removeAnnotation(id, video) {
+      /*
+      utils.get_ws('annotations', {
+        courseid: course.id,
+        id,
+        videoid: video,
+        operation: 'remove',
+      }, (msg) => {
+        try {
+          const d = JSON.parse(msg.data);
+          Vi2.updateAnnotations('comments');
+        } catch (e) {
+          console.log('Could not parse comments from database after remove');
+          console.log(msg);
+        }
+      });*/
+    },
+    cancelAnnotation() {
+      this.showAnnotationForm = false;
+      this.play();
+    },
+    play() {
+      Vi2.getObserver().player.play();
+    },
+    pause() {
+      Vi2.getObserver().player.pause();
+    },
+    destroy() {
+      Vi2.getObserver().player.pause();
+      // xxx more things need to be done
+    },
+  },
+};
+</script>
+
+
 <template>
   <div id="video">
+    HELLO
     <div class="page-item VIDEO">
       <!-- Storage -->
       <div style="display:none; visibility:hidden;" id="vi2"></div>
@@ -12,7 +105,7 @@
           </a>
           <!-- Main -->
           <div :id="vi2_player_id" class="container-fluid">
-            <h2>{{ video.title }}</h2>
+            <h2>video.title</h2>
             <div class="row">
               <div id="videowrapper" class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                 <div :id="video_selector"></div>
@@ -101,13 +194,3 @@
     </div>
   </div>
 </template>
-
-<script>
-
-// import Video from '../js/Video.js';
-// import store from '../store';
-// const videovue = new Video(store);
-// const video = videovue.video;
-
-
-</script>

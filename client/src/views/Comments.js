@@ -36,7 +36,7 @@ define([
         moment(t) {
           return moment(Number(t), 'x').fromNow()
         },
-        edit(id) {},
+        edit(id) { },
         remove(id, video) {
           utils.get_ws('annotations', {
             courseid: course.id,

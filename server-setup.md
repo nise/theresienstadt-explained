@@ -47,12 +47,10 @@ server {
     }
 }
 
-
 **Domain in der hosts.conf hinzufügen**
  `sudo vi /etc/hosts`
 185.25.252.55 berthelsdorf.de www.berthelsdorf.de
 185.25.252.55 theresienstadt-film.net www.theresienstadt-film.net
-
 
 
 # Server einrichten
@@ -75,11 +73,24 @@ Requirements: git, npm, node, forever
 * `sudo chmod a+x /usr/sbin/certbot-auto`
 * `sudo certbot-auto --nginx -d theresienstadt-film.net  -d www.theresienstadt-film.net`
 * TODO: add to cromntab: `0 2 * * * sudo /usr/sbin/certbot-auto -q renew`
-* I had solv this issue first: https://github.com/certbot/certbot/issues/2883
-* 
+* I had to solve this issue first: https://github.com/certbot/certbot/issues/2883
+* TODO configure ufw: `sudo ufw enable`
+
+/etc/letsencrypt/live/theresienstadt-film.net/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/theresienstadt-film.net/privkey.pem
+   Your cert will expire on 2020-03-11. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot-auto
+   again with the "certonly" option. To non-interactively renew *all*
+   of your certificates, run "certbot-auto renew"
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
 
 
 
 
-sudo ufw enable
+
 

@@ -1,9 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Intro from './views/Intro.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Home from './views/Home.vue';
+//import Video from './views/Video.vue';
+//import Intro from './views/Intro.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -22,7 +23,7 @@ export default new Router({
     {
       path: '/film',
       name: 'film',
-      component: () => import(/* webpackChunkName: "imprint" */ './views/Video.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/Video.vue'),
     },
     {
       path: '/about',

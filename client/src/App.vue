@@ -184,10 +184,14 @@ body {
   height: 300px;
   max-width: 100%;
   overflow: hidden;
+  padding-left:0;
+  padding-right:0;
 }
 
 .page-apps .app-cell img {
   z-index: 1;
+  width:100%;
+  max-height: 420px;
 }
 
 .page-apps .cell-box {

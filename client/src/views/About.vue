@@ -13,10 +13,17 @@
         <li><strong>Filmbearbeitung:</strong> Niels Seidel</li>
         <li><strong>Filmprotokoll und filmästhetische Analyse:</strong><a href="https://scholar.princeton.edu/dennisschaefer/home"> Dennis Schäfer, Princton University</a></li>
         <li hidden><strong>Fotos:</strong> xxx</li>
-        <li><strong>Software und Architektur:</strong><a href="https://www.fernuni-hagen.de/ks/team/niels.seidel.shtml">Niels Seidel, FernUniversität in Hagen</a>  sowie die Studierenden Michael Dittwald und Michael Desch</li>
+        <li><strong>Software Entwicklung:</strong>
+          <ul>
+            <li>Architektur: <a href="https://www.fernuni-hagen.de/ks/team/niels.seidel.shtml">Niels Seidel, FernUniversität in Hagen</a></li>
+            <li>Guided Video Tour: Michael Dittwald, Bachelorand am Lehrgebiet Kooperative Systeme, 2018</li>
+            <li>ArgueGraph Video Analyse: Michael Desch, Bachelorand am Lehrgebiet Kooperative Systeme, 2020</li>
+          </ul>
+        </li>
         <li><strong>Design:</strong><a href="http://dioptrin.de/">Marcel Hüsni, dioptrin</a></li>
         <li hidden><strong>Inhaltliche Begutachtung:</strong> Dr. Karel Margry</li>
         <li><strong>PR:</strong> Frauke Wenzel</li>
+        
       </ul>
 
       <h2>Unterstützer, Förderer und Kooperationspartner</h2>
