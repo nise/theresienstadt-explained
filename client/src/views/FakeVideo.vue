@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <h1>FakeVideo</h1>
+    <!--
+- Digital video tampering detection: An overview of passive techniques, https://www.sciencedirect.com/science/article/pii/S1742287616300718
+- DLF Framing
+- Deep Fake
 
+    -->
     <div class="page">
       Video-Aufnahmen gelten bislang als wichtige Beweise, um Sachverhalte zu klären. Das könnte bald vorbei sein, denn die Manipulation von Bewegtbildern ist technisch quasi für jeden möglich. Öffentlichkeit und vor allem Medienmacher müssen künftig also noch viel genauer hinschauen, welche Videos echt sind und welche manipuliert.
       Unterschied zwischen den Visual Effects in Kinofilmen und den hier presentierten Techniken ist der betriebene Aufwand und die dazu notwendige Expertise.

@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <h1>Protagonisten</h1>
-
-    <div v-for="person in persons">{{ person.name }}</div>
+    <div v-for="person in persons" v-bind:key="person">{{ person.name }}</div>
   </div>
 </template>
 
