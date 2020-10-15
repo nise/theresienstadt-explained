@@ -1,8 +1,26 @@
 <template>
   <div class="home">
     <h1>Protagonisten</h1>
-
-    <div v-for="person in persons">{{ person.name }}</div>
+    <b-container fluid>
+      <b-row>
+        <b-col sm="6">
+          
+              <personcard class="my-4 mr-1" v-for="(person, index) in persons1"
+                :key = "index"
+                :person = "person">
+              </personcard>
+            </b-col>
+          
+        <b-col sm="6">
+          
+              <personcard class="my-4 ml-1" v-for="(person, index) in persons2"
+                :key = "index"
+                :person = "person">
+              </personcard>
+            
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -10,10 +28,12 @@
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+//import 'bootstrap/dist/css/bootstrap.css'
+//import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
+
+import personcard from '@/components/PersonCard.vue';
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue';
 
@@ -35,8 +55,44 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'home',
+  components: {
+    personcard
+  },
+
+  created: function(){
+    this.GiveArrID(this.persons);
+    this.SplitArrInTwo(this.persons, this.persons1, this.persons2);
+  },
+
+  methods: {
+    SplitArrInTwo: function (personarr, out1, out2){
+      let size = personarr.length;
+
+      for (let i = 0; i < size; i++)
+      {
+        if (i%2 == 0)
+        {
+          out1.push(personarr[i]); 
+        }
+        else
+        {
+          out2.push(personarr[i]);
+        }
+      }
+    },
+    GiveArrID: function (personarr){
+      let size = personarr.length;
+      for (let i = 0; i < size; i++)
+      {
+        personarr[i].id = i
+      }
+    },
+  },
+
   data: () => ({
     error: '',
+    persons1: [],
+    persons2: [],
     persons: [
       {
         shortname: 'Maximilian Adler',
@@ -769,6 +825,5 @@ export default {
         this.message = result;
       });
   }, */
-  methods: {},
 }
 </script>

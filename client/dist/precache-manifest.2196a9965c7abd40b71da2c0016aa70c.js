@@ -1,67 +1,67 @@
 self.__precacheManifest = [
   {
-    "revision": "cf3202cf994f720345fd",
-    "url": "/js/about.8280a6e9.js"
+    "revision": "b0dd15eb4f00edc2c0fd",
+    "url": "/js/about.7bf20a32.js"
   },
   {
     "revision": "97390d695e9052e766d1",
     "url": "/js/about~persons~scenes.fc6c4276.js"
   },
   {
-    "revision": "05e22b627d64a6de3818",
-    "url": "/js/analysis.446361bd.js"
+    "revision": "ee395867126004b21d1d",
+    "url": "/js/analysis.26fc3fa6.js"
   },
   {
-    "revision": "5a5ae4cc131f8a50625f",
-    "url": "/js/app.8864a85c.js"
+    "revision": "192376b3ebc9bbcf0680",
+    "url": "/js/app.ad4f1a16.js"
   },
   {
     "revision": "d0b48585d95ce01e9964",
     "url": "/js/chunk-vendors.025cda56.js"
   },
   {
-    "revision": "7d12f495881df2dc41e1",
-    "url": "/js/fakevideo.aa918204.js"
+    "revision": "24aed40dca00488a6a64",
+    "url": "/js/fakevideo.eacb2058.js"
   },
   {
-    "revision": "07665693fce264ea4968",
-    "url": "/js/guidedvideo.8e8d03f4.js"
+    "revision": "b2a621bb1b0b0283e850",
+    "url": "/js/guidedvideo.2de56ffb.js"
   },
   {
-    "revision": "9dd0afab35812ce7f917",
-    "url": "/js/history.8167d3e8.js"
+    "revision": "5b9cea52866fda0f6e5a",
+    "url": "/js/history.cf6e2155.js"
   },
   {
     "revision": "5571edfcf47b6deb6c1a",
     "url": "/js/history~privacy.9f061f07.js"
   },
   {
-    "revision": "1ce2aa4af4eb9cb7811d",
-    "url": "/js/imprint.84ab5de3.js"
+    "revision": "37c752861f03e1b6213a",
+    "url": "/js/imprint.ddda507e.js"
   },
   {
-    "revision": "1ebbb4267a602ec5e5b2",
-    "url": "/js/map.26a172da.js"
+    "revision": "3a35d7d974f18fadcab2",
+    "url": "/js/map.f3fdabca.js"
   },
   {
-    "revision": "631ade19c6759734464e",
-    "url": "/js/persons.9c70c2ec.js"
+    "revision": "676016c092afaa353457",
+    "url": "/js/persons.10155d57.js"
   },
   {
-    "revision": "ad7c3413c6de83473456",
-    "url": "/js/privacy.e626b368.js"
+    "revision": "0810bbc6ff612eaa85e4",
+    "url": "/js/privacy.150bd794.js"
   },
   {
-    "revision": "f21fc75c572bf5d6c675",
-    "url": "/js/propaganda.187ac05b.js"
+    "revision": "c5984c2966df0c71965d",
+    "url": "/js/propaganda.8fb508a2.js"
   },
   {
-    "revision": "b0e72a73f4fd1caa1087",
-    "url": "/js/references.609ae857.js"
+    "revision": "462f8e8f59da218198a1",
+    "url": "/js/references.15aeb4e6.js"
   },
   {
-    "revision": "67f297650c8aa1eea54b",
-    "url": "/js/scenes.f33925b9.js"
+    "revision": "3d03f08957d4f08d6653",
+    "url": "/js/scenes.d8726413.js"
   },
   {
     "revision": "2a47ad46091bea89b8febac13e353bbc",
@@ -88,10 +88,6 @@ self.__precacheManifest = [
     "url": "/img/home-orte.3e5f4413.png"
   },
   {
-    "revision": "5aa1fc8810f5b8128a1650224290de26",
-    "url": "/media/intro.5aa1fc88.mp4"
-  },
-  {
     "revision": "d0736c46699375d764cfc02d7f8ee2af",
     "url": "/img/dummy.d0736c46.png"
   },
@@ -116,11 +112,7 @@ self.__precacheManifest = [
     "url": "/img/home-literatur.f1cb37b0.png"
   },
   {
-    "revision": "a2a9d1ab7f603e9ae8e45519f0b87656",
-    "url": "/media/theresienstadt.a2a9d1ab.mp4"
-  },
-  {
-    "revision": "6acd22b50e076fa0efa6db0b69807a41",
+    "revision": "f2df54f1d896953fabf94f6448037597",
     "url": "/index.html"
   },
   {

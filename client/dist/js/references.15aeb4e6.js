@@ -1,2 +1,2 @@
 (window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["references"],{"65fa":function(e,t,n){"use strict";n.r(t);var a=function(){var e=this,t=e.$createElement;e._self._c;return e._m(0)},s=[function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",{staticClass:"container"},[n("h1",[e._v("Literatur und Film über den Film")]),n("div",{staticClass:"page"},[n("h2",[e._v("Bim")]),n("ul",{staticClass:"page-list"},[n("li",[e._v("dd")])]),n("h2",[e._v("Bam")])])])}],i=n("2877"),l={},r=Object(i["a"])(l,a,s,!1,null,null,null);t["default"]=r.exports}}]);
-//# sourceMappingURL=references.609ae857.js.map
+//# sourceMappingURL=references.15aeb4e6.js.map
