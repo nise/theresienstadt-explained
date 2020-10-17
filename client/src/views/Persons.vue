@@ -1,13 +1,24 @@
 <template>
   <div class="home">
+    <br>
+    <br>
     <h1>Protagonisten</h1>
+    <br>
+    <br>
     <b-container fluid>
+      <b-row>
+        <b-col cols="4"></b-col>
+        <b-col> <input type="text" v-model="searchquery" @keyup="getsearchquery" class="form-control" placeholder="Suchen..." id="searchfield"> </b-col>
+        <b-col> <input type="text" class="form-control" placeholder="Filter" id="filerfield"> </b-col>
+        <b-col cols="4"></b-col>
+      </b-row>
       <b-row>
         <b-col sm="6">
           
               <personcard class="my-4 mr-1" v-for="(person, index) in persons1"
                 :key = "index"
-                :person = "person">
+                :person = "person"
+                :ref = "'ref'+person.id">
               </personcard>
             </b-col>
           
@@ -15,7 +26,8 @@
           
               <personcard class="my-4 ml-1" v-for="(person, index) in persons2"
                 :key = "index"
-                :person = "person">
+                :person = "person"
+                :ref = "'ref'+person.id">
               </personcard>
             
         </b-col>
@@ -34,6 +46,7 @@ import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
 import personcard from '@/components/PersonCard.vue';
+
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue';
 
@@ -60,12 +73,71 @@ export default {
   },
 
   created: function(){
-    this.GiveArrID(this.persons);
-    this.SplitArrInTwo(this.persons, this.persons1, this.persons2);
+    this.giveArrID(this.persons);
+    this.splitArrInTwo(this.persons, this.persons1, this.persons2);
+
+    
+  },
+
+  mounted: function(){
   },
 
   methods: {
-    SplitArrInTwo: function (personarr, out1, out2){
+    getsearchquery: function (){
+      if (this.searchquery.length > 1){
+        this.search(this.persons, this.searchquery);
+      }
+      else if(this.states.displayingSearch){
+        this.states.displaySearchResult = false;
+        this.showAllCards();
+        //this.initialCardState.close = true;
+        //this.persons1.splice(0);
+        //this.persons2.splice(0);
+        //this.splitArrInTwo(this.persons, this.persons1, this.persons2);
+      }
+    },
+
+    search: function (haystack, needle){
+      let result = haystack.filter(el => el.shortname.toLowerCase().indexOf(needle.toLowerCase()) != -1);
+      this.displaySearchResult(result);
+    },
+
+    displaySearchResult: function (result){
+      this.states.displayingSearch = true;
+      //this.persons1.splice(0);
+      //this.persons2.splice(0);
+      //this.splitArrInTwo(result, this.persons1, this.persons2);
+      this.hideAllCards();
+      //console.log(result);
+      for (let i = 0; i < result.length; i++){
+        this.showCard(result[i].id);
+      }
+      //this.showCard(result[0].id);
+    },
+
+    hideAllCards: function(){
+      for (let i = 0; i < this.persons1.length; i++){
+        this.$refs["ref"+this.persons1[i].id][0].hideself = true;
+      }
+      for (let i = 0; i < this.persons2.length; i++){
+        this.$refs["ref"+this.persons2[i].id][0].hideself = true;
+      }
+    },
+
+    showAllCards: function(){
+      for (let i = 0; i < this.persons1.length; i++){
+        this.$refs["ref"+this.persons1[i].id][0].hideself = false;
+      }
+      for (let i = 0; i < this.persons2.length; i++){
+        this.$refs["ref"+this.persons2[i].id][0].hideself = false;
+      }
+    },
+
+    showCard: function(cardID){
+        this.$refs["ref"+cardID][0].hideself = false;   
+    },
+
+    splitArrInTwo: function (personarr, out1, out2){
       let size = personarr.length;
 
       for (let i = 0; i < size; i++)
@@ -80,7 +152,7 @@ export default {
         }
       }
     },
-    GiveArrID: function (personarr){
+    giveArrID: function (personarr){
       let size = personarr.length;
       for (let i = 0; i < size; i++)
       {
@@ -93,6 +165,15 @@ export default {
     error: '',
     persons1: [],
     persons2: [],
+    searchquery: '',
+    states: {
+      displayingSearch: false
+    },
+    initialCardState: {
+      close: false,
+      hideself: false
+    },
+
     persons: [
       {
         shortname: 'Maximilian Adler',

@@ -1,9 +1,9 @@
 <template>
 
-<b-container class="ld xld odd bg-light" style="height:210px; overflow-y:visible; height:auto">
+<b-container class="ld xld odd bg-light" style="height:210px; overflow-y:visible; height:auto" :style="{display: (this.hideself ? 'none' : 'block')}">
     <b-row>
         
-            <img style = "height:210px; width:180px"/>
+            <img style = "height:210px; width:180px" :id="'personcard'+person.id"/>
         
         <b-col>
             <h3 class = "text-left ml-3">{{person.shortname}}</h3>
@@ -50,16 +50,17 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootstrap/dist/css/bootstrap.css'
 export default {
     name: "personcard",
-    props: ["person", "id"],
+    props: ["person"],
     data: () => ({
         isopenbio: "block",
+        hideself: false,
         moviescenes: [
             1,
             2,
             3,
         ],
     }),
-
+    
     methods: {
 
         togglebio: function (){
