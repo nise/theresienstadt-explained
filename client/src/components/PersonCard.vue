@@ -12,9 +12,9 @@
             <br>
             <br>
             <b-row class = "ml-3">
-                <p class = "text-left mr-auto">{{person.profession}}</p>
-                <b-button v-b-toggle = "'collapse-'+person.id" class="mr-4" @click="togglebio" size="sm" squared variant="dark"
-                    style = "background-color:black; height:25px;" :style="{display:this.isopenbio}">Mehr...
+                <p class = "text-left">{{person.profession}}</p>
+                <b-button v-b-toggle = "'collapse-'+person.id" class="mr-3" @click="togglebio" size="sm" squared variant="dark"
+                    style = "background-color:black; height:25px; position:absolute; right:0px;" :style="{display:this.isopenbio}">Mehr...
                 </b-button>
             </b-row>
             

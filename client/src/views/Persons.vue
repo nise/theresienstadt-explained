@@ -7,14 +7,11 @@
     <br>
     <b-container fluid>
       <b-row>
-        <b-col cols="4"></b-col>
-        <b-col> <input type="text" v-model="searchquery" @keyup="getsearchquery" class="form-control" placeholder="Suchen..." id="searchfield"> </b-col>
-        <b-col> <input type="text" class="form-control" placeholder="Filter" id="filerfield"> </b-col>
-        <b-col cols="4"></b-col>
-      </b-row>
-      <b-row>
         <b-col sm="6">
-          
+              <input type="text" style="float:right;width:400px;" v-model="searchquery" 
+                @keyup="getsearchquery" class="mx-1 form-control" placeholder="Suchen..." id="searchfield">
+              <br>
+              <br>
               <personcard class="my-4 mr-1" v-for="(person, index) in persons1"
                 :key = "index"
                 :person = "person"
@@ -23,7 +20,9 @@
             </b-col>
           
         <b-col sm="6">
-          
+              <input type="text" style="float:left;width:400px;" class="mx-1 form-control" placeholder="Filter" id="filerfield">
+              <br>
+              <br>
               <personcard class="my-4 ml-1" v-for="(person, index) in persons2"
                 :key = "index"
                 :person = "person"
