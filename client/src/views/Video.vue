@@ -308,9 +308,11 @@ var annoLength = this.annotations.length;
         <div class="video-controls col-12">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
-            <!--<div class="timeline-top">
-              <span :title="annotation.content.title" v-for="annotation in refs.annotationscomp.annotations" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
-            </div>-->
+            <div class="timeline-top">
+              <portal-target name="timeline-annotation-marker">
+              </portal-target>
+            </div>
+
             <div @click="clickTimeline" class="timeline-main"></div>
             <div class="timeline-bottom"></div>
             <div :style="'width:' + getProgressWidth() + '%;'" class="timeline-progress"></div>
@@ -356,10 +358,11 @@ var annoLength = this.annotations.length;
             </select>
           </div>
         </div>
-        <annotations
+        <annotations v-if="videoElement"
           ref = "annotationscomp"
           :selectedPropagandaTechnique = "selectedPropagandaTechnique"
           :currentTime = "currentTime"
+          :videoElementduration = "videoElement.duration"
           @gotoTimerequest = "gotoTime">
         </annotations>
         <div hidden class="row video-bar scenes ml-1 mt-2">
