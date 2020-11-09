@@ -34,10 +34,16 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
+import annotations from '../components/Annotations'
+
 // Choose Locale
 //moment.locale('de');
 
 export default {
+  name: 'Video',
+  components: {
+    annotations
+  },
   data() {
     return {
       scenes: [
@@ -117,12 +123,7 @@ export default {
       currentTime: 0,
       formatedTime: '00:00',
       timer: null,
-      annotations: [],
-      showAnnotationForm: false,
       selectedPropagandaTechnique: '',
-      newannotationtitle:'',
-      newannotationreason:'',
-      newannotationtime:''
     };
   },
   methods: {
@@ -253,11 +254,11 @@ export default {
     currentTime: function(c){ 
       this.videolog({session: this.session, playback: c, utc: (new Date()).getTime() });
 
-      for(var i = 0; i < this.annotations.length; i++){
-        if( c >= this.annotations[i].start && c < this.annotations[i].end){
-          this.annotations[i].active ? this.showAnnotation(this.annotations[i]) : null;
+      for(var i = 0; i < this.$refs.annotationscomp.annotations.length; i++){
+        if( c >= this.$refs.annotationscomp.annotations[i].start && c < this.$refs.annotationscomp.annotations[i].end){
+          this.$refs.annotationscomp.annotations[i].active ? this.showAnnotation(this.$refs.annotationscomp.annotations[i]) : null;
         }else{
-          this.hideAnnotations(this.annotations[i]);
+          this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
         }
       }
 /*
@@ -307,9 +308,9 @@ var annoLength = this.annotations.length;
         <div class="video-controls col-12">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
-            <div class="timeline-top">
-              <span :title="annotation.content.title" v-for="annotation in annotations" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
-            </div>
+            <!--<div class="timeline-top">
+              <span :title="annotation.content.title" v-for="annotation in refs.annotationscomp.annotations" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
+            </div>-->
             <div @click="clickTimeline" class="timeline-main"></div>
             <div class="timeline-bottom"></div>
             <div :style="'width:' + getProgressWidth() + '%;'" class="timeline-progress"></div>
@@ -355,31 +356,12 @@ var annoLength = this.annotations.length;
             </select>
           </div>
         </div>
-        <div class="row video-bar annotations ml-1 mt-2">
-          <h4>Markierungen</h4>
-          <button v-if="!showAnnotationForm" @click="toggleForm" class="btn btn-primary btn-sm left ml-2">Neue Markierung anlegen</button>
-          <div v-if="showAnnotationForm" class="annotation-form col-12">
-            <div class="time left">Zeitpunkt: {{ currentTime | moment('mm:ss') }}</div>
-            <input v-model="newannotationtitle" placeholder="Geben Sie der Markierung einen Titel"></input><br>
-            <textarea v-model="newannotationreason" placeholder="Begründen Sie, warum die markierte Stelle eine Manipulation darstellt"></textarea><br>
-            <button @click="saveannotation" class="btn btn-primary left">speichern</button>
-            <button @click="clearannotation" class="btn btn-link right">verwerfen</button>
-          </div>
-          <br/>
-          <br/>
-          <br/>
-          <div class="annotation-list col-12">
-            <ul class="scene-list">
-              <li v-for="annotation in annotations" @click="gotoTime(annotation.start)">
-                <a class="link">
-                  {{ annotation.start | moment('mm:ss') }} {{ annotation.content.title}} <i @click="deleteAnnotation(annotation.id)" class="fa fa-info right mr-2"></i>
-                </a>
-                <div class="description">{{ annotation.content.reason }}</div>
-                
-              </li>
-            </ul>
-          </div>
-        </div>
+        <annotations
+          ref = "annotationscomp"
+          :selectedPropagandaTechnique = "selectedPropagandaTechnique"
+          :currentTime = "currentTime"
+          @gotoTimerequest = "gotoTime">
+        </annotations>
         <div hidden class="row video-bar scenes ml-1 mt-2">
           <h4>Szenen</h4>
           <ul class="scene-list">
@@ -453,20 +435,20 @@ h4 {
   border-radius: 10px;
 }
 
-.scene-list {
-  padding-left: 10px;
-  text-align: left;
-}
-.scene-list li {
-  list-style: none;
-  display: block;
-  width: auto;
-}
-.scene-list li a.scene {
-  display: inline-block;
-  padding: 1px 8px;
-  white-space: nowrap;
-}
+  .scene-list {
+    padding-left: 10px;
+    text-align: left;
+  }
+  .scene-list li {
+    list-style: none;
+    display: block;
+    width: auto;
+  }
+  .scene-list li a.scene {
+    display: inline-block;
+    padding: 1px 8px;
+    white-space: nowrap;
+  }
 
 a.kultur {
   color: #2ca500;
