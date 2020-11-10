@@ -193,41 +193,11 @@ export default {
       this.videoElement.currentTime = time;
     },
     hideAnnotations(){
+      this.showAnnotationForm = false;
 
     },
-    // Annotations
     toggleForm(){
       this.showAnnotationForm = true;
-    },
-    deleteAnnotaion(id){
-      for(var i = 0; i < this.annotations.length; i++){
-        if(this.annotations[i].id === id){
-          delete this.annotations[i];
-        }
-      }
-    },
-    saveannotation() {
-      let newAnnotation =  {
-        id: Math.ceil(Math.random()*10000000),
-        start: this.currentTime, 
-        end: this.currentTime+1, 
-        type: this.selectedPropagandaTechnique, 
-        content: {
-          title: this.newannotationtitle,
-          reason: this.newannotationreason
-        }, 
-        x: 50, 
-        y: 50 
-      };
-      this.log(newAnnotation)
-      this.annotations.push(newAnnotation);
-      this.showAnnotationForm = false;
-    },
-    clearannotation() {
-      this.showAnnotationForm = false;
-      this.newannotationtime = 0;
-      this.newannotationtitle = '';
-      this.newannotationreason = '';
     },
   },
   computed: {
