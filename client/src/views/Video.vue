@@ -35,12 +35,14 @@ import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
 import videotranskript from '../components/VideoTranskript.vue'
+import sceneContentTable from '../components/SceneContentTable'
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
   components: {
+    sceneContentTable,
     videotranskript
   },
   data() {
