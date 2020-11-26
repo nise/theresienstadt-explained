@@ -250,7 +250,7 @@ export default {
   },
   watch: {
     // eslint-disable-next-line object-shorthand
-    currentTime: function(c){ 
+    currentTime: function(c){
       this.videolog({session: this.session, playback: c, utc: (new Date()).getTime() });
 
       for(var i = 0; i < this.annotations.length; i++){
