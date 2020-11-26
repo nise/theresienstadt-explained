@@ -14,6 +14,6 @@
 //// vtt (and other file types) handling: https://forum.vuejs.org/t/vtt-handling/65657/2
 
 export default {
-    name: "FilmTranskript",
+    name: "Video-Transkript",
 }
 </script>
