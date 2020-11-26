@@ -2,7 +2,7 @@
 
 <script>
 export default {
-  name: "videoTOC",
+  name: "video-toc",
   props: {},
   methods: {
     search() {

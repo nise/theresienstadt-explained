@@ -36,25 +36,27 @@ Vue.use(VueAxios, axios)
 
 import videoTranskript from '../components/VideoTranskript'
 import videoTOC from '../components/VideoTOC'
+//import videoAnnotations from '../components/VideoAnnotations'
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
   components: {
+    videoTranskript,
     videoTOC,
-    videoTranskript
+    //videoAnnotations
   },
   data() {
     return {
-      
+      showSceneContentTable:true, 
       session:0,
       videoElement: null,
       paused: null,
       currentTime: 0,
       formatedTime: '00:00',
-      timer: null,
-      selectedPropagandaTechnique: '',
+      timer: null
+     
     };
   },
   methods: {
@@ -222,7 +224,7 @@ var annoLength = this.annotations.length;
       </div>
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
-        <div hidden class="row video-bar topics ml-1 mt-2">
+        <div class="row video-bar topics ml-1 mt-2">
           <h4>Themenauswahl</h4>
           <div class="row">
             <button class="btn btn-sm btn-outline-warning">Alltag</button>
@@ -230,41 +232,15 @@ var annoLength = this.annotations.length;
             <button class="btn btn-sm btn-outline-success">Arbeit</button>
           </div>
         </div>
-        <div class="row video-bar topics ml-1 mt-2">
-          <h4>Propagandatechnik</h4>
-          <div class="row">
-            <select v-model="selectedPropagandaTechnique" class="ml-2">
-              <option disabled value="">Bitte wählen Sie eine Technik aus</option>
-              <option>Ästhetisierung</option>
-              <option>Dekontextualisierung</option>
-              <option>Kognitive Dissonanz</option>
-              <option>Normaler Mensch</option>
-              <option>Berufung auf berühmte Menschen</option>
-              <option>Übertreibung</option>
-              <option>Euphorie</option>
-              <option>Wiederholung</option>
-              <option>Berufung auf Autoritäten</option>
-              <option>Halbwahrheit</option>
-              <option>Rosinenpicken</option>
-            </select>
-          </div>
-        </div>
-        <annotations v-if="videoElement"
+        <video-toc v-if="showSceneContentTable" @gotoTimerequest = "gotoTime"></video-toc>
+        <video-annotations v-if="videoElement"
           ref = "annotationscomp"
           :selectedPropagandaTechnique = "selectedPropagandaTechnique"
           :currentTime = "currentTime"
           :videoElementduration = "videoElement.duration"
           @gotoTimerequest = "gotoTime">
-        </annotations>
-        <div hidden class="row video-bar scenes ml-1 mt-2">
-          <h4>Szenen</h4>
-          <ul class="scene-list">
-            <li v-for="scene in search()">
-              <a :class="'scene ' + scene.category.toLowerCase()">{{scene.title}}</a>
-              <i v-if="scene.description !== ''" class="fa fa-info"></i>
-            </li>
-          </ul>
-        </div>
+        </video-annotations>
+        
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>
