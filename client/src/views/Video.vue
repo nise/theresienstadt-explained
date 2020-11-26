@@ -34,14 +34,14 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
-import filmtranskript from '../components/FilmTranskript.vue'
+import videotranskript from '../components/VideoTranskript.vue'
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
   components: {
-    filmtranskript
+    videotranskript
   },
   data() {
     return {
@@ -303,7 +303,7 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <filmtranskript></filmtranskript>
+          <video-transkript></video-transkript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a
