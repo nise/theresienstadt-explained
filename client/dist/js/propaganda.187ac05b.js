@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["propaganda"],{fb18:function(a,t,n){"use strict";n.r(t);var e=function(){var a=this,t=a.$createElement;a._self._c;return a._m(0)},s=[function(){var a=this,t=a.$createElement,n=a._self._c||t;return n("div",{staticClass:"container"},[n("h1",[a._v("Propaganda im Film")]),n("div",{staticClass:"page"},[n("h2",[a._v("Manipulationstechniken")]),n("ul",{staticClass:"page-list"})])])}],i=n("2877"),l={},c=Object(i["a"])(l,e,s,!1,null,null,null);t["default"]=c.exports}}]);
-//# sourceMappingURL=propaganda.187ac05b.js.map
