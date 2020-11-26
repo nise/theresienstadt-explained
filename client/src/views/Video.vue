@@ -34,15 +34,16 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
-import videotranskript from '../components/VideoTranskript.vue'
-import sceneContentTable from '../components/SceneContentTable'
+import videoTranskript from '../components/VideoTranskript'
+import videoTOC from '../components/VideoTOC'
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
   components: {
-    sceneContentTable,
+    videoTOC,
+    videoTranskript
   },
   data() {
     return {
@@ -235,7 +236,7 @@ var annoLength = this.annotations.length;
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
-              <span :title="annotation.content.title" v-for="annotation in annotations" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
+              <span :title="annotation.content.title" v-for="annotation in annotations" v-bind:key="annotation" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
             </div>
             <div @click="clickTimeline" class="timeline-main"></div>
             <div class="timeline-bottom"></div>
@@ -297,7 +298,7 @@ var annoLength = this.annotations.length;
           <br/>
           <div class="annotation-list col-12">
             <ul class="scene-list">
-              <li v-for="annotation in annotations" @click="gotoTime(annotation.start)">
+              <li v-for="annotation in annotations" v-bind:key="annotation" @click="gotoTime(annotation.start)">
                 <a class="link">
                   {{ annotation.start | moment('mm:ss') }} {{ annotation.content.title}} <i @click="deleteAnnotation(annotation.id)" class="fa fa-info right mr-2"></i>
                 </a>
@@ -307,9 +308,9 @@ var annoLength = this.annotations.length;
             </ul>
           </div>
         </div>
-        <sceneContentTable v-if="showSceneContentTable"
+        <videoTOC v-if="showSceneContentTable"
           @gotoTimerequest = "gotoTime">
-        </sceneContentTable>
+        </videoTOC>
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>

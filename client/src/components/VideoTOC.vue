@@ -2,7 +2,7 @@
 
 <script>
 export default {
-  name: "SceneContentTable",
+  name: "videoTOC",
   props: {},
   methods: {
     search() {
@@ -108,7 +108,7 @@ export default {
   <div class="row video-bar scenes ml-1 mt-2">
     <h4>Szenen</h4>
     <ul class="scene-list">
-      <li v-for="scene in search()">
+      <li v-for="scene in search()" v-bind:key="scene">
         <a :class="'scene ' + scene.category.toLowerCase()" @click="gotoTime(scene.start)">{{
           scene.title
         }}</a>
@@ -127,6 +127,7 @@ export default {
   list-style: none;
   display: block;
   width: auto;
+  cursor: pointer;
 }
 .scene-list li a.scene {
   display: inline-block;
