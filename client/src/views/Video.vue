@@ -36,7 +36,7 @@ Vue.use(VueAxios, axios)
 
 import videoTranskript from '../components/VideoTranskript'
 import videoTOC from '../components/VideoTOC'
-//import videoAnnotations from '../components/VideoAnnotations'
+import videoAnnotations from '../components/VideoAnnotations'
 
 // Choose Locale
 //moment.locale('de');
@@ -45,7 +45,7 @@ export default {
   components: {
     videoTranskript,
     videoTOC,
-    //videoAnnotations
+    videoAnnotations
   },
   data() {
     return {
