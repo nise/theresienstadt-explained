@@ -34,89 +34,20 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
-import annotations from '../components/Annotations'
+import videoTranskript from '../components/VideoTranskript'
+import videoTOC from '../components/VideoTOC'
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
-  name: 'Video',
   components: {
-    annotations
+    videoTOC,
+    videoTranskript
   },
   data() {
     return {
-      scenes: [
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf4"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Schmiede",
-          category: "Alltag",
-          number: 26,
-          source: "4",
-          duration: "22:15",
-          start: 596,
-          status: "vollständig",
-          description:
-            "In der Werkstatt eines Huf- Wagenschmieds beschlägt ein Hufschmied einen Ochsen. Der Ochse wird aus der Schmiede herausgeführt.",
-          music: "",
-          locations: "Schmiede",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z"
-          },
-          __v: 0
-        },
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf5"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          category: "Kultur",
-          title: "Zentralbad",
-          number: 31,
-          source: "4,5",
-          duration: "27:16",
-          start: 1086,
-          status: "vollständig",
-          description:
-            "Männer laufen in die Gemeinschaftsdusche und waschen sich. Männer verlassen das Zentralbad und laufen auf die Straße.",
-          music: "",
-          locations: "Zentralbad",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z"
-          },
-          __v: 0
-        },
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf6"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Abendfreizeit",
-          number: 36,
-          category: "Kultur",
-          source: "5",
-          duration: "1:54:24",
-          start: 1374,
-          status: "vollständig",
-          description:
-            "Leute erholen sich außerhalb von Holzbaracken, Szenen aus den Gemeinschaftsunterkünften. Outdoor facilities of the barracks with inhabitants, mostly women and children, on benches, chatting, reading. Inside a barrack of the women's accommodation, pan on the central corridor to separate living spaces with wooden tables and benches, double bunk beds separating the living spaces, partly covered with cloths. Several women and young girls reading, needle working, chatting in small groups, playing cards.",
-          music: "",
-          locations: "",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.089Z"
-          },
-          __v: 0,
-        },
-      ],
+      
       session:0,
       videoElement: null,
       paused: null,
@@ -206,22 +137,11 @@ export default {
   // eslint-disable-next-line object-shorthand
   mounted: function(){
     this.session = Math.ceil(Math.random()*100000);
-    this.scenes = this.scenes.sort((a, b) => {
-      a.number = parseInt(a.number, 10);
-      b.number = parseInt(b.number, 10);
-      if (a.number < b.number) {
-        return -1;
-        // eslint-disable-next-line no-else-return
-      } else if (a.number > b.number) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+
   },
   watch: {
     // eslint-disable-next-line object-shorthand
-    currentTime: function(c){ 
+    currentTime: function(c){
       this.videolog({session: this.session, playback: c, utc: (new Date()).getTime() });
 
       for(var i = 0; i < this.$refs.annotationscomp.annotations.length; i++){
@@ -269,6 +189,7 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
+          <video-transkript></video-transkript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a
