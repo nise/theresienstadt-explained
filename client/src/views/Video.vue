@@ -34,7 +34,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
+import videotranskript from '../components/VideoTranskript.vue'
 import sceneContentTable from '../components/SceneContentTable'
+
 // Choose Locale
 //moment.locale('de');
 
@@ -174,7 +176,7 @@ export default {
   },
   watch: {
     // eslint-disable-next-line object-shorthand
-    currentTime: function(c){ 
+    currentTime: function(c){
       this.videolog({session: this.session, playback: c, utc: (new Date()).getTime() });
 
       for(var i = 0; i < this.annotations.length; i++){
@@ -222,6 +224,7 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
+          <video-transkript></video-transkript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a
