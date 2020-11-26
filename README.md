@@ -21,8 +21,8 @@ cd client && npm run build && cd .. && npm run start
 * `cd client`
 * `npm run build`
 * `cd ..`
-* `npm run start`
-* open `http://localhost:3000` in your browser
+* `npm run start`   (requires an installation of mongodb)
+* open `http://localhost:3000/home` in your browser
 
 
 **Deploy locally**
