@@ -16,6 +16,17 @@ module.exports = function (db, app) {
         });
     });
 
+    app.get('/persondata', (req, res) => {
+      let persond;
+      fs.readFile('./ressources/Persons.json', function(err, data){
+        res.send(data);
+        /* res.json({
+          dat: data,
+          error: err
+        }); */
+      });
+    });
+
     var bodyParser = require('body-parser')
     app.use(bodyParser.json());       // to support JSON-encoded bodies
     app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
