@@ -110,7 +110,8 @@ var conn = mongoose.connect(
     }) 
     .then(() => {
         // Initialize Access Control List 
-        var ACL = require('./routes/acl')(conn, app);
+        require('./routes/acl')(conn, app);
+        
         // start server
         server.listen(port, () => {
             console.log('\n\n***************************************************************');

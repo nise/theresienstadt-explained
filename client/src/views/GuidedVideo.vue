@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Gefürhte Filmvorführungen</h1>
+    <h1>Geführte Filmvorführungen</h1>
 
     <div class="page">
       <h2>Bim</h2>

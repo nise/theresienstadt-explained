@@ -45,7 +45,7 @@ export default new Router({
     },
     {
       path: '/pages/persons',
-      name: 'imprint',
+      name: 'persons',
       component: () => import(/* webpackChunkName: "persons" */ './views/Persons.vue'),
     },
     {
@@ -60,7 +60,7 @@ export default new Router({
     },
     {
       path: '/pages/history',
-      name: 'imprint',
+      name: 'history',
       component: () => import(/* webpackChunkName: "history" */ './views/History.vue'),
     },
     {
@@ -70,22 +70,22 @@ export default new Router({
     },
     {
       path: '/pages/references',
-      name: 'imprint',
+      name: 'references',
       component: () => import(/* webpackChunkName: "references" */ './views/References.vue'),
     },
     {
       path: '/pages/video-analyses',
-      name: 'imprint',
+      name: 'analysis',
       component: () => import(/* webpackChunkName: "analysis" */ './views/VideoAnalyses.vue'),
     },
     {
       path: '/pages/guided-video',
-      name: 'imprint',
+      name: 'guide',
       component: () => import(/* webpackChunkName: "guidedvideo" */ './views/GuidedVideo.vue'),
     },
     {
       path: '/pages/propaganda',
-      name: 'imprint',
+      name: 'propaganda',
       component: () => import(/* webpackChunkName: "propaganda" */ './views/Propaganda.vue'),
     },
   ],

@@ -54,8 +54,6 @@ import personcard from '@/components/PersonCard.vue';
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue';
 
-// const API_URL = "http://localhost:4000/message";
-
 /**
  * shortname: String,
     name: String,
