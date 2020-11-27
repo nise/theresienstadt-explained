@@ -36,6 +36,9 @@
 </template>
 
 <script>
+
+// TODO: implement filter
+
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 
@@ -74,10 +77,6 @@ export default {
   },
 
   created: function(){
-/*     this.giveArrID(this.persons);
-    this.splitArrInTwo(this.persons, this.persons1, this.persons2); */
-
-    
   },
 
   mounted: function(){
@@ -87,7 +86,7 @@ export default {
   methods: {
     getdata: function(){
       let _this = this;
-      axios.get('http://localhost:8080/ressources/Persons.json').then(function (response) {
+      axios.get('/persondata').then(function (response) {
         _this.persons = response.data;
         _this.giveArrID(_this.persons);
         _this.splitArrInTwo(_this.persons, _this.persons1, _this.persons2);

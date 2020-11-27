@@ -1,7 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "b0dd15eb4f00edc2c0fd",
-    "url": "/js/about.7bf20a32.js"
+    "revision": "31f72d7038cc1884b883",
+    "url": "/js/about.8ab9cdee.js"
+  },
+  {
+    "revision": "92da32b874a6eb88eedd",
+    "url": "/js/about~persons.dc2975c4.js"
   },
   {
     "revision": "97390d695e9052e766d1",
@@ -12,8 +16,8 @@ self.__precacheManifest = [
     "url": "/js/analysis.26fc3fa6.js"
   },
   {
-    "revision": "192376b3ebc9bbcf0680",
-    "url": "/js/app.ad4f1a16.js"
+    "revision": "9707f165dafd51cdea74",
+    "url": "/js/app.f39a0c25.js"
   },
   {
     "revision": "d0b48585d95ce01e9964",
@@ -44,8 +48,8 @@ self.__precacheManifest = [
     "url": "/js/map.f3fdabca.js"
   },
   {
-    "revision": "676016c092afaa353457",
-    "url": "/js/persons.10155d57.js"
+    "revision": "0038bc9cc96aa9a71130",
+    "url": "/js/persons.3ab233c6.js"
   },
   {
     "revision": "0810bbc6ff612eaa85e4",
@@ -88,6 +92,10 @@ self.__precacheManifest = [
     "url": "/img/home-orte.3e5f4413.png"
   },
   {
+    "revision": "5aa1fc8810f5b8128a1650224290de26",
+    "url": "/media/intro.5aa1fc88.mp4"
+  },
+  {
     "revision": "d0736c46699375d764cfc02d7f8ee2af",
     "url": "/img/dummy.d0736c46.png"
   },
@@ -112,7 +120,11 @@ self.__precacheManifest = [
     "url": "/img/home-literatur.f1cb37b0.png"
   },
   {
-    "revision": "f2df54f1d896953fabf94f6448037597",
+    "revision": "a2a9d1ab7f603e9ae8e45519f0b87656",
+    "url": "/media/theresienstadt.a2a9d1ab.mp4"
+  },
+  {
+    "revision": "53ec0e883c6d5cba82ba3f1a1aa438ba",
     "url": "/index.html"
   },
   {
