@@ -34,95 +34,29 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
+import videoTranskript from '../components/VideoTranskript'
+import videoTOC from '../components/VideoTOC'
+import videoAnnotations from '../components/VideoAnnotations'
+
 // Choose Locale
 //moment.locale('de');
 
 export default {
+  components: {
+    videoTranskript,
+    videoTOC,
+    videoAnnotations
+  },
   data() {
     return {
-      scenes: [
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf4"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Schmiede",
-          category: "Alltag",
-          number: 26,
-          source: "4",
-          duration: "22:15",
-          start: 596,
-          status: "vollständig",
-          description:
-            "In der Werkstatt eines Huf- Wagenschmieds beschlägt ein Hufschmied einen Ochsen. Der Ochse wird aus der Schmiede herausgeführt.",
-          music: "",
-          locations: "Schmiede",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z"
-          },
-          __v: 0
-        },
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf5"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          category: "Kultur",
-          title: "Zentralbad",
-          number: 31,
-          source: "4,5",
-          duration: "27:16",
-          start: 1086,
-          status: "vollständig",
-          description:
-            "Männer laufen in die Gemeinschaftsdusche und waschen sich. Männer verlassen das Zentralbad und laufen auf die Straße.",
-          music: "",
-          locations: "Zentralbad",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z"
-          },
-          __v: 0
-        },
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf6"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Abendfreizeit",
-          number: 36,
-          category: "Kultur",
-          source: "5",
-          duration: "1:54:24",
-          start: 1374,
-          status: "vollständig",
-          description:
-            "Leute erholen sich außerhalb von Holzbaracken, Szenen aus den Gemeinschaftsunterkünften. Outdoor facilities of the barracks with inhabitants, mostly women and children, on benches, chatting, reading. Inside a barrack of the women's accommodation, pan on the central corridor to separate living spaces with wooden tables and benches, double bunk beds separating the living spaces, partly covered with cloths. Several women and young girls reading, needle working, chatting in small groups, playing cards.",
-          music: "",
-          locations: "",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.089Z"
-          },
-          __v: 0,
-        },
-      ],
+      showSceneContentTable:true, 
       session:0,
       videoElement: null,
       paused: null,
       currentTime: 0,
       formatedTime: '00:00',
-      timer: null,
-      annotations: [],
-      showAnnotationForm: false,
-      selectedPropagandaTechnique: '',
-      newannotationtitle:'',
-      newannotationreason:'',
-      newannotationtime:''
+      timer: null
+     
     };
   },
   methods: {
@@ -192,41 +126,11 @@ export default {
       this.videoElement.currentTime = time;
     },
     hideAnnotations(){
+      this.showAnnotationForm = false;
 
     },
-    // Annotations
     toggleForm(){
       this.showAnnotationForm = true;
-    },
-    deleteAnnotaion(id){
-      for(var i = 0; i < this.annotations.length; i++){
-        if(this.annotations[i].id === id){
-          delete this.annotations[i];
-        }
-      }
-    },
-    saveannotation() {
-      let newAnnotation =  {
-        id: Math.ceil(Math.random()*10000000),
-        start: this.currentTime, 
-        end: this.currentTime+1, 
-        type: this.selectedPropagandaTechnique, 
-        content: {
-          title: this.newannotationtitle,
-          reason: this.newannotationreason
-        }, 
-        x: 50, 
-        y: 50 
-      };
-      this.log(newAnnotation)
-      this.annotations.push(newAnnotation);
-      this.showAnnotationForm = false;
-    },
-    clearannotation() {
-      this.showAnnotationForm = false;
-      this.newannotationtime = 0;
-      this.newannotationtitle = '';
-      this.newannotationreason = '';
     },
   },
   computed: {
@@ -235,29 +139,18 @@ export default {
   // eslint-disable-next-line object-shorthand
   mounted: function(){
     this.session = Math.ceil(Math.random()*100000);
-    this.scenes = this.scenes.sort((a, b) => {
-      a.number = parseInt(a.number, 10);
-      b.number = parseInt(b.number, 10);
-      if (a.number < b.number) {
-        return -1;
-        // eslint-disable-next-line no-else-return
-      } else if (a.number > b.number) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+
   },
   watch: {
     // eslint-disable-next-line object-shorthand
-    currentTime: function(c){ 
+    currentTime: function(c){
       this.videolog({session: this.session, playback: c, utc: (new Date()).getTime() });
 
-      for(var i = 0; i < this.annotations.length; i++){
-        if( c >= this.annotations[i].start && c < this.annotations[i].end){
-          this.annotations[i].active ? this.showAnnotation(this.annotations[i]) : null;
+      for(var i = 0; i < this.$refs.annotationscomp.annotations.length; i++){
+        if( c >= this.$refs.annotationscomp.annotations[i].start && c < this.$refs.annotationscomp.annotations[i].end){
+          this.$refs.annotationscomp.annotations[i].active ? this.showAnnotation(this.$refs.annotationscomp.annotations[i]) : null;
         }else{
-          this.hideAnnotations(this.annotations[i]);
+          this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
         }
       }
 /*
@@ -298,6 +191,7 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
+          <video-transkript></video-transkript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a
@@ -308,8 +202,10 @@ var annoLength = this.annotations.length;
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
-              <span :title="annotation.content.title" v-for="annotation in annotations" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
+              <portal-target name="timeline-annotation-marker">
+              </portal-target>
             </div>
+
             <div @click="clickTimeline" class="timeline-main"></div>
             <div class="timeline-bottom"></div>
             <div :style="'width:' + getProgressWidth() + '%;'" class="timeline-progress"></div>
@@ -328,7 +224,7 @@ var annoLength = this.annotations.length;
       </div>
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
-        <div hidden class="row video-bar topics ml-1 mt-2">
+        <div class="row video-bar topics ml-1 mt-2">
           <h4>Themenauswahl</h4>
           <div class="row">
             <button class="btn btn-sm btn-outline-warning">Alltag</button>
@@ -336,59 +232,15 @@ var annoLength = this.annotations.length;
             <button class="btn btn-sm btn-outline-success">Arbeit</button>
           </div>
         </div>
-        <div class="row video-bar topics ml-1 mt-2">
-          <h4>Propagandatechnik</h4>
-          <div class="row">
-            <select v-model="selectedPropagandaTechnique" class="ml-2">
-              <option disabled value="">Bitte wählen Sie eine Technik aus</option>
-              <option>Ästhetisierung</option>
-              <option>Dekontextualisierung</option>
-              <option>Kognitive Dissonanz</option>
-              <option>Normaler Mensch</option>
-              <option>Berufung auf berühmte Menschen</option>
-              <option>Übertreibung</option>
-              <option>Euphorie</option>
-              <option>Wiederholung</option>
-              <option>Berufung auf Autoritäten</option>
-              <option>Halbwahrheit</option>
-              <option>Rosinenpicken</option>
-            </select>
-          </div>
-        </div>
-        <div class="row video-bar annotations ml-1 mt-2">
-          <h4>Markierungen</h4>
-          <button v-if="!showAnnotationForm" @click="toggleForm" class="btn btn-primary btn-sm left ml-2">Neue Markierung anlegen</button>
-          <div v-if="showAnnotationForm" class="annotation-form col-12">
-            <div class="time left">Zeitpunkt: {{ currentTime | moment('mm:ss') }}</div>
-            <input v-model="newannotationtitle" placeholder="Geben Sie der Markierung einen Titel"></input><br>
-            <textarea v-model="newannotationreason" placeholder="Begründen Sie, warum die markierte Stelle eine Manipulation darstellt"></textarea><br>
-            <button @click="saveannotation" class="btn btn-primary left">speichern</button>
-            <button @click="clearannotation" class="btn btn-link right">verwerfen</button>
-          </div>
-          <br/>
-          <br/>
-          <br/>
-          <div class="annotation-list col-12">
-            <ul class="scene-list">
-              <li v-for="annotation in annotations" @click="gotoTime(annotation.start)">
-                <a class="link">
-                  {{ annotation.start | moment('mm:ss') }} {{ annotation.content.title}} <i @click="deleteAnnotation(annotation.id)" class="fa fa-info right mr-2"></i>
-                </a>
-                <div class="description">{{ annotation.content.reason }}</div>
-                
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div hidden class="row video-bar scenes ml-1 mt-2">
-          <h4>Szenen</h4>
-          <ul class="scene-list">
-            <li v-for="scene in search()">
-              <a :class="'scene ' + scene.category.toLowerCase()">{{scene.title}}</a>
-              <i v-if="scene.description !== ''" class="fa fa-info"></i>
-            </li>
-          </ul>
-        </div>
+        <video-toc v-if="showSceneContentTable" @gotoTimerequest = "gotoTime"></video-toc>
+        <video-annotations v-if="videoElement"
+          ref = "annotationscomp"
+          :selectedPropagandaTechnique = "selectedPropagandaTechnique"
+          :currentTime = "currentTime"
+          :videoElementduration = "videoElement.duration"
+          @gotoTimerequest = "gotoTime">
+        </video-annotations>
+        
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>
@@ -453,20 +305,20 @@ h4 {
   border-radius: 10px;
 }
 
-.scene-list {
-  padding-left: 10px;
-  text-align: left;
-}
-.scene-list li {
-  list-style: none;
-  display: block;
-  width: auto;
-}
-.scene-list li a.scene {
-  display: inline-block;
-  padding: 1px 8px;
-  white-space: nowrap;
-}
+  .scene-list {
+    padding-left: 10px;
+    text-align: left;
+  }
+  .scene-list li {
+    list-style: none;
+    display: block;
+    width: auto;
+  }
+  .scene-list li a.scene {
+    display: inline-block;
+    padding: 1px 8px;
+    white-space: nowrap;
+  }
 
 a.kultur {
   color: #2ca500;

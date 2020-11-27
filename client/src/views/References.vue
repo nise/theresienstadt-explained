@@ -1,3 +1,7 @@
+<!--
+TODO:
+- Statische Seite mit bibliografischen und filmografischen Angaben, durch Bilder angereichert und mit Kommentaren erläutert.
+-->
 <template>
   <div class="container">
     <h1>Literatur und Film über den Film</h1>
