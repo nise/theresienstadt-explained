@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve --open",
-    "start": "node ./server"
+    "start": "npm run build --prefix ./client  && node ./server"
   },
   "keywords": [
     "interactive",
