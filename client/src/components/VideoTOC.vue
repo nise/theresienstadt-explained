@@ -8,11 +8,11 @@ export default {
     search() {
       return this.scenes;
     },
-    gotoTime(time){
+    gotoTime(time) {
       this.$emit("gotoTimerequest", time);
     },
   },
-  mounted: function () {
+  mounted: function () { console.log('toc mounted')
     this.scenes = this.scenes.sort((a, b) => {
       a.number = parseInt(a.number, 10);
       b.number = parseInt(b.number, 10);
@@ -109,9 +109,11 @@ export default {
     <h4>Szenen</h4>
     <ul class="scene-list">
       <li v-for="scene in search()" v-bind:key="scene">
-        <a :class="'scene ' + scene.category.toLowerCase()" @click="gotoTime(scene.start)">{{
-          scene.title
-        }}</a>
+        <a
+          :class="'scene ' + scene.category.toLowerCase()"
+          @click="gotoTime(scene.start)"
+          >{{ scene.title }}</a
+        >
         <i v-if="scene.description !== ''" class="fa fa-info"></i>
       </li>
     </ul>
