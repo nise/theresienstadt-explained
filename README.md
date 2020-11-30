@@ -14,12 +14,14 @@ Irgendwo schwirrt auch noch Code aus einem ganz anderen Projekt hier rum - da ge
 
 ---
 # Instructions
-(Ich weiß nicht, ob das noch aktuell ist)
-**Run in production mode**
-* `cd client`
-* `npm run build`
-* `cd ..`
-* `npm run start`
+
+cd client && npm run build && cd .. && npm run start
+
+**Run in production mode using node.js backend**
+I made this much easier, just run the one line for building the client and starting the node server:
+* `npm run start`   (requires an installation of mongodb)
+* open `http://localhost:3000/home` in your browser
+
 
 **Deploy locally**
 * `cd client`

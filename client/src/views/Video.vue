@@ -16,127 +16,63 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
-import { faPause } from '@fortawesome/free-solid-svg-icons'
-import { faForward } from '@fortawesome/free-solid-svg-icons'
-import { faBackward } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPause } from "@fortawesome/free-solid-svg-icons";
+import { faForward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(faPlay, faPause, faForward, faBackward);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component("font-awesome-icon", FontAwesomeIcon);
 
-import moment from 'moment';
-import VueMoment from 'vue-moment';
+import moment from "moment";
+import VueMoment from "vue-moment";
 Vue.use(VueMoment, { moment });
 
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-Vue.use(VueAxios, axios)
+import axios from "axios";
+import VueAxios from "vue-axios";
+Vue.use(VueAxios, axios);
+
+import videoTranskript from "../components/VideoTranskript";
+import videoTOC from "../components/VideoTOC";
+import videoAnnotations from "../components/VideoAnnotations";
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
+  components: {
+    "Video-Transcript": videoTranskript,
+    "Video-TOC": videoTOC,
+    "Video-Annotations": videoAnnotations,
+  },
   data() {
     return {
-      scenes: [
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf4"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Schmiede",
-          category: "Alltag",
-          number: 26,
-          source: "4",
-          duration: "22:15",
-          start: 596,
-          status: "vollständig",
-          description:
-            "In der Werkstatt eines Huf- Wagenschmieds beschlägt ein Hufschmied einen Ochsen. Der Ochse wird aus der Schmiede herausgeführt.",
-          music: "",
-          locations: "Schmiede",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z"
-          },
-          __v: 0
-        },
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf5"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          category: "Kultur",
-          title: "Zentralbad",
-          number: 31,
-          source: "4,5",
-          duration: "27:16",
-          start: 1086,
-          status: "vollständig",
-          description:
-            "Männer laufen in die Gemeinschaftsdusche und waschen sich. Männer verlassen das Zentralbad und laufen auf die Straße.",
-          music: "",
-          locations: "Zentralbad",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z"
-          },
-          __v: 0
-        },
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf6"
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Abendfreizeit",
-          number: 36,
-          category: "Kultur",
-          source: "5",
-          duration: "1:54:24",
-          start: 1374,
-          status: "vollständig",
-          description:
-            "Leute erholen sich außerhalb von Holzbaracken, Szenen aus den Gemeinschaftsunterkünften. Outdoor facilities of the barracks with inhabitants, mostly women and children, on benches, chatting, reading. Inside a barrack of the women's accommodation, pan on the central corridor to separate living spaces with wooden tables and benches, double bunk beds separating the living spaces, partly covered with cloths. Several women and young girls reading, needle working, chatting in small groups, playing cards.",
-          music: "",
-          locations: "",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.089Z"
-          },
-          __v: 0,
-        },
-      ],
-      session:0,
+      showSceneContentTable: true,
+      session: 0,
       videoElement: null,
       paused: null,
       currentTime: 0,
-      formatedTime: '00:00',
+      formatedTime: "00:00",
       timer: null,
-      annotations: [],
-      showAnnotationForm: false,
-      selectedPropagandaTechnique: '',
-      newannotationtitle:'',
-      newannotationreason:'',
-      newannotationtime:''
     };
   },
   methods: {
-    log(data){
+    log(data) {
       data.session = this.session;
-      axios.post('/log', { data: data})
+      axios
+        .post("/log", { data: data })
         //.then(function (response) { })
         .catch(function (error) {
           console.log(error);
         });
     },
-    videolog(data){
+    videolog(data) {
+      return; // xxx: for testing disabled
       data.session = this.session;
-      axios.post('/logplayback', { data: data})
+      axios
+        .post("/logplayback", { data: data })
         //.then(function (response) {})
         .catch(function (error) {
           console.log(error);
@@ -157,110 +93,80 @@ export default {
       this.videoElement.pause();
       clearInterval(this.timer);
     },
-    forward(){},
-    backward(){},
-    updateAnnotaions(){
+    forward() {},
+    backward() {},
+    updateAnnotaions() {
       this.currentTime = this.videoElement.currentTime;
     },
     momenwwwt: function () {
       return moment();
     },
-    getXPosition(time){
-      if(!this.videoElement){
+    getXPosition(time) {
+      if (!this.videoElement) {
         return 0;
       }
       return (time / this.videoElement.duration) * 100;
     },
-    getProgressWidth(){
-      if(!this.videoElement){
+    getProgressWidth() {
+      if (!this.videoElement) {
         return 0;
       }
       return (this.videoElement.currentTime / this.videoElement.duration) * 100;
     },
-    clickTimeline(e){
-      if(!this.videoElement){
+    clickTimeline(e) {
+      if (!this.videoElement) {
         return 0;
       }
       let rect = e.target.getBoundingClientRect();
-      this.videoElement.currentTime = ((e.clientX - rect.left) / (rect.right - rect.left)) * this.videoElement.duration;
+      this.videoElement.currentTime =
+        ((e.clientX - rect.left) / (rect.right - rect.left)) *
+        this.videoElement.duration;
       //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right);
     },
-    gotoTime(time){
-      if(!this.videoElement){
+    gotoTime(time) {
+      if (!this.videoElement) {
         return 0;
       }
       this.videoElement.currentTime = time;
     },
-    hideAnnotations(){
-
+    hideAnnotations() {
+      this.showAnnotationForm = false;
     },
-    // Annotations
-    toggleForm(){
+    toggleForm() {
       this.showAnnotationForm = true;
-    },
-    deleteAnnotaion(id){
-      for(var i = 0; i < this.annotations.length; i++){
-        if(this.annotations[i].id === id){
-          delete this.annotations[i];
-        }
-      }
-    },
-    saveannotation() {
-      let newAnnotation =  {
-        id: Math.ceil(Math.random()*10000000),
-        start: this.currentTime, 
-        end: this.currentTime+1, 
-        type: this.selectedPropagandaTechnique, 
-        content: {
-          title: this.newannotationtitle,
-          reason: this.newannotationreason
-        }, 
-        x: 50, 
-        y: 50 
-      };
-      this.log(newAnnotation)
-      this.annotations.push(newAnnotation);
-      this.showAnnotationForm = false;
-    },
-    clearannotation() {
-      this.showAnnotationForm = false;
-      this.newannotationtime = 0;
-      this.newannotationtitle = '';
-      this.newannotationreason = '';
     },
   },
   computed: {
-    playing() { return !this.paused; }
+    playing() {
+      return !this.paused;
+    },
   },
   // eslint-disable-next-line object-shorthand
-  mounted: function(){
-    this.session = Math.ceil(Math.random()*100000);
-    this.scenes = this.scenes.sort((a, b) => {
-      a.number = parseInt(a.number, 10);
-      b.number = parseInt(b.number, 10);
-      if (a.number < b.number) {
-        return -1;
-        // eslint-disable-next-line no-else-return
-      } else if (a.number > b.number) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+  mounted: function () {
+    this.session = Math.ceil(Math.random() * 100000);
   },
   watch: {
     // eslint-disable-next-line object-shorthand
-    currentTime: function(c){ 
-      this.videolog({session: this.session, playback: c, utc: (new Date()).getTime() });
+    currentTime: function (c) {
+      this.videolog({
+        session: this.session,
+        playback: c,
+        utc: new Date().getTime(),
+      });
 
-      for(var i = 0; i < this.annotations.length; i++){
-        if( c >= this.annotations[i].start && c < this.annotations[i].end){
-          this.annotations[i].active ? this.showAnnotation(this.annotations[i]) : null;
-        }else{
-          this.hideAnnotations(this.annotations[i]);
+      for (var i = 0; i < this.$refs.annotationscomp.annotations.length; i++) {
+        if (
+          c >= this.$refs.annotationscomp.annotations[i].start &&
+          c < this.$refs.annotationscomp.annotations[i].end
+        ) {
+          this.$refs.annotationscomp.annotations[i].active
+            ? this.showAnnotation(this.$refs.annotationscomp.annotations[i])
+            : null;
+        } else {
+          this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
         }
       }
-/*
+      /*
 var annoLength = this.annotations.length;
             for (var i = 0; i < annoLength; i++) {
                 var oAnn = this.annotations[i];
@@ -276,11 +182,10 @@ var annoLength = this.annotations.length;
             }
 */
       //return moment.duration(num, 'minutes');
-      //num = num/60; 
+      //num = num/60;
       //this.formatedTime = ('0' + Math.floor(num) % 24).slice(-2) + ':' + ((num % 1)*60 + '0').slice(0, 2);//moment(currentTime).format('mm:ss');
     },
   },
-
 };
 </script>
 
@@ -298,37 +203,58 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
+          <Video-Transkript></Video-Transkript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
-          <a
-            href="../assets/videos/theresienstadt.mp4"
-          >here</a>.
+          <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
         <div class="video-controls col-12">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
-              <span :title="annotation.content.title" v-for="annotation in annotations" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
+              <portal-target name="timeline-annotation-marker"> </portal-target>
             </div>
+
             <div @click="clickTimeline" class="timeline-main"></div>
             <div class="timeline-bottom"></div>
-            <div :style="'width:' + getProgressWidth() + '%;'" class="timeline-progress"></div>
+            <div
+              :style="'width:' + getProgressWidth() + '%;'"
+              class="timeline-progress"
+            ></div>
           </div>
           <div class="control-bar">
             <div class="video-play-pause vi2-btn mt-2" title="Play/Pause">
-              <font-awesome-icon @click="backward" icon="backward" class="backward-btn mr-3" />
-              <font-awesome-icon v-show="paused" @click="play" icon="play" class="pause-btn bigger"/>
-              <font-awesome-icon v-show="playing" @click="pause" icon="pause" class="play-btn bigger"/>
-              <font-awesome-icon @click="forward" icon="forward" class="forward-btn ml-3"/>
+              <font-awesome-icon
+                @click="backward"
+                icon="backward"
+                class="backward-btn mr-3"
+              />
+              <font-awesome-icon
+                v-show="paused"
+                @click="play"
+                icon="play"
+                class="pause-btn bigger"
+              />
+              <font-awesome-icon
+                v-show="playing"
+                @click="pause"
+                icon="pause"
+                class="play-btn bigger"
+              />
+              <font-awesome-icon
+                @click="forward"
+                icon="forward"
+                class="forward-btn ml-3"
+              />
             </div>
-            <div class="video-timer">{{ currentTime | moment('mm:ss') }}</div>
+            <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
       </div>
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
-        <div hidden class="row video-bar topics ml-1 mt-2">
+        <div class="row video-bar topics ml-1 mt-2">
           <h4>Themenauswahl</h4>
           <div class="row">
             <button class="btn btn-sm btn-outline-warning">Alltag</button>
@@ -336,59 +262,21 @@ var annoLength = this.annotations.length;
             <button class="btn btn-sm btn-outline-success">Arbeit</button>
           </div>
         </div>
-        <div class="row video-bar topics ml-1 mt-2">
-          <h4>Propagandatechnik</h4>
-          <div class="row">
-            <select v-model="selectedPropagandaTechnique" class="ml-2">
-              <option disabled value="">Bitte wählen Sie eine Technik aus</option>
-              <option>Ästhetisierung</option>
-              <option>Dekontextualisierung</option>
-              <option>Kognitive Dissonanz</option>
-              <option>Normaler Mensch</option>
-              <option>Berufung auf berühmte Menschen</option>
-              <option>Übertreibung</option>
-              <option>Euphorie</option>
-              <option>Wiederholung</option>
-              <option>Berufung auf Autoritäten</option>
-              <option>Halbwahrheit</option>
-              <option>Rosinenpicken</option>
-            </select>
-          </div>
-        </div>
-        <div class="row video-bar annotations ml-1 mt-2">
-          <h4>Markierungen</h4>
-          <button v-if="!showAnnotationForm" @click="toggleForm" class="btn btn-primary btn-sm left ml-2">Neue Markierung anlegen</button>
-          <div v-if="showAnnotationForm" class="annotation-form col-12">
-            <div class="time left">Zeitpunkt: {{ currentTime | moment('mm:ss') }}</div>
-            <input v-model="newannotationtitle" placeholder="Geben Sie der Markierung einen Titel"></input><br>
-            <textarea v-model="newannotationreason" placeholder="Begründen Sie, warum die markierte Stelle eine Manipulation darstellt"></textarea><br>
-            <button @click="saveannotation" class="btn btn-primary left">speichern</button>
-            <button @click="clearannotation" class="btn btn-link right">verwerfen</button>
-          </div>
-          <br/>
-          <br/>
-          <br/>
-          <div class="annotation-list col-12">
-            <ul class="scene-list">
-              <li v-for="annotation in annotations" @click="gotoTime(annotation.start)">
-                <a class="link">
-                  {{ annotation.start | moment('mm:ss') }} {{ annotation.content.title}} <i @click="deleteAnnotation(annotation.id)" class="fa fa-info right mr-2"></i>
-                </a>
-                <div class="description">{{ annotation.content.reason }}</div>
-                
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div hidden class="row video-bar scenes ml-1 mt-2">
-          <h4>Szenen</h4>
-          <ul class="scene-list">
-            <li v-for="scene in search()">
-              <a :class="'scene ' + scene.category.toLowerCase()">{{scene.title}}</a>
-              <i v-if="scene.description !== ''" class="fa fa-info"></i>
-            </li>
-          </ul>
-        </div>
+        some Value: {{ showSceneContentTable }}
+        <Video-TOC
+          v-if="showSceneContentTable"
+          @gotoTimerequest="gotoTime"
+        ></Video-TOC>
+        <Video-Annotations
+          v-if="videoElement"
+          ref="annotationscomp"
+          :selectedPropagandaTechnique="selectedPropagandaTechnique"
+          :currentTime="currentTime"
+          :videoElementduration="videoElement.duration"
+          @gotoTimerequest="gotoTime"
+        >
+        </Video-Annotations>
+
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>
@@ -498,7 +386,7 @@ a.arbeit:hover {
   color: #fff;
 }
 
-.left-bar{
+.left-bar {
   max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -533,55 +421,55 @@ video {
 }
 
 .control-bar {
-  padding-top:20px;
+  padding-top: 20px;
   color: #fff;
 }
 
-.video-play-pause > *{
- cursor: pointer;
-}
-
-.timelines {
-  position:relative;
-}
-
-.timeline-main{
-  position: absolute;
-  top: 10px;
-  left:0;
-  height:10px;
-  background-color: #fff;
-  width:100%;
-  opacity:0.3;
-  z-index:1000;
+.video-play-pause > * {
   cursor: pointer;
 }
 
-.timeline-progress{
-  height:10px;
+.timelines {
+  position: relative;
+}
+
+.timeline-main {
   position: absolute;
   top: 10px;
-  left:0;
+  left: 0;
+  height: 10px;
+  background-color: #fff;
+  width: 100%;
+  opacity: 0.3;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.timeline-progress {
+  height: 10px;
+  position: absolute;
+  top: 10px;
+  left: 0;
   background-color: #c10000;
-  z-index:990;
+  z-index: 990;
   cursor: pointer;
 }
 
 .timeline-marker {
-  height:10px;
-  width:10px;
+  height: 10px;
+  width: 10px;
   position: absolute;
   top: 4px;
   background-color: #c10000;
 }
 
-.timeline-marker:hover{
-  height:14px;
-  width:14px;
+.timeline-marker:hover {
+  height: 14px;
+  width: 14px;
   top: 0px;
 }
 
-.video-timer{
+.video-timer {
   position: absolute;
   top: 30px;
   left: 10px;
@@ -592,52 +480,52 @@ video {
 
 .annotations {
   padding: 0 0px;
-  color:#fff;
+  color: #fff;
 }
 
-.annotations input{
-  width:100%;
+.annotations input {
+  width: 100%;
 }
-.annotations textarea{
-  width:100%;
-}
-
-.annotations .annotation-list, .annotations .annotation-form {
-  display:block;
-  padding-left:10px !important;
+.annotations textarea {
+  width: 100%;
 }
 
-.annotation-list ul{
-  padding-left:0;
+.annotations .annotation-list,
+.annotations .annotation-form {
+  display: block;
+  padding-left: 10px !important;
+}
+
+.annotation-list ul {
+  padding-left: 0;
 }
 
 .annotation-list ul li {
   cursor: pointer;
   border-bottom: 1px solid #555;
-  padding-left:6px;
+  padding-left: 6px;
 }
 
-.annotation-list ul li:hover{
+.annotation-list ul li:hover {
   background-color: #555;
 }
 
-.annotation-list ul li .link{
+.annotation-list ul li .link {
   color: #fff;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .annotation-list .description {
-  display:block;
-  margin-left:50px;
+  display: block;
+  margin-left: 50px;
   font-size: 0.9em;
-  color:#999;
-
+  color: #999;
 }
 
 .left {
-float:left;
+  float: left;
 }
 .right {
-float:right;
+  float: right;
 }
 </style>
