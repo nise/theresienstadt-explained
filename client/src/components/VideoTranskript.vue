@@ -1,5 +1,7 @@
 <template>
-    <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default>
+  <div>
+    <track id="tracktrack" src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default>
+  </div>
 </template>
 
 <style>
@@ -15,5 +17,25 @@
 
 export default {
     name: "Video-Transkript",
+    methods:
+    {
+      test(){
+      var test = document.getElementById("tracktrack").getAttribute("track");
+        console.log(test)
+      },
+      fart()
+      {
+        console.log("ha");
+      }
+    },
+    mounted: function(){
+      var el = document.getElementById("tracktrack");
+      console.log(el.src);
+        el.oncuechange = (event) => {
+  let cues = event.target.track.activeCues;
+  console.log(cues);
+}
+        
+    }
 }
 </script>
