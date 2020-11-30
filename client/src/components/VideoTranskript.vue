@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <track id="tracktrack" src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default>
-  </div>
+  <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default />
 </template>
 
 <style>
-    video::cue {
-        color: white;
-        font-size: 2rem;
-        background-color: rgba(0, 0, 0, 0.60);
-    }
+video::cue {
+  color: white;
+  font-size: 2rem;
+  background-color: rgba(0, 0, 0, 0.6);
+}
 </style>
 
 <script>

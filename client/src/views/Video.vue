@@ -16,61 +16,63 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
-import { faPause } from '@fortawesome/free-solid-svg-icons'
-import { faForward } from '@fortawesome/free-solid-svg-icons'
-import { faBackward } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPause } from "@fortawesome/free-solid-svg-icons";
+import { faForward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(faPlay, faPause, faForward, faBackward);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component("font-awesome-icon", FontAwesomeIcon);
 
-import moment from 'moment';
-import VueMoment from 'vue-moment';
+import moment from "moment";
+import VueMoment from "vue-moment";
 Vue.use(VueMoment, { moment });
 
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-Vue.use(VueAxios, axios)
+import axios from "axios";
+import VueAxios from "vue-axios";
+Vue.use(VueAxios, axios);
 
-import videoTranskript from '../components/VideoTranskript'
-import videoTOC from '../components/VideoTOC'
-import videoAnnotations from '../components/VideoAnnotations'
+import videoTranskript from "../components/VideoTranskript";
+import videoTOC from "../components/VideoTOC";
+import videoAnnotations from "../components/VideoAnnotations";
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
   components: {
-    videoTranskript,
-    videoTOC,
-    videoAnnotations
+    "Video-Transcript": videoTranskript,
+    "Video-TOC": videoTOC,
+    "Video-Annotations": videoAnnotations,
   },
   data() {
     return {
-      showSceneContentTable:true, 
-      session:0,
+      showSceneContentTable: true,
+      session: 0,
       videoElement: null,
       paused: null,
       currentTime: 0,
-      formatedTime: '00:00',
-      timer: null
-     
+      formatedTime: "00:00",
+      timer: null,
     };
   },
   methods: {
-    log(data){
+    log(data) {
       data.session = this.session;
-      axios.post('/log', { data: data})
+      axios
+        .post("/log", { data: data })
         //.then(function (response) { })
         .catch(function (error) {
           console.log(error);
         });
     },
-    videolog(data){
+    videolog(data) {
+      return; // xxx: for testing disabled
       data.session = this.session;
-      axios.post('/logplayback', { data: data})
+      axios
+        .post("/logplayback", { data: data })
         //.then(function (response) {})
         .catch(function (error) {
           console.log(error);
@@ -91,69 +93,80 @@ export default {
       this.videoElement.pause();
       clearInterval(this.timer);
     },
-    forward(){},
-    backward(){},
-    updateAnnotaions(){
+    forward() {},
+    backward() {},
+    updateAnnotaions() {
       this.currentTime = this.videoElement.currentTime;
     },
     momenwwwt: function () {
       return moment();
     },
-    getXPosition(time){
-      if(!this.videoElement){
+    getXPosition(time) {
+      if (!this.videoElement) {
         return 0;
       }
       return (time / this.videoElement.duration) * 100;
     },
-    getProgressWidth(){
-      if(!this.videoElement){
+    getProgressWidth() {
+      if (!this.videoElement) {
         return 0;
       }
       return (this.videoElement.currentTime / this.videoElement.duration) * 100;
     },
-    clickTimeline(e){
-      if(!this.videoElement){
+    clickTimeline(e) {
+      if (!this.videoElement) {
         return 0;
       }
       let rect = e.target.getBoundingClientRect();
-      this.videoElement.currentTime = ((e.clientX - rect.left) / (rect.right - rect.left)) * this.videoElement.duration;
+      this.videoElement.currentTime =
+        ((e.clientX - rect.left) / (rect.right - rect.left)) *
+        this.videoElement.duration;
       //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right);
     },
-    gotoTime(time){
-      if(!this.videoElement){
+    gotoTime(time) {
+      if (!this.videoElement) {
         return 0;
       }
       this.videoElement.currentTime = time;
     },
-    hideAnnotations(){
+    hideAnnotations() {
       this.showAnnotationForm = false;
-
     },
-    toggleForm(){
+    toggleForm() {
       this.showAnnotationForm = true;
     },
   },
   computed: {
-    playing() { return !this.paused; }
+    playing() {
+      return !this.paused;
+    },
   },
   // eslint-disable-next-line object-shorthand
-  mounted: function(){
-    this.session = Math.ceil(Math.random()*100000);
-
+  mounted: function () {
+    this.session = Math.ceil(Math.random() * 100000);
   },
   watch: {
     // eslint-disable-next-line object-shorthand
-    currentTime: function(c){
-      this.videolog({session: this.session, playback: c, utc: (new Date()).getTime() });
+    currentTime: function (c) {
+      this.videolog({
+        session: this.session,
+        playback: c,
+        utc: new Date().getTime(),
+      });
 
-      for(var i = 0; i < this.$refs.annotationscomp.annotations.length; i++){
-        if( c >= this.$refs.annotationscomp.annotations[i].start && c < this.$refs.annotationscomp.annotations[i].end){
-          this.$refs.annotationscomp.annotations[i].active ? this.showAnnotation(this.$refs.annotationscomp.annotations[i]) : null;
-        }else{
+      for (var i = 0; i < this.$refs.annotationscomp.annotations.length; i++) {
+        if (
+          c >= this.$refs.annotationscomp.annotations[i].start &&
+          c < this.$refs.annotationscomp.annotations[i].end
+        ) {
+          this.$refs.annotationscomp.annotations[i].active
+            ? this.showAnnotation(this.$refs.annotationscomp.annotations[i])
+            : null;
+        } else {
           this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
         }
       }
-/*
+      /*
 var annoLength = this.annotations.length;
             for (var i = 0; i < annoLength; i++) {
                 var oAnn = this.annotations[i];
@@ -169,11 +182,10 @@ var annoLength = this.annotations.length;
             }
 */
       //return moment.duration(num, 'minutes');
-      //num = num/60; 
+      //num = num/60;
       //this.formatedTime = ('0' + Math.floor(num) % 24).slice(-2) + ':' + ((num % 1)*60 + '0').slice(0, 2);//moment(currentTime).format('mm:ss');
     },
   },
-
 };
 </script>
 
@@ -191,33 +203,51 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <video-transkript></video-transkript>
+          <Video-Transkript></Video-Transkript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
-          <a
-            href="../assets/videos/theresienstadt.mp4"
-          >here</a>.
+          <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
         <div class="video-controls col-12">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
-              <portal-target name="timeline-annotation-marker">
-              </portal-target>
+              <portal-target name="timeline-annotation-marker"> </portal-target>
             </div>
 
             <div @click="clickTimeline" class="timeline-main"></div>
             <div class="timeline-bottom"></div>
-            <div :style="'width:' + getProgressWidth() + '%;'" class="timeline-progress"></div>
+            <div
+              :style="'width:' + getProgressWidth() + '%;'"
+              class="timeline-progress"
+            ></div>
           </div>
           <div class="control-bar">
             <div class="video-play-pause vi2-btn mt-2" title="Play/Pause">
-              <font-awesome-icon @click="backward" icon="backward" class="backward-btn mr-3" />
-              <font-awesome-icon v-show="paused" @click="play" icon="play" class="pause-btn bigger"/>
-              <font-awesome-icon v-show="playing" @click="pause" icon="pause" class="play-btn bigger"/>
-              <font-awesome-icon @click="forward" icon="forward" class="forward-btn ml-3"/>
+              <font-awesome-icon
+                @click="backward"
+                icon="backward"
+                class="backward-btn mr-3"
+              />
+              <font-awesome-icon
+                v-show="paused"
+                @click="play"
+                icon="play"
+                class="pause-btn bigger"
+              />
+              <font-awesome-icon
+                v-show="playing"
+                @click="pause"
+                icon="pause"
+                class="play-btn bigger"
+              />
+              <font-awesome-icon
+                @click="forward"
+                icon="forward"
+                class="forward-btn ml-3"
+              />
             </div>
-            <div class="video-timer">{{ currentTime | moment('mm:ss') }}</div>
+            <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
@@ -232,15 +262,21 @@ var annoLength = this.annotations.length;
             <button class="btn btn-sm btn-outline-success">Arbeit</button>
           </div>
         </div>
-        <video-toc v-if="showSceneContentTable" @gotoTimerequest = "gotoTime"></video-toc>
-        <video-annotations v-if="videoElement"
-          ref = "annotationscomp"
-          :selectedPropagandaTechnique = "selectedPropagandaTechnique"
-          :currentTime = "currentTime"
-          :videoElementduration = "videoElement.duration"
-          @gotoTimerequest = "gotoTime">
-        </video-annotations>
-        
+        some Value: {{ showSceneContentTable }}
+        <Video-TOC
+          v-if="showSceneContentTable"
+          @gotoTimerequest="gotoTime"
+        ></Video-TOC>
+        <Video-Annotations
+          v-if="videoElement"
+          ref="annotationscomp"
+          :selectedPropagandaTechnique="selectedPropagandaTechnique"
+          :currentTime="currentTime"
+          :videoElementduration="videoElement.duration"
+          @gotoTimerequest="gotoTime"
+        >
+        </Video-Annotations>
+
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>
@@ -305,20 +341,20 @@ h4 {
   border-radius: 10px;
 }
 
-  .scene-list {
-    padding-left: 10px;
-    text-align: left;
-  }
-  .scene-list li {
-    list-style: none;
-    display: block;
-    width: auto;
-  }
-  .scene-list li a.scene {
-    display: inline-block;
-    padding: 1px 8px;
-    white-space: nowrap;
-  }
+.scene-list {
+  padding-left: 10px;
+  text-align: left;
+}
+.scene-list li {
+  list-style: none;
+  display: block;
+  width: auto;
+}
+.scene-list li a.scene {
+  display: inline-block;
+  padding: 1px 8px;
+  white-space: nowrap;
+}
 
 a.kultur {
   color: #2ca500;
@@ -350,7 +386,7 @@ a.arbeit:hover {
   color: #fff;
 }
 
-.left-bar{
+.left-bar {
   max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -385,55 +421,55 @@ video {
 }
 
 .control-bar {
-  padding-top:20px;
+  padding-top: 20px;
   color: #fff;
 }
 
-.video-play-pause > *{
- cursor: pointer;
-}
-
-.timelines {
-  position:relative;
-}
-
-.timeline-main{
-  position: absolute;
-  top: 10px;
-  left:0;
-  height:10px;
-  background-color: #fff;
-  width:100%;
-  opacity:0.3;
-  z-index:1000;
+.video-play-pause > * {
   cursor: pointer;
 }
 
-.timeline-progress{
-  height:10px;
+.timelines {
+  position: relative;
+}
+
+.timeline-main {
   position: absolute;
   top: 10px;
-  left:0;
+  left: 0;
+  height: 10px;
+  background-color: #fff;
+  width: 100%;
+  opacity: 0.3;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.timeline-progress {
+  height: 10px;
+  position: absolute;
+  top: 10px;
+  left: 0;
   background-color: #c10000;
-  z-index:990;
+  z-index: 990;
   cursor: pointer;
 }
 
 .timeline-marker {
-  height:10px;
-  width:10px;
+  height: 10px;
+  width: 10px;
   position: absolute;
   top: 4px;
   background-color: #c10000;
 }
 
-.timeline-marker:hover{
-  height:14px;
-  width:14px;
+.timeline-marker:hover {
+  height: 14px;
+  width: 14px;
   top: 0px;
 }
 
-.video-timer{
+.video-timer {
   position: absolute;
   top: 30px;
   left: 10px;
@@ -444,52 +480,52 @@ video {
 
 .annotations {
   padding: 0 0px;
-  color:#fff;
+  color: #fff;
 }
 
-.annotations input{
-  width:100%;
+.annotations input {
+  width: 100%;
 }
-.annotations textarea{
-  width:100%;
-}
-
-.annotations .annotation-list, .annotations .annotation-form {
-  display:block;
-  padding-left:10px !important;
+.annotations textarea {
+  width: 100%;
 }
 
-.annotation-list ul{
-  padding-left:0;
+.annotations .annotation-list,
+.annotations .annotation-form {
+  display: block;
+  padding-left: 10px !important;
+}
+
+.annotation-list ul {
+  padding-left: 0;
 }
 
 .annotation-list ul li {
   cursor: pointer;
   border-bottom: 1px solid #555;
-  padding-left:6px;
+  padding-left: 6px;
 }
 
-.annotation-list ul li:hover{
+.annotation-list ul li:hover {
   background-color: #555;
 }
 
-.annotation-list ul li .link{
+.annotation-list ul li .link {
   color: #fff;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .annotation-list .description {
-  display:block;
-  margin-left:50px;
+  display: block;
+  margin-left: 50px;
   font-size: 0.9em;
-  color:#999;
-
+  color: #999;
 }
 
 .left {
-float:left;
+  float: left;
 }
 .right {
-float:right;
+  float: right;
 }
 </style>
