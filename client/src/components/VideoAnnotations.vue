@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-       selectedPropagandaTechnique: '',
+      selectedPropagandaTechnique: "",
       showAnnotationForm: false,
       newannotationtitle: "",
       newannotationreason: "",
@@ -107,7 +107,7 @@ export default {
         <br/>
         <div class="annotation-list col-12">
             <ul class="scene-list">
-                <li v-for="annotation in annotations" @click="gotoTime(annotation.start)">
+                <li v-for="annotation in annotations" v-bind:key="annotations" @click="gotoTime(annotation.start)">
                     <a class="link">
                         {{ annotation.start | moment('mm:ss') }} {{ annotation.content.title}} <i @click="deleteAnnotation(annotation.id)" class="fa fa-info right mr-2"></i>
                     </a>

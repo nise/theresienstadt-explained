@@ -51,9 +51,6 @@ import axios from 'axios';
 
 import personcard from '@/components/PersonCard.vue';
 
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue';
-
 /**
  * shortname: String,
     name: String,
