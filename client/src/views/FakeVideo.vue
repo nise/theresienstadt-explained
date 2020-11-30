@@ -8,23 +8,48 @@
 
     -->
     <div class="page">
-      Video-Aufnahmen gelten bislang als wichtige Beweise, um Sachverhalte zu klären. Das könnte bald vorbei sein, denn die Manipulation von Bewegtbildern ist technisch quasi für jeden möglich. Öffentlichkeit und vor allem Medienmacher müssen künftig also noch viel genauer hinschauen, welche Videos echt sind und welche manipuliert.
-      Unterschied zwischen den Visual Effects in Kinofilmen und den hier presentierten Techniken ist der betriebene Aufwand und die dazu notwendige Expertise.
-      Techniken aus der Fotomanipulation lassen sich auf Video übertragen.
-      Will deepfakes do deep damage? https://cacm.acm.org/magazines/2020/1/241708-will-deepfakes-do-deep-damage/fulltext
-      <h2>Bim</h2>
-      <ul class="page-list">
-        <li>dd</li>
-      </ul>
+
+      Für den Theresienstadt-Film hatte die SS eine aufwendige Stadtverschönerung veranlasst 
+      und eine große Zahl von Protagonisten zu Filmaufnahmen gezwungen. 
+
+      Mit den heutigen technischen Mitteln lassen sich Filmszenen wie diese 
+      mit Hilfe maschineller Lernverfahren am Computer erzeugen. 
+
+      Video-Aufnahmen gelten bislang als wichtige Beweise, um Sachverhalte zu
+      klären. Das könnte bald vorbei sein, denn die Manipulation von
+      Bewegtbildern ist technisch quasi für jeden möglich. Öffentlichkeit und
+      vor allem Medienmacher müssen künftig also noch viel genauer hinschauen,
+      welche Videos echt sind und welche manipuliert. Unterschied zwischen den
+      Visual Effects in Kinofilmen und den hier presentierten Techniken ist der
+      betriebene Aufwand und die dazu notwendige Expertise. Techniken aus der
+      Fotomanipulation lassen sich auf Video übertragen. Will deepfakes do deep
+      damage?
+      https://cacm.acm.org/magazines/2020/1/241708-will-deepfakes-do-deep-damage/fulltext
+      
 
       <h2>Beispiele</h2>
-
-      <h3>Personen aus dem Videobild entfernen</h3>Mayes hat einen Algorithmus auf Basis des Machine-Learning-Frameworks Tensorflow aus dem Hause Google entwickelt, der in der Lage ist, Personen aus dem Live-Bild einer Webcam zu entfernen. Dazu lernt die KI in Echtzeit. Die einzige Voraussetzung ist, dass sich die zu entfernende Person bewegt und die Umgebung ansonsten statisch ist. Komplexe Hintergründe verschlechtern zwar das Ergebnis ein wenig, stellen aber kein gravierendes Hindernis dar.
-      Tatsächlich kümmert sich der Algorithmus aber gar nicht um die Person, sondern um den Hintergrund und rechnet alles heraus, was nicht Hintergrund ist.
-      siehe https://github.com/jasonmayes/Real-Time-Person-Removal
-      <section id="demos" class="invisible">
+      
+      <!--
+        - Person aus Theresienstadt-Film entfernen
+      -->
+      <h3 class="mt-3">Personen aus dem Videobild entfernen</h3>
+      Mayes hat einen Algorithmus auf Basis des Machine-Learning-Frameworks
+      Tensorflow aus dem Hause Google entwickelt, der in der Lage ist, Personen
+      aus dem Live-Bild einer Webcam zu entfernen. Dazu lernt die KI in
+      Echtzeit. Die einzige Voraussetzung ist, dass sich die zu entfernende
+      Person bewegt und die Umgebung ansonsten statisch ist. Komplexe
+      Hintergründe verschlechtern zwar das Ergebnis ein wenig, stellen aber kein
+      gravierendes Hindernis dar. Tatsächlich kümmert sich der Algorithmus aber
+      gar nicht um die Person, sondern um den Hintergrund und rechnet alles
+      heraus, was nicht Hintergrund ist. siehe
+      https://github.com/jasonmayes/Real-Time-Person-Removal
+      <section hidden id="demos" class="invisible">
         <h2>Demo: Webcam live removal</h2>
-        <p>Try this out using your webcam. Stand a few feet away from your webcam and start walking around... Watch as you slowly disappear in the bottom preview.</p>
+        <p>
+          Try this out using your webcam. Stand a few feet away from your webcam
+          and start walking around... Watch as you slowly disappear in the
+          bottom preview.
+        </p>
 
         <div id="liveView" class="webcam">
           <button id="webcamButton">Enable Webcam</button>
@@ -32,19 +57,54 @@
         </div>
       </section>
 
-      <h3>Gesichter austauschen (face swapping)</h3>(z. B. „voice swapping“) und die als „body-puppetry“ bekannte Übertragung von Körperbewegungen auf andere Personen in Videomaterial
-      FakeVideo aus einem einzigen Bild erstellen: https://www.cnet.com/news/samsung-ai-deepfake-can-fabricate-a-video-of-you-from-a-single-photo-mona-lisa-cheapfake-dumbfake/
-      Anleitung: https://1e9.community/t/wie-ich-in-nur-zwei-wochen-gelernt-habe-eigene-deepfakes-zu-produzieren/3494
-      Änderung einelner Bildelemente: https://www.tagesschau.de/faktenfinder/hintergrund/deep-fakes-101.html
-    </div>
 
-    <h3>Mimik eines Videos auf eine Foto animieren</h3>
-https://cacm.acm.org/magazines/2020/3/243031-editing-self-image/abstract
-    Deep Video Portraits
-    https://gvv.mpi-inf.mpg.de/projects/DeepVideoPortraits/
-    Averbuch-Elore et al. (2017)
-    Convert Audio to speech video: Suwajanakorn et al. (2017)
-    Microsoft Azure: Stimme des Theresienstadt-Sprechers als Trainingsdaten nutzen, um selbst Text zu vertonen.
+      <!--
+        - TODO
+      -->
+      <h3 class="mt-3">Gesichter austauschen</h3>
+      Einzelbilder zu einem Film animieren.
+      https://www.youtube.com/watch?v=p1b5aiTrGzY&feature=emb_title
+
+      <!--
+        - Person aus Theresienstadt-Film entfernen
+      -->
+      <h3 class="mt-3">Gesichter austauschen</h3>
+      (face swapping) (z. B. „voice swapping“) und die als „body-puppetry“
+      bekannte Übertragung von Körperbewegungen auf andere Personen in
+      Videomaterial FakeVideo aus einem einzigen Bild erstellen:
+      https://www.cnet.com/news/samsung-ai-deepfake-can-fabricate-a-video-of-you-from-a-single-photo-mona-lisa-cheapfake-dumbfake/
+      
+      Anleitung:
+      https://1e9.community/t/wie-ich-in-nur-zwei-wochen-gelernt-habe-eigene-deepfakes-zu-produzieren/3494
+      
+      Beispiele:
+      <ul>
+        <li><a href="https://www.youtube.com/embed/9WfZuNceFDM" target="new">Sassy Justice</a> ist eine Web-Fernsehserie von Trey Parker, Matt Stone und Peter Serafinowicz, die mithilfe von Deepfake-Technologie nicht verwandte Prominente und Politiker in die fiktive Welt eines Fernsehreporters.</li>
+        <li>...</li>
+      </ul>
+      
+      
+      <!--
+        - 
+      -->
+      <h3 class="mt-3">Mimik eines Videos auf eine Foto animieren</h3>
+      https://cacm.acm.org/magazines/2020/3/243031-editing-self-image/abstract
+      Deep Video Portraits
+      https://gvv.mpi-inf.mpg.de/projects/DeepVideoPortraits/ Averbuch-Elore et
+      al. (2017) Convert Audio to speech video: Suwajanakorn et al. (2017)
+
+      
+      <!--
+        - Test Azure: https://speech.microsoft.com/customvoice
+        - https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-voice-prepare-data
+        - 2000+ utterances required
+        - audio: PCM, 16-bit, < 15s, .wav, all files should be zipped
+        - transcript: name-of-audio-file[tab] Some transcripted text
+      -->
+      <h3 class="mt-3">Fremde Stimmen sprechen lassen</h3>
+      Microsoft Azure: Stimme des Theresienstadt-Sprechers als Trainingsdaten
+      nutzen, um selbst Text zu vertonen.
+    </div>
   </div>
 </template>
 
@@ -157,7 +217,7 @@ export default {
     //this.do();
   },
   methods: {
-    do: function() {
+    do: function () {
       // xxx_ Wait until bodypix will be loaded from tensor flow.
 
       /* eslint-disable no-plusplus */
@@ -172,7 +232,7 @@ export default {
         architecture: "MobileNetV1",
         outputStride: 16,
         multiplier: 0.75,
-        quantBytes: 4
+        quantBytes: 4,
       };
 
       // An object to configure parameters for detection. I have raised
@@ -182,7 +242,7 @@ export default {
         flipHorizontal: false,
         internalResolution: "high",
         segmentationThreshold: 0.9,
-        scoreThreshold: 0.2
+        scoreThreshold: 0.2,
       };
 
       // Render returned segmentation data to a given canvas context.
@@ -298,7 +358,7 @@ export default {
       let modelHasLoaded = false;
       let model;
 
-      model = bodyPix.load(bodyPixProperties).then(function(loadedModel) {
+      model = bodyPix.load(bodyPixProperties).then(function (loadedModel) {
         model = loadedModel;
         modelHasLoaded = true;
         // Show demo section now model is ready to use.
@@ -328,7 +388,7 @@ export default {
           // Now classify the canvas image we have available.
           model
             .segmentPerson(videoRenderCanvas, segmentationProperties)
-            .then(function(segmentation) {
+            .then(function (segmentation) {
               processSegmentation(webcamCanvas, segmentation);
               previousSegmentationComplete = true;
             });
@@ -349,29 +409,31 @@ export default {
 
         // getUsermedia parameters.
         const constraints = {
-          video: true
+          video: true,
         };
 
         // Activate the webcam stream.
-        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-          video.addEventListener("loadedmetadata", function() {
-            // Update widths and heights once video is successfully played otherwise
-            // it will have width and height of zero initially causing classification
-            // to fail.
-            webcamCanvas.width = video.videoWidth;
-            webcamCanvas.height = video.videoHeight;
-            videoRenderCanvas.width = video.videoWidth;
-            videoRenderCanvas.height = video.videoHeight;
-            bodyPixCanvas.width = video.videoWidth;
-            bodyPixCanvas.height = video.videoHeight;
-            let webcamCanvasCtx = webcamCanvas.getContext("2d");
-            webcamCanvasCtx.drawImage(video, 0, 0);
+        navigator.mediaDevices
+          .getUserMedia(constraints)
+          .then(function (stream) {
+            video.addEventListener("loadedmetadata", function () {
+              // Update widths and heights once video is successfully played otherwise
+              // it will have width and height of zero initially causing classification
+              // to fail.
+              webcamCanvas.width = video.videoWidth;
+              webcamCanvas.height = video.videoHeight;
+              videoRenderCanvas.width = video.videoWidth;
+              videoRenderCanvas.height = video.videoHeight;
+              bodyPixCanvas.width = video.videoWidth;
+              bodyPixCanvas.height = video.videoHeight;
+              let webcamCanvasCtx = webcamCanvas.getContext("2d");
+              webcamCanvasCtx.drawImage(video, 0, 0);
+            });
+
+            video.srcObject = stream;
+
+            video.addEventListener("loadeddata", predictWebcam);
           });
-
-          video.srcObject = stream;
-
-          video.addEventListener("loadeddata", predictWebcam);
-        });
       }
 
       // We will create a tempory canvas to render to store frames from
@@ -400,7 +462,7 @@ export default {
       } else {
         console.warn("getUserMedia() is not supported by your browser");
       }
-    }
-  }
+    },
+  },
 };
 </script>
