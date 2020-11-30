@@ -5,8 +5,8 @@
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
     <b-row>
-      <img style="height: 210px; width: 180px" :id="'personcard' + person.id" src="../assets/persons/Baeck_Leo.jpg" />
-
+      <img style="height: 210px; width: 180px" :id="'personcard' + person.id" :src="getImagePath(person)" />
+      
       <b-col>
         <h3 class="text-left ml-3">{{ person.shortname }}</h3>
         <p class="text-left ml-3">
@@ -49,8 +49,7 @@
         <h5 class="text-left px-3">Sichtbar im Film</h5>
         <b-row>
           <b-col v-for="entries in moviescenes" v-bind:key="entries"
-            ><img class="movieshotodd movieshotxld movieshotld"
-          /></b-col>
+            ><img class="movieshotodd movieshotxld movieshotld" /></b-col>
         </b-row>
         <br />
         <b-button
@@ -86,7 +85,9 @@ export default {
       this.isopenbio = this.isopenbio == "block" ? "none" : "block";
     },
     getImagePath(p){
-        return '../assets/persons/'+p.surname+'_'+p.name+'.jpg';
+        let t = p.shortname.split(' ');
+        return '/img/persons/'+t[1]+'_'+t[0]+'.jpg';
+        return '/img/persons/'+p.surename+'_'+p.name+'.jpg';
     }
   },
 };
