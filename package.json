@@ -4,9 +4,8 @@
   "description": "NS Propaganda film about the concentration camp in Theresienstadt",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve --open",
-    "start": "node ./server"
+    "start": "npm run build --prefix ./client  && node ./server"
   },
   "keywords": [
     "interactive",
@@ -16,15 +15,15 @@
   "author": "Niels Seidel, niels.seidel@fernuni-hagen.de",
   "license": "MIT",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.31",
-    "@fortawesome/free-brands-svg-icons": "^5.15.0",
-    "@fortawesome/free-solid-svg-icons": "^5.15.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-brands-svg-icons": "^5.15.1",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^0.1.10",
     "@vue/cli": "^3.12.1",
-    "@vue/cli-service": "^4.5.6",
+    "@vue/cli-service": "^4.5.9",
     "body-parser": "^1.19.0",
-    "bootstrap": "^4.5.2",
-    "bootstrap-vue": "^2.17.3",
+    "bootstrap": "^4.5.3",
+    "bootstrap-vue": "^2.19.0",
     "connect-flash": "^0.1.1",
     "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "^1.4.5",
@@ -32,10 +31,10 @@
     "express": "^4.17.1",
     "express-json": "^1.0.0",
     "express-session": "^1.17.1",
-    "express-validator": "^6.6.1",
+    "express-validator": "^6.7.0",
     "method-override": "^3.0.0",
-    "moment": "^2.29.0",
-    "mongoose": "^5.10.7",
+    "moment": "^2.29.1",
+    "mongoose": "^5.10.18",
     "morgan": "^1.10.0",
     "vue": "^2.6.12",
     "vue-moment": "^4.1.0"
