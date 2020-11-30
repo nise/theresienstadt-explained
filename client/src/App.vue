@@ -55,7 +55,7 @@ export default {
   watch: {
    $route: function() {
     // Check if given route is true, if it is then hide Nav. 
-    if (this.$route.path === "/film") {
+    if (this.$route.path.substring(0,5) === "/film") {
         this.footershow = false;
         } else  {
         this.footershow = true;
