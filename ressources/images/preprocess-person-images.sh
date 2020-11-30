@@ -40,6 +40,9 @@ find ./ -type f -iname "*.jpg" -exec mogrify -scale 500 {} \;
 
 find ./ -type f -iname "*.jpg" -exec mogrify -quality 95 {} \;
 
+rm ./../../../public/img/persons/*.jpg
+cp ./* ./../../../public/img/persons/
+
 exit;
 
 exit
