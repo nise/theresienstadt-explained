@@ -12,7 +12,7 @@ export default {
       this.$emit("gotoTimerequest", time);
     },
   },
-  mounted: function () { console.log('toc mounted')
+  mounted: function () {
     this.scenes = this.scenes.sort((a, b) => {
       a.number = parseInt(a.number, 10);
       b.number = parseInt(b.number, 10);
@@ -105,18 +105,28 @@ export default {
 </script>
 
 <template>
-  <div class="row video-bar scenes ml-1 mt-2">
-    <h4>Szenen</h4>
-    <ul class="scene-list">
-      <li v-for="scene in search()" v-bind:key="scene">
-        <a
-          :class="'scene ' + scene.category.toLowerCase()"
-          @click="gotoTime(scene.start)"
-          >{{ scene.title }}</a
-        >
-        <i v-if="scene.description !== ''" class="fa fa-info"></i>
-      </li>
-    </ul>
+  <div>
+    <div class="row video-bar topics ml-1 mt-2">
+      <h4>Themenauswahl</h4>
+      <div class="row">
+        <button class="btn btn-sm btn-outline-warning">Alltag</button>
+        <button class="btn btn-sm btn-outline-primary">Kultur</button>
+        <button class="btn btn-sm btn-outline-success">Arbeit</button>
+      </div>
+    </div>
+    <div class="row video-bar scenes ml-1 mt-2">
+      <h4>Szenen</h4>
+      <ul class="scene-list">
+        <li v-for="scene in search()" v-bind:key="scene">
+          <a
+            :class="'scene ' + scene.category.toLowerCase()"
+            @click="gotoTime(scene.start)"
+            >{{ scene.title }}</a
+          >
+          <i v-if="scene.description !== ''" class="fa fa-info"></i>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 

@@ -42,6 +42,7 @@ import videoAnnotations from "../components/VideoAnnotations";
 //moment.locale('de');
 
 export default {
+  props: ['modus'],
   components: {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
@@ -49,8 +50,12 @@ export default {
   },
   data() {
     return {
-      showSceneContentTable: true,
       session: 0,
+      featureSets:{
+        'basic': [],
+        'player': ['toc', 'transcript'],
+        'analysis': ['annotations']
+      },
       videoElement: null,
       paused: null,
       currentTime: 0,
@@ -77,6 +82,9 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+    },
+    isModusFeatures(feature){
+      return this.featureSets[this.modus].indexOf(feature) !== -1;
     },
     search() {
       return this.scenes;
@@ -142,7 +150,7 @@ export default {
     },
   },
   // eslint-disable-next-line object-shorthand
-  mounted: function () {
+  mounted: function () { 
     this.session = Math.ceil(Math.random() * 100000);
   },
   watch: {
@@ -203,7 +211,7 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transkript></Video-Transkript>
+          <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
@@ -254,21 +262,12 @@ var annoLength = this.annotations.length;
       </div>
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
-        <div class="row video-bar topics ml-1 mt-2">
-          <h4>Themenauswahl</h4>
-          <div class="row">
-            <button class="btn btn-sm btn-outline-warning">Alltag</button>
-            <button class="btn btn-sm btn-outline-primary">Kultur</button>
-            <button class="btn btn-sm btn-outline-success">Arbeit</button>
-          </div>
-        </div>
-        some Value: {{ showSceneContentTable }}
-        <Video-TOC
-          v-if="showSceneContentTable"
+        <Video-TOC 
+          v-if="isModusFeatures('toc')"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
         <Video-Annotations
-          v-if="videoElement"
+          v-if="isModusFeatures('annotations') && videoElement"
           ref="annotationscomp"
           :selectedPropagandaTechnique="selectedPropagandaTechnique"
           :currentTime="currentTime"

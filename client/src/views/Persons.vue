@@ -72,8 +72,8 @@ export default {
   },
 
   mounted: function () {
-    //this.getdata();
     this.splitArrInTwo(this.persons, this.persons1, this.persons2);
+    this.getdata();
   },
 
   methods: {
