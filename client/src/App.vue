@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="footer-copyright text-center">
-        © 2019 Copyright:
+        © 2020 Copyright:
         <a
           href="https://jugendbegegnung.de/dresden/"
         >Förderverein Jugendbegegnung in Theresienstadt/Terezin</a>
