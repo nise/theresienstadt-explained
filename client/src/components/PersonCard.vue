@@ -5,7 +5,7 @@
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
     <b-row>
-      <img style="height: 210px; width: 180px" :id="'personcard' + person.id" />
+      <img style="height: 210px; width: 180px" :id="'personcard' + person.id" src="../assets/persons/Baeck_Leo.jpg" />
 
       <b-col>
         <h3 class="text-left ml-3">{{ person.shortname }}</h3>
@@ -85,6 +85,9 @@ export default {
     togglebio: function () {
       this.isopenbio = this.isopenbio == "block" ? "none" : "block";
     },
+    getImagePath(p){
+        return '../assets/persons/'+p.surname+'_'+p.name+'.jpg';
+    }
   },
 };
 </script>
