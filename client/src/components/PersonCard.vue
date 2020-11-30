@@ -43,7 +43,7 @@
         style="width: inherit"
       >
         <br />
-        <p class="text-left px-3 text-break">{{ person.bio }}</p>
+        <p v-if="person.bio" class="text-left px-3 text-break">{{ person.bio }}</p>
         <hr />
 
         <h5 class="text-left px-3">Sichtbar im Film</h5>
