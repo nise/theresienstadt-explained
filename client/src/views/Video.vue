@@ -37,6 +37,7 @@ Vue.use(VueAxios, axios);
 import videoTranskript from "../components/VideoTranskript";
 import videoTOC from "../components/VideoTOC";
 import videoAnnotations from "../components/VideoAnnotations";
+import videoInfoMarker from "../components/VideoInfoMarker";
 
 // Choose Locale
 //moment.locale('de');
@@ -46,6 +47,7 @@ export default {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
     "Video-Annotations": videoAnnotations,
+    "Video-InfoMarker": videoInfoMarker,
   },
   data() {
     return {
@@ -121,6 +123,7 @@ export default {
       this.videoElement.currentTime =
         ((e.clientX - rect.left) / (rect.right - rect.left)) *
         this.videoElement.duration;
+      this.currentTime = this.videoElement.currentTime;
       //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right);
     },
     gotoTime(time) {
@@ -128,6 +131,7 @@ export default {
         return 0;
       }
       this.videoElement.currentTime = time;
+      this.currentTime = time;
     },
     hideAnnotations() {
       this.showAnnotationForm = false;
@@ -191,10 +195,15 @@ var annoLength = this.annotations.length;
 
 <template>
   <div id="video">
+    <Video-InfoMarker
+      :currentTime="currentTime"
+      :videoID="videoplayer">
+    </Video-InfoMarker>
     <div class="row">
       <div class="col-8 video-panel">
         <video
           ref="video"
+          id="videoplayer"
           @canplay="updatePaused"
           @playing="updatePaused"
           @pause="updatePaused"
@@ -203,7 +212,7 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transkript></Video-Transkript>
+          <Video-Transcript></Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
