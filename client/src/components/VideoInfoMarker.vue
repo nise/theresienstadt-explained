@@ -19,7 +19,7 @@ export default {
       let videoparent = document.getElementById(this.videoID);
       let newmarker = document.createElement("div");
       document.querySelector(".video-panel").appendChild(newmarker);
-      newmarker.id = "newmark";
+      newmarker.id = marker.title;
       newmarker.style.width = '50px';
       newmarker.style.height = '50px';
       /* newmarker.style.left = (videoparent.offsetLeft + 50) + 'px';
@@ -29,10 +29,11 @@ export default {
       newmarker.style.border = '2px solid #a64ceb';
       newmarker.style.position = "absolute";
       newmarker.style.zIndex = 100;
-      console.log(document.getElementById("newmark"));
     },
     deleteMarker(marker){
       console.log("off " + marker.title);
+      let todelete = document.getElementById(marker.title);
+      document.querySelector(".video-panel").removeChild(todelete);
     }
   },
   mounted: function(){
