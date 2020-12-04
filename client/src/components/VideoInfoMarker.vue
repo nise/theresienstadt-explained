@@ -72,7 +72,9 @@ export default {
       } else {    // if difference to last interval is higher than 0.6s, user clicked on timebar 
         this.activeMarkers.splice(0);
         this.activeInfoTextBox.splice(0);
-        this.markers = this.markerStore;
+        for (let i = 0; i < this.markerStore.length; i++){
+          this.markers.push(this.markerStore[i]);
+        }
       }
       this.lastInterval = this.currentTime;
 
