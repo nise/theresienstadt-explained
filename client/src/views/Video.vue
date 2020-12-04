@@ -195,12 +195,15 @@ var annoLength = this.annotations.length;
 
 <template>
   <div id="video">
-    <Video-InfoMarker
-      :currentTime="currentTime"
-      :videoID="videoplayer">
-    </Video-InfoMarker>
     <div class="row">
       <div class="col-8 video-panel">
+        <Video-InfoMarker
+          :currentTime="currentTime"
+          :videoID="videoplayer"
+          :paused="paused"
+          @pauserequest="pause"
+          @playrequest="play">
+        </Video-InfoMarker>
         <video
           ref="video"
           id="videoplayer"

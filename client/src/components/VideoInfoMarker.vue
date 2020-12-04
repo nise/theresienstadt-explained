@@ -4,8 +4,27 @@ export default {
   props: {
     currentTime: Number,
     videoID: String,
+    paused: Boolean,
   },
   methods: {
+    closeTextBox(event){
+      this.activeInfoTextBox.splice(0);
+      this.$emit("playrequest");
+      console.log(this.activeInfoTextBox);
+    },
+    displayTextBox(event){
+      this.$emit("pauserequest");
+      if (this.activeInfoTextBox.length > 0) this.activeInfoTextBox.splice(0);
+      this.activeInfoTextBox.push(this.getpayload(event.target.id));
+    },
+
+    getpayload(id){
+      for (let i = 0; i < this.activeMarkers.length; i++){
+        if (this.activeMarkers[i].title === id){
+          return this.activeMarkers[i];
+        }
+      }
+    },
     sortbystart(markers){
       markers.sort(function(a,b){
         if (a.start < b.start) return -1;
@@ -16,24 +35,9 @@ export default {
     displayMarker(marker){
       console.log("on " + marker.title);
       this.activeMarkers.push(marker)
-      let videoparent = document.getElementById(this.videoID);
-      let newmarker = document.createElement("div");
-      document.querySelector(".video-panel").appendChild(newmarker);
-      newmarker.id = marker.title;
-      newmarker.style.width = '50px';
-      newmarker.style.height = '50px';
-      /* newmarker.style.left = (videoparent.offsetLeft + 50) + 'px';
-      newmarker.style.top = (videoparent.offsetTop + 100) + 'px'; */
-      newmarker.style.left = marker.posX;
-      newmarker.style.top = marker.posY;
-      newmarker.style.border = '2px solid #a64ceb';
-      newmarker.style.position = "absolute";
-      newmarker.style.zIndex = 100;
     },
-    deleteMarker(marker){
+    deleteMarker(marker){   //obsolete for now. deletion by splicing array
       console.log("off " + marker.title);
-      let todelete = document.getElementById(marker.title);
-      document.querySelector(".video-panel").removeChild(todelete);
     }
   },
   mounted: function(){
@@ -42,6 +46,11 @@ export default {
     console.log(this.markers);
   },
   watch: {
+    paused: function(){
+      if (this.paused == false && this.activeInfoTextBox.length > 0){
+        this.activeInfoTextBox.splice(0);
+      }
+    },
     currentTime: function(){
       if (Math.abs(this.currentTime - this.lastInterval) < 0.6)
       {
@@ -60,8 +69,10 @@ export default {
             }
           });
         }
-      } else {
-        this.markers = this.markerStore.slice(0);
+      } else {    // if difference to last interval is higher than 0.6s, user clicked on timebar 
+        this.activeMarkers.splice(0);
+        this.activeInfoTextBox.splice(0);
+        this.markers = this.markerStore;
       }
       this.lastInterval = this.currentTime;
 
@@ -70,46 +81,112 @@ export default {
   data(){
     return {
       lastInterval: 0,
+      activeInfoTextBox: [],
       activeMarkers: [],
       markers: [],
       markerStore: [
         {
           title: 'Test1',
-          content: 'Testest',
+          content: '<b>Person</b> <p>TextTextText</p>',
           type: 'InfoBox',
           start: 1,
           end: 5,
-          posX: '30%',
+          posX: '50%',
           posY: '50%',
+          textBoxTop: '50px',
+          textBoxBottom: '100px'
+
         },
         {
           title: 'Test2',
-          content: 'Testest',
+          content: 'Testest2',
           type: 'InfoBox',
           start: 3,
           end: 8,
           posX: '40%',
-          posY: '60%',
+          posY: '40%',
+          textBoxBottom: '100px'
         },
         {
           title: 'Test3',
-          content: 'Testest',
+          content: 'Testest3',
           type: 'InfoBox',
           start: 5,
           end: 10,
-          posX: '50%',
-          posY: '70%',
+          posX: '60%',
+          posY: '60%',
+          textBoxBottom: '100px'
         },
       ],
     }
   }
 }
 </script>
-
-<template>
   
+<template>
+<div>
+  <div v-if="activeMarkers.length > 0">   <!-- v-if to prevent error on missing key when arr is empty -->
+    <div v-for="marker in activeMarkers" :key = "marker.title"
+      @click="displayTextBox"
+      :id = "marker.title"
+      class = "redInfoIconStyle"
+      :style="{left: marker.posX, top: marker.posY}">
+      i
+    </div>
+  </div>
+
+  <div v-if="activeInfoTextBox.length > 0">   <!-- v-if to prevent error on missing key when arr is empty -->
+    <div v-for="textbox in activeInfoTextBox" :key = "textbox.title"
+      class = "infoTextBoxStyle" 
+      :style = "[textbox.textBoxTop ? {top: textbox.textBoxTop} : {bottom: textbox.textBoxBottom}]"
+      >
+      <span v-html="textbox.content"></span>
+      <b-button class = "infoTextBoxExitbuttonStyle"
+        @click="closeTextBox">
+        &times;
+      </b-button>
+    </div>
+  </div>
+</div>
 </template>
 
 <style>
+.redInfoIconStyle{
+  color: #fff;
+  background-color: #f00;
+  width: 40px;
+  height: 40px;
+  padding: 0px 0px 0px 0px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 100;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+.infoTextBoxStyle{
+  color: #fff;
+  background: #000 0% 0% no-repeat;
+  width: 72%;         /* Thats about the ratio (width to viewport size) of the design specs */
+  height: 150px;
+  position:absolute;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 101;
+  opacity: 0.6;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
 
+.infoTextBoxExitbuttonStyle{
+  color: #000;
+  background-color: #fff;
+  width: 28px;
+  height: 28px;
+  padding: 0px 0px 0px 0px;
+  border-radius: 50%;
+  position: absolute;
+  left: -0.5%;
+  top: -0.5%;
+  transform: translate(-50%, -50%);
+}
 </style>
