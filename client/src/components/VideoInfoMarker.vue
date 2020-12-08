@@ -5,17 +5,20 @@ export default {
     currentTime: Number,
     videoID: String,
     paused: Boolean,
+    clickedTimeline: Boolean,
   },
   methods: {
-    closeTextBox(event){
-      this.activeInfoTextBox.splice(0);
+    closeTextBox(){
       this.$emit("playrequest");
-      console.log(this.activeInfoTextBox);
+      this.infoTextBoxVisible = false;
     },
     displayTextBox(event){
       this.$emit("pauserequest");
-      if (this.activeInfoTextBox.length > 0) this.activeInfoTextBox.splice(0);
-      this.activeInfoTextBox.push(this.getpayload(event.target.id));
+      if (this.infoTextBoxVisible == true){
+        this.infoTextBoxVisible = false;
+      }
+      this.textbox = this.getpayload(event.target.id);
+      this.infoTextBoxVisible = true;
     },
 
     getpayload(id){
@@ -33,55 +36,67 @@ export default {
       });
     },
     displayMarker(marker){
-      console.log("on " + marker.title);
-      this.activeMarkers.push(marker)
+      this.activeMarkers.push(marker);
+      document.getElementById(marker.title).style.display = 'block';
     },
-    deleteMarker(marker){   //obsolete for now. deletion by splicing array
-      console.log("off " + marker.title);
+    hideMarker(marker){
+      document.getElementById(marker.title).style.display = 'none';
     }
   },
   mounted: function(){
     this.markers = this.markerStore.slice(0);
     this.sortbystart(this.markers);
-    console.log(this.markers);
+    this.textbox = this.markers[0];
   },
   watch: {
+    clickedTimeline: function(){
+      if (this.clickedTimeline == true){
+        this.$emit("ackclickTimeline");
+        for (let i = 0; i < this.activeMarkers.length; i++){
+          this.hideMarker(this.activeMarkers[i]);
+        }
+        this.activeMarkers.splice(0);
+        this.markerstart = 0;
+        this.closeTextBox();
+      }
+    },
     paused: function(){
-      if (this.paused == false && this.activeInfoTextBox.length > 0){
-        this.activeInfoTextBox.splice(0);
+      if (this.paused == false && this.infoTextBoxVisible){
+        this.closeTextBox();
       }
     },
     currentTime: function(){
-      if (Math.abs(this.currentTime - this.lastInterval) < 0.6)
-      {
-        this.markers.forEach((element, index) => {
-          if (this.currentTime > element.start && this.currentTime < element.end){
-            this.displayMarker(element);
-            this.markers.splice(index, 1);
-          }
-        });
+      
+      if (this.markerstart + 5 > this.markers.length){
+        this.markerend = this.markers.length
+      } else {
+        this.markerend = this.markerstart + 5;
+      }
 
-        if (this.activeMarkers.length > 0){
-          this.activeMarkers.forEach((element, index) => {
-            if (this.currentTime > element.end){
-              this.deleteMarker(element);
-              this.activeMarkers.splice(index, 1);
-            }
-          });
-        }
-      } else {    // if difference to last interval is higher than 0.6s, user clicked on timebar 
-        this.activeMarkers.splice(0);
-        this.activeInfoTextBox.splice(0);
-        for (let i = 0; i < this.markerStore.length; i++){
-          this.markers.push(this.markerStore[i]);
+
+      for (let i = this.markerstart; i < this.markerend; i++){
+        if (this.currentTime > this.markers[i].start && this.currentTime < this.markers[i].end){
+          this.displayMarker(this.markers[i]);
+          this.markerstart = i+1;
         }
       }
-      this.lastInterval = this.currentTime;
 
+      for (let i = 0; i < this.activeMarkers.length; i++){
+        if (this.currentTime > this.activeMarkers[i].end){
+          this.hideMarker(this.activeMarkers[i]);
+          this.activeMarkers.splice(i, 1);
+        }
+      }
+      
+      this.lastInterval = this.currentTime;
     }
   },
   data(){
     return {
+      markerstart: 0,
+      markerend: 0,
+      infoTextBoxVisible: false,
+      textbox: null,
       lastInterval: 0,
       activeInfoTextBox: [],
       activeMarkers: [],
@@ -97,7 +112,6 @@ export default {
           posY: '50%',
           textBoxTop: '50px',
           textBoxBottom: '100px'
-
         },
         {
           title: 'Test2',
@@ -119,6 +133,66 @@ export default {
           posY: '60%',
           textBoxBottom: '100px'
         },
+        {
+          title: 'Test4',
+          content: 'Testest4',
+          type: 'InfoBox',
+          start: 8,
+          end: 15,
+          posX: '20%',
+          posY: '20%',
+          textBoxBottom: '100px'
+        },
+        {
+          title: 'Test5',
+          content: 'Testest5',
+          type: 'InfoBox',
+          start: 10,
+          end: 15,
+          posX: '80%',
+          posY: '30%',
+          textBoxBottom: '100px'
+        },
+        {
+          title: 'Test6',
+          content: 'Testest6',
+          type: 'InfoBox',
+          start: 13,
+          end: 18,
+          posX: '60%',
+          posY: '60%',
+          textBoxBottom: '100px'
+        },
+        {
+          title: 'Test7',
+          content: 'Testest7',
+          type: 'InfoBox',
+          start: 7,
+          end: 20,
+          posX: '20%',
+          posY: '60%',
+          textBoxBottom: '100px'
+        },
+        {
+          title: 'Test8',
+          content: 'Testest8',
+          type: 'InfoBox',
+          start: 20,
+          end: 25,
+          posX: '60%',
+          posY: '60%',
+          textBoxBottom: '100px'
+        },
+        {
+          title: 'Test9',
+          content: 'Testest9',
+          type: 'InfoBox',
+          start: 17,
+          end: 25,
+          posX: '60%',
+          posY: '20%',
+          textBoxBottom: '100px'
+        },
       ],
     }
   }
@@ -127,18 +201,20 @@ export default {
   
 <template>
 <div>
-  <div v-if="activeMarkers.length > 0">   <!-- v-if to prevent error on missing key when arr is empty -->
-    <div v-for="marker in activeMarkers" :key = "marker.title"
+  <div v-if="markerStore.length > 0">   <!-- v-if to prevent error on missing key when arr is empty -->
+    <div v-for="marker in markerStore" :key = "marker.title"
       @click="displayTextBox"
       :id = "marker.title"
       class = "redInfoIconStyle"
       :style="{left: marker.posX, top: marker.posY}">
-      i
+      &#x0069;
     </div>
   </div>
 
-  <div v-if="activeInfoTextBox.length > 0">   <!-- v-if to prevent error on missing key when arr is empty -->
-    <div v-for="textbox in activeInfoTextBox" :key = "textbox.title"
+  <transition name="fade">
+    <div v-if="infoTextBoxVisible"
+      
+      :id = "textbox.title + 'textbox'"
       class = "infoTextBoxStyle" 
       :style = "[textbox.textBoxTop ? {top: textbox.textBoxTop} : {bottom: textbox.textBoxBottom}]"
       >
@@ -148,17 +224,21 @@ export default {
         &times;
       </b-button>
     </div>
-  </div>
+  </transition>
 </div>
 </template>
 
 <style>
 .redInfoIconStyle{
+  display: none;
+  font-size: 1.5em;
   color: #fff;
   background-color: #f00;
   width: 40px;
   height: 40px;
-  padding: 0px 0px 0px 0px;
+  padding-top: 2px;
+  padding-right: 1px;
+  /*padding: 0px 0px 0px 0px;*/
   border-radius: 50%;
   position: absolute;
   z-index: 100;
@@ -177,6 +257,13 @@ export default {
   opacity: 0.6;
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 .infoTextBoxExitbuttonStyle{
