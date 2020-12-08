@@ -167,17 +167,18 @@ export default {
         playback: c,
         utc: new Date().getTime(),
       });
-
-      for (var i = 0; i < this.$refs.annotationscomp.annotations.length; i++) {
-        if (
-          c >= this.$refs.annotationscomp.annotations[i].start &&
-          c < this.$refs.annotationscomp.annotations[i].end
-        ) {
-          this.$refs.annotationscomp.annotations[i].active
-            ? this.showAnnotation(this.$refs.annotationscomp.annotations[i])
-            : null;
-        } else {
-          this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
+      if (this.isModusFeatures('annotations')){
+        for (var i = 0; i < this.$refs.annotationscomp.annotations.length; i++) {
+          if (
+            c >= this.$refs.annotationscomp.annotations[i].start &&
+            c < this.$refs.annotationscomp.annotations[i].end
+          ) {
+            this.$refs.annotationscomp.annotations[i].active
+              ? this.showAnnotation(this.$refs.annotationscomp.annotations[i])
+              : null;
+          } else {
+            this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
+          }
         }
       }
       /*

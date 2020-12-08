@@ -126,7 +126,7 @@ export default {
       @click="displayTextBox"
       :id = "marker.title"
       class = "redInfoIconStyle"
-      :style="{left: marker.posX, top: marker.posY}">
+      :style="{left: marker.posX+'%', top: marker.posY+'%'}">
       &#x0069;
     </div>
   </div>
@@ -136,7 +136,7 @@ export default {
       
       :id = "textbox.title + 'textbox'"
       class = "infoTextBoxStyle" 
-      :style = "[textbox.textBoxTop ? {top: textbox.textBoxTop} : {bottom: textbox.textBoxBottom}]"
+      :style = "[(textbox.posY > 50) ? {top: '50px'} : {bottom: '100px'}]"
       >
       <span v-html="textbox.content"></span>
       <b-button class = "infoTextBoxExitbuttonStyle"
