@@ -1,4 +1,8 @@
 <script>
+
+import axios from 'axios';
+
+
 export default {
   name: "VideoInfoMarker",
   props: {
@@ -8,6 +12,15 @@ export default {
     clickedTimeline: Boolean,
   },
   methods: {
+    getdata: function(){
+      let _this = this;
+      axios.get('/markerdata').then(function (response) {
+        _this.markerStore = response.data.slice(0);
+        _this.markers = _this.markerStore.slice(0);
+        _this.sortbystart(_this.markers);
+        _this.textbox = _this.markers[0];
+      });
+    },
     closeTextBox(){
       this.$emit("playrequest");
       this.infoTextBoxVisible = false;
@@ -44,9 +57,8 @@ export default {
     }
   },
   mounted: function(){
-    this.markers = this.markerStore.slice(0);
-    this.sortbystart(this.markers);
-    this.textbox = this.markers[0];
+    this.getdata();
+
   },
   watch: {
     clickedTimeline: function(){
@@ -101,99 +113,7 @@ export default {
       activeInfoTextBox: [],
       activeMarkers: [],
       markers: [],
-      markerStore: [
-        {
-          title: 'Test1',
-          content: '<b>Person</b> <p>TextTextText</p>',
-          type: 'InfoBox',
-          start: 1,
-          end: 5,
-          posX: '50%',
-          posY: '50%',
-          textBoxTop: '50px',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test2',
-          content: 'Testest2',
-          type: 'InfoBox',
-          start: 3,
-          end: 8,
-          posX: '40%',
-          posY: '40%',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test3',
-          content: 'Testest3',
-          type: 'InfoBox',
-          start: 5,
-          end: 10,
-          posX: '60%',
-          posY: '60%',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test4',
-          content: 'Testest4',
-          type: 'InfoBox',
-          start: 8,
-          end: 15,
-          posX: '20%',
-          posY: '20%',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test5',
-          content: 'Testest5',
-          type: 'InfoBox',
-          start: 10,
-          end: 15,
-          posX: '80%',
-          posY: '30%',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test6',
-          content: 'Testest6',
-          type: 'InfoBox',
-          start: 13,
-          end: 18,
-          posX: '60%',
-          posY: '60%',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test7',
-          content: 'Testest7',
-          type: 'InfoBox',
-          start: 7,
-          end: 20,
-          posX: '20%',
-          posY: '60%',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test8',
-          content: 'Testest8',
-          type: 'InfoBox',
-          start: 20,
-          end: 25,
-          posX: '60%',
-          posY: '60%',
-          textBoxBottom: '100px'
-        },
-        {
-          title: 'Test9',
-          content: 'Testest9',
-          type: 'InfoBox',
-          start: 17,
-          end: 25,
-          posX: '60%',
-          posY: '20%',
-          textBoxBottom: '100px'
-        },
-      ],
+      markerStore: []
     }
   }
 }
@@ -246,6 +166,8 @@ export default {
   transform: translate(-50%, -50%);
 }
 .infoTextBoxStyle{
+  text-justify: auto;
+  overflow-wrap: break-word;
   color: #fff;
   background: #000 0% 0% no-repeat;
   width: 72%;         /* Thats about the ratio (width to viewport size) of the design specs */
