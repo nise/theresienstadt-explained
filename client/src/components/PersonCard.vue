@@ -5,8 +5,8 @@
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
     <b-row>
-      <img style="height: 210px; width: 180px" :id="'personcard' + person.id" />
-
+      <img style="height: 210px; width: 180px" :id="'personcard' + person.id" :src="getImagePath(person)" />
+      
       <b-col>
         <h3 class="text-left ml-3">{{ person.shortname }}</h3>
         <p class="text-left ml-3">
@@ -43,14 +43,13 @@
         style="width: inherit"
       >
         <br />
-        <p class="text-left px-3 text-break">{{ person.bio }}</p>
+        <p v-if="person.bio" class="text-left px-3 text-break">{{ person.bio }}</p>
         <hr />
 
         <h5 class="text-left px-3">Sichtbar im Film</h5>
         <b-row>
           <b-col v-for="entries in moviescenes" v-bind:key="entries"
-            ><img class="movieshotodd movieshotxld movieshotld"
-          /></b-col>
+            ><img class="movieshotodd movieshotxld movieshotld" /></b-col>
         </b-row>
         <br />
         <b-button
@@ -85,6 +84,11 @@ export default {
     togglebio: function () {
       this.isopenbio = this.isopenbio == "block" ? "none" : "block";
     },
+    getImagePath(p){
+        let t = p.shortname.split(' ');
+        return '/img/persons/'+t[1]+'_'+t[0]+'.jpg';
+        return '/img/persons/'+p.surename+'_'+p.name+'.jpg';
+    }
   },
 };
 </script>

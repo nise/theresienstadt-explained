@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
-//import Video from './views/Video.vue';
+import Video from './views/Video.vue';
 //import Intro from './views/Intro.vue';
 
 Vue.use(Router);
@@ -21,9 +21,10 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/film',
+      path: '/film/:modus',
       name: 'film',
       component: () => import(/* webpackChunkName: "about" */ './views/Video.vue'),
+      props: true 
     },
     {
       path: '/about',
@@ -73,11 +74,11 @@ export default new Router({
       name: 'references',
       component: () => import(/* webpackChunkName: "references" */ './views/References.vue'),
     },
-    {
+   /* {
       path: '/pages/video-analyses',
       name: 'analysis',
-      component: () => import(/* webpackChunkName: "analysis" */ './views/VideoAnalyses.vue'),
-    },
+      component: () => import('./views/VideoAnalyses.vue'),
+    },*/
     {
       path: '/pages/guided-video',
       name: 'guide',

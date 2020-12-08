@@ -15,6 +15,10 @@
       <b-alert v-model="show" class="mt-3" dismissible @dismissed="dismissed">Hello {{ name }}!</b-alert>
     </div>
     -->
+
+    <router-link to="/film/player">Zum Film</router-link>
+
+
     <div class="container-fluid page-apps">
       <div class="container">
 
@@ -118,7 +122,7 @@
             <img src="../assets/home-analyse.png">
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/video-analyses">Filmanalyse in Gruppenarbeit</router-link>
+                <router-link to="/film/analysis">Filmanalyse in Gruppenarbeit</router-link>
               </div>
               <div class="cell-text"></div>
             </div>
@@ -157,31 +161,15 @@ export default {
         this.message = result
       })
   },
-  methods: {},
 }
-
-/**
- * export default {
-  data() {
-    return {
-      name: "BootstrapVue",
-      show: true
-    };
-  },
-  watch: {
-    show(newVal) {
-      console.log("Alert is now " + (newVal ? "visible" : "hidden"));
-    }
-  },
-  methods: {
-    toggle() {
-      console.log("Toggle button clicked");
-      this.show = !this.show;
-    },
-    dismissed() {
-      console.log("Alert dismissed");
-    }
-  }
-};
- */
 </script>
+
+
+<style>
+.cell-headline a{
+  color:#2a2a2a;
+}
+.cell-headline a:hover{
+  color:#2a2a2a;
+}
+</style>
