@@ -9,13 +9,13 @@
         </ul>
       <h2>Realisierung</h2>
       <ul class="page-list">
-        <li><strong>Recherchen:</strong> Niels Seidel, Armin Pietsch, Janick Baumann</li>
+        <li><strong>Recherchen:</strong> Niels Seidel, Armin Pietsch, Benedikt Schaumlöffel, Janick Baumann</li>
         <li><strong>Filmbearbeitung:</strong> Niels Seidel</li>
         <li><strong>Filmprotokoll und filmästhetische Analyse:</strong><a href="https://scholar.princeton.edu/dennisschaefer/home"> Dennis Schäfer, Princton University</a></li>
         <li hidden><strong>Fotos:</strong> xxx</li>
         <li><strong>Software Entwicklung:</strong>
           <ul>
-            <li>Architektur: <a href="https://www.fernuni-hagen.de/ks/team/niels.seidel.shtml">Niels Seidel, FernUniversität in Hagen</a></li>
+            <li>Architektur: <a href="https://www.fernuni-hagen.de/ks/team/niels.seidel.shtml">Niels Seidel und Konstantin Friedrich, FernUniversität in Hagen</a></li>
             <li>Guided Video Tour: Michael Dittwald, Bachelorand am Lehrgebiet Kooperative Systeme, 2018</li>
             <li>ArgueGraph Video Analyse: Michael Desch, Bachelorand am Lehrgebiet Kooperative Systeme, 2020</li>
           </ul>
