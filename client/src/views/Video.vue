@@ -58,6 +58,7 @@ export default {
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
+      clickTimelineNotify: false
     };
   },
   methods: {
@@ -119,6 +120,7 @@ export default {
       if (!this.videoElement) {
         return 0;
       }
+      this.clickTimelineNotify = true;
       let rect = e.target.getBoundingClientRect();
       this.videoElement.currentTime =
         ((e.clientX - rect.left) / (rect.right - rect.left)) *
@@ -201,6 +203,8 @@ var annoLength = this.annotations.length;
           :currentTime="currentTime"
           :videoID="videoplayer"
           :paused="paused"
+          :clickedTimeline="clickTimelineNotify"
+          @ackclickTimeline="clickTimelineNotify = false"
           @pauserequest="pause"
           @playrequest="play">
         </Video-InfoMarker>
