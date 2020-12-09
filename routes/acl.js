@@ -28,6 +28,12 @@ module.exports = function (db, app) {
       });
     });
 
+    app.get('/theresienbib', (req, res) => {
+      fs.readFile('./ressources/Theresienstadt.bib', function (err, data){
+        res.send(data);
+      });
+    });
+
     var bodyParser = require('body-parser')
     app.use(bodyParser.json());       // to support JSON-encoded bodies
     app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
