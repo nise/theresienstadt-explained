@@ -37,6 +37,7 @@ Vue.use(VueAxios, axios);
 import videoTranskript from "../components/VideoTranskript";
 import videoTOC from "../components/VideoTOC";
 import videoAnnotations from "../components/VideoAnnotations";
+import videoInfoMarker from "../components/VideoInfoMarker";
 
 // Choose Locale
 //moment.locale('de');
@@ -47,6 +48,7 @@ export default {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
     "Video-Annotations": videoAnnotations,
+    "Video-InfoMarker": videoInfoMarker,
   },
   data() {
     return {
@@ -61,6 +63,7 @@ export default {
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
+      clickTimelineNotify: false
     };
   },
   methods: {
@@ -125,10 +128,12 @@ export default {
       if (!this.videoElement) {
         return 0;
       }
+      this.clickTimelineNotify = true;
       let rect = e.target.getBoundingClientRect();
       this.videoElement.currentTime =
         ((e.clientX - rect.left) / (rect.right - rect.left)) *
         this.videoElement.duration;
+      this.currentTime = this.videoElement.currentTime;
       //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right);
     },
     gotoTime(time) {
@@ -136,6 +141,7 @@ export default {
         return 0;
       }
       this.videoElement.currentTime = time;
+      this.currentTime = time;
     },
     hideAnnotations() {
       this.showAnnotationForm = false;
@@ -161,17 +167,18 @@ export default {
         playback: c,
         utc: new Date().getTime(),
       });
-
-      for (var i = 0; i < this.$refs.annotationscomp.annotations.length; i++) {
-        if (
-          c >= this.$refs.annotationscomp.annotations[i].start &&
-          c < this.$refs.annotationscomp.annotations[i].end
-        ) {
-          this.$refs.annotationscomp.annotations[i].active
-            ? this.showAnnotation(this.$refs.annotationscomp.annotations[i])
-            : null;
-        } else {
-          this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
+      if (this.isModusFeatures('annotations')){
+        for (var i = 0; i < this.$refs.annotationscomp.annotations.length; i++) {
+          if (
+            c >= this.$refs.annotationscomp.annotations[i].start &&
+            c < this.$refs.annotationscomp.annotations[i].end
+          ) {
+            this.$refs.annotationscomp.annotations[i].active
+              ? this.showAnnotation(this.$refs.annotationscomp.annotations[i])
+              : null;
+          } else {
+            this.hideAnnotations(this.$refs.annotationscomp.annotations[i]);
+          }
         }
       }
       /*
@@ -201,8 +208,18 @@ var annoLength = this.annotations.length;
   <div id="video">
     <div class="row">
       <div class="col-8 video-panel">
+        <Video-InfoMarker
+          :currentTime="currentTime"
+          :videoID="videoplayer"
+          :paused="paused"
+          :clickedTimeline="clickTimelineNotify"
+          @ackclickTimeline="clickTimelineNotify = false"
+          @pauserequest="pause"
+          @playrequest="play">
+        </Video-InfoMarker>
         <video
           ref="video"
+          id="videoplayer"
           @canplay="updatePaused"
           @playing="updatePaused"
           @pause="updatePaused"
