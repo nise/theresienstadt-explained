@@ -23,104 +23,179 @@ export default {
       _this.bibparse.setInput(response.data);
       _this.bibparse.bibtex();
       _this.theresienbib = _this.bibparse.getEntries();
+      _this.removeCurlBraces();
+      
     })
+  },
+  methods: {
+    removeCurlBraces(){
+      let regtest = RegExp(/\{|\}/gi);
+      for (var val in this.theresienbib){
+        for (var objval in this.theresienbib[val]){
+
+          let noCurlBraces = this.theresienbib[val][objval]
+          if (regtest.test(noCurlBraces)){
+            this.theresienbib[val][objval] = noCurlBraces.replace(regtest, ' ');
+          }
+        }
+      }
+    }
   }
 }
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" style="background-color:white">
     <h1>Literatur und Film über den Film</h1>
     <br>
     <ul>
-      <li v-for="entry in theresienbib" style="list-style-type:none">
+      <li v-for="entry in theresienbib" style="list-style-type:none; color:black; text-align:left;">
          
         <div class = "row">
-          <div v-if="entry.TITLE">
-            <p class="dist"> Titel: {{entry.TITLE}}</p>
-          </div>
-          <div v-if="entry.JOURNAL">
-            <p class="dist"> Journal: {{entry.JOURNAL}}</p>
-          </div>
-          <div v-if="entry.BOOKTITLE">
-            <p class="dist"> Buchtitel: {{entry.BOOKTITLE}}</p>
-          </div>
-          <div v-if="entry.SHORTTITLE">
-            <p class="dist"> Kurztitel: {{entry.SHORTTITLE}}</p>
-          </div>
+          <template v-if="entry.BIBTEXTYPEKEY === '@BOOK'">
+            <template v-if="entry.AUTHOR">
+              <span class="dist">{{entry.AUTHOR}}.</span>
+            </template>
+            <template v-if="entry.YEAR">
+              <span class="dist">({{entry.YEAR}}).</span>
+            </template>
+            <template v-if="entry.TITLE">
+              <span class="dist">{{entry.TITLE}}.</span>
+            </template>
+            <template v-if="entry.EDITOR">
+              <span class="dist">({{entry.EDITOR}}, Ed.)</span>
+            </template>
+            <template v-if="entry.PUBLISHER">
+              <span class="dist">{{entry.PUBLISHER}}.</span>
+            </template>
+            <template v-if="entry.DOI">
+              <span class="dist">. {{entry.DOI}}</span>
+            </template>
+          </template>
+        
+          <template v-if="entry.BIBTEXTYPEKEY === '@INCOLLECTION'">
+            <template v-if="entry.AUTHOR">
+              <span class="dist">{{entry.AUTHOR}}.</span>
+            </template>
+            <template v-if="entry.YEAR">
+              <span class="dist">({{entry.YEAR}}).</span>
+            </template>
+            <template v-if="entry.TITLE">
+                <span class="dist">{{entry.TITLE}}.</span>
+            </template>
+            <template v-if="entry.EDITOR">
+              <span class="dist">({{entry.EDITOR}}, Ed.)</span>
+            </template>
+            <template v-if="entry.BOOKTITLE">
+              <span class="dist">{{entry.BOOKTITLE}}</span>
+            </template>
+            <template v-if="entry.PAGES">
+              <span class="dist">(pp.{{entry.PAGES}}).</span>
+            </template>
+            <template v-if="entry.PUBLISHER">
+              <span class="dist">{{entry.PUBLISHER}}.</span>
+            </template>
+            <template v-if="entry.DOI">
+              <a class="dist" :href="'https://doi.org/'+entry.DOI">DOI-Link</a>
+            </template>
+          </template>
 
-          <div v-if="entry.CHAPTER">
-            <p class="dist"> Kapitel: {{entry.CHAPTER}}</p>
-          </div>
-        
-        
-        <div v-if="entry.BIBTEXTYPEKEY">
-          <div v-if="entry.BIBTEXTYPEKEY === '@INCOLLECTION'">
-            <p class="dist">Typ: Buchkapitel</p>
-          </div>
-          <div v-if="entry.BIBTEXTYPEKEY === '@ARTICLE'">
-            <p class="dist">Typ: Journal</p> 
-          </div>
-          <div v-if="entry.BIBTEXTYPEKEY === '@BOOK'">
-            <p class="dist">Typ: Buch</p>
-          </div>
-          <div v-if="entry.BIBTEXTYPEKEY === '@MISC'">
-          </div>
-        </div>
-        
-          <div v-if="entry.AUTHOR">
-            <p class="dist">Autor: {{entry.AUTHOR}}</p>
-          </div>
-          <div v-if="entry.EDITOR">
-            <p class="dist">Editor: {{entry.EDITOR}}</p>
-          </div>
-        
+          <template v-if="entry.BIBTEXTYPEKEY === '@ARTICLE'">
+            <template v-if="entry.AUTHOR">
+              <span class="dist">{{entry.AUTHOR}}.</span>
+            </template>
+            <template v-if="entry.YEAR">
+              <span class="dist">({{entry.YEAR}}).</span>
+            </template>
+            <template v-if="entry.TITLE">
+                <span class="dist">{{entry.TITLE}}.</span>
+            </template>
+            <template v-if="entry.JOURNAL">
+                <span class="dist">{{entry.JOURNAL}}.</span>
+            </template>
+            <template v-if="entry.VOLUME">
+                <span class="dist">{{entry.VOLUME}}.</span>
+            </template>
+            <template v-if="entry.PAGES">
+              <span class="dist">({{entry.PAGES}}).</span>
+            </template>
+            <template v-if="entry.DOI">
+              <a class="dist" :href="'https://doi.org/'+entry.DOI">DOI-Link</a>
+            </template>
+            <template v-if="entry.URL">
+              <a class="dist" :href="entry.URL">URL-Link</a>
+            </template>
+          </template>
 
-          <div v-if="entry.VOLUME">
-            <p class="dist">Volume: {{entry.VOLUME}}</p>
-          </div>
-          <div v-if="entry.PAGES">
-            <p class="dist">Seiten: {{entry.PAGES}} </p>
-          </div>
-          <div v-if="entry.LANGUAGE">
-          <p class="dist">Sprache: {{entry.LANGUAGE}} </p>
-          </div>
+          <template v-if="entry.BIBTEXTYPEKEY === '@PHDTHESIS' || entry.BIBTEXTYPEKEY === '@MASTERSTHESIS'">
+            <template v-if="entry.AUTHOR">
+              <span class="dist">{{entry.AUTHOR}}.</span>
+            </template>
+            <template v-if="entry.YEAR">
+              <span class="dist">({{entry.YEAR}}).</span>
+            </template>
+            <template v-if="entry.TITLE">
+                <span class="dist">{{entry.TITLE}}.</span>
+            </template>
+            <template v-if="entry.SCHOOL">
+                <span class="dist">{{entry.SCHOOL}}.</span>
+            </template>
+            <template v-if="entry.URL">
+              <a class="dist" :href="entry.URL">URL-Link</a>
+            </template>
+          </template>
 
-          <div v-if="entry.KEYWORDS">
-            <p class="dist">Stichwörter: {{entry.KEYWORDS}}</p>
-          </div>
+          <template v-if="entry.BIBTEXTYPEKEY === '@MISC'">
+            <template v-if="entry.AUTHOR">
+              <span class="dist">{{entry.AUTHOR}}.</span>
+            </template>
+            <template v-if="entry.YEAR">
+              <span class="dist">({{entry.YEAR}}).</span>
+            </template>
+            <template v-if="entry.TITLE">
+                <span class="dist">{{entry.TITLE}}.</span>
+            </template>
+            <template v-if="entry.EDITOR">
+              <span class="dist">({{entry.EDITOR}}, Ed.)</span>
+            </template>
+            <template v-if="entry.JOURNAL">
+              <span class="dist">{{entry.JOURNAL}},</span>
+            </template>
+            <template v-if="entry.PAGES && !entry.VOLUME">
+              <span class="dist">(pp.{{entry.PAGES}})</span>
+            </template>
+            <template v-if="entry.PAGES && entry.VOLUME">
+              <span class="dist">({{entry.VOLUME}} ed. pp.{{entry.PAGES}})</span>
+            </template>
+            <template v-if="entry.PUBLISHER">
+              <span class="dist">{{entry.PUBLISHER}}</span>
+            </template>
+          </template>
+
+
+          <template v-if="entry.BIBTEXTYPEKEY === '@INPROCEEDINGS'">
+            <template v-if="entry.AUTHOR">
+              <span class="dist">{{entry.AUTHOR}}.</span>
+            </template>
+            <template v-if="entry.YEAR">
+              <span class="dist">({{entry.YEAR}}).</span>
+            </template>
+            <template v-if="entry.TITLE">
+                <span class="dist">{{entry.TITLE}}.</span>
+            </template>
+            <template v-if="entry.BOOKTITLE">
+              <span class="dist">{{entry.BOOKTITLE}}.</span>
+            </template>
+            <template v-if="entry.PAGES">
+              <span class="dist">(pp.{{entry.PAGES}}).</span>
+            </template>
+          </template>
+
+
         </div>
         
-        
-
-        <div class = "row">
-          <div v-if="entry.PUBLISHER">
-            <p class="dist">Verlag: {{entry.PUBLISHER}}</p>
-          </div>
-          <div v-if="entry.ISBN">
-            <p class="dist">ISBN: {{entry.ISBN}}</p>
-          </div>
-          <div v-if="entry.ISSN">
-            <p class="dist">ISSN: {{entry.ISSN}}</p>
-          </div>
-          <div v-if="entry.YEAR">
-            <p class="dist">Escheinungsjahr: {{entry.YEAR}}</p>
-          </div>
-        </div>
-
-        <div v-if="entry.ABSTRACT">
-          <p class="dist">Abstrakt: {{entry.ABSTRACT}}</p>
-        </div>
-        <div v-if="entry.URL">
-          <a :href="entry.URL">Link zur Quelle</a>
-        </div>
-        <div v-if="entry.FILE">
-          <p class="dist">Dateipfad: {{entry.FILE}}</p>
-        </div>
-        <div v-if="entry.DOI">
-          <p class="dist">DOI: {{entry.DOI}}</p>
-        </div>
-        <hr style="background-color:white">
+         
+        <br>
       </li>
 
 
