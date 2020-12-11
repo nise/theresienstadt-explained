@@ -66,38 +66,45 @@ export default {
       _this.removeCurlBraces();
       _this.attachKeywords(_this.bibparse.getEntries());
     });
-    return;
-    axios.get("/references/filmography").then(function (response) {
-      _this.filmography = response.data;
+    
+    axios.get("/references/filmography").then(function (response) { console.log(response)
+      _this.filmography = response.data.filmography;
     });
   },
   methods: {
+
     attachKeywords: function (bib) {
       let tmp = "";
       for (var i in this.theresienbib) {
         if (this.theresienbib.hasOwnProperty(i)) {
           if(this.theresienbib[i].KEYWORDS){
-            this.theresienbib[i].tags = this.theresienbib[i].KEYWORDS.split(",");
+            //this.theresienbib[i].tags = this.theresienbib[i].KEYWORDS.split(", ");
+            this.theresienbib[i].tags = this.theresienbib[i].KEYWORDS.length > 0 ? this.theresienbib[i].KEYWORDS.split(", ") : [];
             tmp = tmp + this.theresienbib[i].KEYWORDS.toString() + ", ";
           }
         }
       }
-      console.log(tmp.length)
-      this.tags = tmp.split(", ");
-      console.log(this.tags.length)
-
+      this.tags = [...new Set(tmp.split(", "))];
     },
+
     applyFilter: function (key) {
       this.filter = key;
     },
-    filteredBibliography: function () {
+
+    filteredBibliography: function () { 
       if (this.filter === "") {
         return this.theresienbib;
       }
-      return this.theresienbib.filter(function (d) {
-        return d.tags.indexof(this.filter) ? 1 : 0;
-      });
+     let _this = this;
+      let f = Object.values(this.theresienbib).filter(function(d){ 
+        if(d.tags){
+          return d.tags.indexOf(_this.filter) > 0;
+        }
+        return false;
+        });
+      return f;
     },
+
     removeCurlBraces() {
       let regtest = RegExp(/\{|\}/gi);
       for (var val in this.theresienbib) {
@@ -120,28 +127,29 @@ export default {
       
       
       <h2 class="mt-4">Filme</h2>
-      <div v-for="film in filmography" :key="film" class="row">
-        <div class="col-2">
-          <img :scr="film.cover" />
+      <div v-for="film in filmography" :key="film" class="row mt-3">
+        <h4 class="col-12 film-headline">{{ film.title_original }} <span v-if="film.title_other">({{film.title_other}})</span></h4>
+        <div class="col-3">
+          <img :scr="'img/'+film.cover" style="width:100%;"/>
         </div>
-        <div class="col-10">
-          <h4>{{ film.title_original }} <span v-if="film.title_other">(film.title_other)</span></h4>
-          <span v-if="film.productioncountry">film.productioncountry</span>, <span v-if="film.year">film.year</span>, <span v-if="film.length">film.length</span>
-          <span v-if="film.description" class="col-12">(film.description</span>
+        <div class="col-9">
+          <span v-if="film.productioncountry">{{film.productioncountry}}</span>, <span v-if="film.year">{{film.year}}</span>, <span v-if="film.length">{{film.length}}</span>
+          <br />
+          <span v-if="film.description" class="col-12 normal-text">{{film.description}}</span>
         </div>
+        <hr>
       </div>
 
 
 
       <h2 class="mt-4">Literatur</h2>
       <div class="row">
-        <div class="col-2">
+        <div class="col-3">
           <h4>Schlüsselwörter</h4>
-          <span v-for="tag in tags" :key="tag" @click="applyFilter(tag)" class="mx-1 tag-link">
-            {{ tag }}
-          </span>
+          <span v-for="tag in tags" :key="tag" @click="applyFilter(tag)" class="mx-1 tag-link">{{tag}} </span>
         </div>
-        <div class="col-10">
+        <div class="col-9">
+          <div v-if="filter != ''">Gefiltert nach "{{filter}}"<br><div class="btn btn-sm ml-3" @click="filter=''">Filter aufheben</div></div>
           <ul class="mr-4 ml-1 px-0">
             <li
               v-for="entry in filteredBibliography()"
@@ -319,10 +327,20 @@ export default {
   word-wrap: break-word !important;
 }
 .tag-link {
+  cursor:pointer;
   font-size:0.8;
   color: #555;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .tag-link:hover{
   color:#c10000;
+}
+.normal-text{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size:1em;
+}
+.film-headline{
+  color:black;
+  font-size: 1.1em;
 }
 </style>
