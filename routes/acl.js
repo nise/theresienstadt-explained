@@ -28,11 +28,24 @@ module.exports = function (db, app) {
       });
     });
 
-    app.get('/theresienbib', (req, res) => {
+    app.get('/references/bibliography', (req, res) => {
       fs.readFile('./ressources/Theresienstadt.bib', function (err, data){
         res.send(data);
       });
     });
+
+    app.get('/references/filmography', (req, res) => {
+        fs.readFile('./ressources/filmography.json', function (err, data) {
+            res.send(data);
+        });
+    });
+
+    app.get('/markerdata', (req, res) => {
+        fs.readFile('./ressources/markers.json', function (err, data) {
+            res.send(data);
+        })
+    })
+
 
     var bodyParser = require('body-parser')
     app.use(bodyParser.json());       // to support JSON-encoded bodies
