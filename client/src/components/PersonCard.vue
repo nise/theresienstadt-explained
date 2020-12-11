@@ -87,7 +87,7 @@ export default {
     getImagePath(p){
         let t = p.shortname.split(' ');
         return '/img/persons/'+t[1]+'_'+t[0]+'.jpg';
-        return '/img/persons/'+p.surename+'_'+p.name+'.jpg';
+        //return '/img/persons/'+p.surename+'_'+p.name+'.jpg';
     }
   },
 };
