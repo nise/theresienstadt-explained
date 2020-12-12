@@ -149,7 +149,9 @@ export default {
           <span v-for="tag in tags" :key="tag" @click="applyFilter(tag)" class="mx-1 tag-link">{{tag}} </span>
         </div>
         <div class="col-9">
-          <div v-if="filter != ''">Gefiltert nach "{{filter}}"<br><div class="btn btn-sm ml-3" @click="filter=''">Filter aufheben</div></div>
+          <div v-if="filter != ''">Gefiltert nach "{{filter}}" <div class="btn btn-sm btn-primary ml-3" @click="filter=''">Filter aufheben</div></div>
+          
+          <h4>Monographien</h4>
           <ul class="mr-4 ml-1 px-0">
             <li
               v-for="entry in filteredBibliography()"
