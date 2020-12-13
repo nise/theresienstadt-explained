@@ -1,10 +1,6 @@
 <template>
   <div class="home">
-    <br />
-    <br />
-    <h1>Protagonisten</h1>
-    <br />
-    <br />
+    <h1 class="my-5">Protagonisten</h1>
     <b-container fluid>
       <b-row>
         <b-col sm="6">
@@ -13,12 +9,10 @@
             style="float: right; width: 400px"
             v-model="searchquery"
             @keyup="getsearchquery"
-            class="mx-1 form-control"
+            class="mx-1 mb-4 form-control"
             placeholder="Suchen..."
             id="searchfield"
           />
-          <br />
-          <br />
           <personcard
             class="my-4 mr-1"
             v-for="(person, index) in persons1"
@@ -29,16 +23,14 @@
           </personcard>
         </b-col>
 
-        <b-col sm="6">
+        <b-col sm="6" hidden>
           <input
             type="text"
             style="float: left; width: 400px"
-            class="mx-1 form-control"
+            class="mx-1 mb-4 form-control"
             placeholder="Filter"
             id="filerfield"
           />
-          <br />
-          <br />
           <personcard
             class="my-4 ml-1"
             v-for="(person, index) in persons2"
@@ -54,7 +46,7 @@
 </template>
 
 <script>
-// TODO: implement filter
+// TODO: implement filter (until that happens the filter is hidden)
 
 import Vue from "vue";
 import BootstrapVue from "bootstrap-vue";
@@ -153,6 +145,7 @@ export default {
 
   data: () => ({
     error: "",
+    persons: persons_data,
     persons1: [],
     persons2: [],
     searchquery: "",

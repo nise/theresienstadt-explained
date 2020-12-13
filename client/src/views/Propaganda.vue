@@ -2,10 +2,11 @@
 Dies ist eine statische HTML-Seite.
 -->
 <template>
-  <div class="container">
-    <h1>Propaganda im Film</h1>
-
-    <div class="page">
+  <div class="container" style="text-align: left">
+    <h1 class="mt-4 mb-1" style="text-align: left">
+    Propaganda im Film
+    </h1>
+    <div style="background-color: white" class="mt-3 mb-5 pt-4 pb-3 px-3">
       <h3>Was ist Propaganda</h3>
       Besser ausformulieren: - ist als sachliche Information (“Dokumentation”)
       getarnt - emotionalisierende Suggestion, - Appell an Grundbedürfnisse,

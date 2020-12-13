@@ -1,8 +1,9 @@
 <template>
-  <div class="container">
-    <h1>Impressum</h1>
-
-    <div class="page">
+  <div class="container" style="text-align: left">
+    <h1 class="mt-4 mb-1" style="text-align: left">
+    Impressum
+    </h1>
+    <div style="background-color: white" class="mt-3 mb-5 pt-4 pb-3 px-3">
       <h2>Anbieterkennzeichnung</h2>
 
       Informationen nach § 5 Telemediengesetz (TMG) und § 55 Abs. 2 Rundfunkstaatsvertrag (RStV)
