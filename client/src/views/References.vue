@@ -1,7 +1,3 @@
-<!--
-TODO:
-- Statische Seite mit bibliografischen und filmografischen Angaben, durch Bilder angereichert und mit Kommentaren erläutert.
--->
 <script>
 import BibTexParser from "../bibtex_js";
 import axios from "axios";
@@ -14,45 +10,7 @@ export default {
       bibparse: null,
       filter: "",
       tags: [],
-      filmography: [
-        {
-          title_original: "Shtikat Haarchion",
-          title_other: "A Film Unfinished (int.), Geheimsache Ghettofilm (dt.)",
-          year: "2010",
-          productioncountry: "Israel, Deutschland",
-          language_original: "Englisch",
-          length: "90 Minuten",
-          regie: "Yael Heronski",
-          Drehbuch: "Yael Heronski",
-          production: "Itay Ken Tor, Noemi Schory",
-          music: "Yishai Adar",
-          camera: "Itai Ne'eman",
-          cut: "Joel Alexis",
-          other_people:
-            "Janusz Hammerszmit, Axel Thielmann, Eliezer Niborski, Alexander Senderovich, Mendy Cahan, Gera Sandler, Hava Alberstein",
-          iMDb: "https://www.imdb.com/title/tt1568923/",
-          description:
-            "Die Regisseurin Yael Hersonski stellt in Shtikat Haarchion den Rohschnitt eines nationalsozialistischen Propagandafilms aus dem Warschauer Getto ins Zentrum ihres Dokumentarfilms. Im Mai 1942 entstanden, zeigen die Aufnahmen die vermeintlichen Lebensumstände im Warschauer Getto; gezeigt werden scheinbare Alltagsszenen. Die Rohfassung ohne Tonspur aus dem Deutschen Bundesarchiv wird angereichert durch Zeitzeugenberichte und nicht verwendete Szenen der Originalaufnahmen die in den 1990er Jahren wieder aufgefunden wurden. Diese zusätzlichen Aufnahmen ermöglichen Hersonski die propagandistische Inszenierung der Filmaufnahmen zu zeigen. Die Aufarbeitung vermittelt einen Eindruck wie Kameraführung, Schnitt und szenische Gestaltung ihre manipulative Wirkung entfalten können. 'Shtikat Haarchion' beschäftigt sich zwar nicht unmittelbar mit den Aufnahmen aus Theresienstadt, arbeitet aber einen thematisch vergleichbaren nationalsozialistischen Propagandafilm auf und bildet einen Anhaltspunkt für die filmische Aufarbeitung solcher historischer Quellen.",
-        },
-        {
-          title_original: "Liga Terezin",
-          title_other: "",
-          year: "2013",
-          productioncountry: "Tschechische Republik, Israel",
-          language_original: "Hebräisch",
-          length: "90 Minuten",
-          regie: "Michael Schwartz",
-          script: "",
-          production: "",
-          music: "",
-          camera: "Avi Kanner",
-          cut: "",
-          other_people: "Oded Breda",
-          iMDb: "https://www.imdb.com/title/tt2798634/",
-          description:
-            "Der israelische Dokumentarfilm nähert sich dem Thema Theresienstadt über den Fußball. Der ehemalige Leiter des „Beit Terezin“, einer israelischen Gedenkstätte für das KZ Theresienstadt, hatte in den Aufnahmen aus Theresienstadt seinen Onkel bei einem Fußballspiel der „Liga Theresienstadt“ erkannt und folgt in der Dokumentation den Spuren dieser „Fußball-Liga“ wie sie in der propagandistischen Darstellung der nationalsozialistischen Aufnahmen aus Theresienstadt gezeigt wurde. Die Filmemacher schlagen dabei einen Bogen von den Fußball-Aufnahmen aus dem KZ und den Zeitzeugenberichten zu Antisemitismus im modernen Fußball.",
-        },
-      ],
+      filmography: [],
     };
   },
 
@@ -66,20 +24,25 @@ export default {
       _this.removeCurlBraces();
       _this.attachKeywords(_this.bibparse.getEntries());
     });
-    
-    axios.get("/references/filmography").then(function (response) { console.log(response)
-      _this.filmography = response.data.filmography;
+
+    axios.get("/references/filmography").then(function (response) {
+      console.log(response);
+      _this.filmography = response.data.filmography.sort(function (a, b) {
+        return b.year - a.year;
+      });
     });
   },
   methods: {
-
     attachKeywords: function (bib) {
       let tmp = "";
       for (var i in this.theresienbib) {
         if (this.theresienbib.hasOwnProperty(i)) {
-          if(this.theresienbib[i].KEYWORDS){
+          if (this.theresienbib[i].KEYWORDS) {
             //this.theresienbib[i].tags = this.theresienbib[i].KEYWORDS.split(", ");
-            this.theresienbib[i].tags = this.theresienbib[i].KEYWORDS.length > 0 ? this.theresienbib[i].KEYWORDS.split(", ") : [];
+            this.theresienbib[i].tags =
+              this.theresienbib[i].KEYWORDS.length > 0
+                ? this.theresienbib[i].KEYWORDS.split(", ")
+                : [];
             tmp = tmp + this.theresienbib[i].KEYWORDS.toString() + ", ";
           }
         }
@@ -91,18 +54,21 @@ export default {
       this.filter = key;
     },
 
-    filteredBibliography: function () { 
-      if (this.filter === "") {
-        return this.theresienbib;
-      }
-     let _this = this;
-      let f = Object.values(this.theresienbib).filter(function(d){ 
-        if(d.tags){
-          return d.tags.indexOf(_this.filter) > 0;
-        }
-        return false;
+    filteredBibliography: function (publication_types) {
+      let _this = this;
+      return Object.values(this.theresienbib)
+        .filter(function (d) {
+          if (d.tags) {
+            return _this.filter === ""
+              ? publication_types.indexOf(d.BIBTEXTYPEKEY) != -1
+              : d.tags.indexOf(_this.filter) > 0 &&
+                  publication_types.indexOf(d.BIBTEXTYPEKEY) != -1;
+          }
+          return false;
+        })
+        .sort(function (a, b) {
+          return b.YEAR - a.YEAR;
         });
-      return f;
     },
 
     removeCurlBraces() {
@@ -122,39 +88,62 @@ export default {
 
 <template>
   <div class="container" style="text-align: left">
-    <h1 class="my-5" style="text-align: left">Literatur und Film über den Film</h1>
+    <h1 class="my-5" style="text-align: left">
+      Literatur und Film über den Film
+    </h1>
     <div style="background-color: white" class="pt-4 pb-3 px-3">
-      
-      
-      <h2 class="mt-4">Filme</h2>
-      <div v-for="film in filmography" :key="film" class="row mt-3">
-        <h4 class="col-12 film-headline">{{ film.title_original }} <span v-if="film.title_other">({{film.title_other}})</span></h4>
+      <h2 class="mt-4 mb-5">Filme</h2>
+      <div v-for="film in filmography" :key="film" class="row mb-5">
         <div class="col-3">
-          <img :scr="'img/'+film.cover" style="width:100%;"/>
+          <img :src="'/img/film/' + film.cover" style="width: 100%" />
         </div>
         <div class="col-9">
-          <span v-if="film.productioncountry">{{film.productioncountry}}</span>, <span v-if="film.year">{{film.year}}</span>, <span v-if="film.length">{{film.length}}</span>
+          <h4 class="col-12 film-headline pl-0">
+            {{ film.title_original }}
+            <span v-if="film.title_other">({{ film.title_other }})</span>
+          </h4>
+          <span v-if="film.productioncountry">{{ film.productioncountry }}</span
+          >, <span v-if="film.year">{{ film.year }}</span
+          >, <span v-if="film.length">{{ film.length }}</span>
           <br />
-          <span v-if="film.description" class="col-12 normal-text">{{film.description}}</span>
+          <span v-if="film.description" class="col-12 normal-text">{{
+            film.description
+          }}</span>
         </div>
-        <hr>
+        <hr />
       </div>
+    </div>
 
-
-
-      <h2 class="mt-4">Literatur</h2>
+    <div style="background-color: white" class="my-5 pt-4 pb-3 px-3">
+      <h2 class="mt-5">Literatur</h2>
       <div class="row">
         <div class="col-3">
-          <h4>Schlüsselwörter</h4>
-          <span v-for="tag in tags" :key="tag" @click="applyFilter(tag)" class="mx-1 tag-link">{{tag}} </span>
+          <h4 class="mt-5">Schlüsselwörter</h4>
+          <span
+            v-for="tag in tags"
+            :key="tag"
+            @click="applyFilter(tag)"
+            class="mx-1 tag-link"
+            >{{ tag }}
+          </span>
         </div>
         <div class="col-9">
-          <div v-if="filter != ''">Gefiltert nach "{{filter}}" <div class="btn btn-sm btn-primary ml-3" @click="filter=''">Filter aufheben</div></div>
-          
-          <h4>Monographien</h4>
+          <div v-if="filter != ''">
+            Gefiltert nach "{{ filter }}"
+            <div class="btn btn-sm btn-primary ml-3" @click="filter = ''">
+              Filter aufheben
+            </div>
+          </div>
+
+          <h3
+            v-if="filteredBibliography(['@BOOK']).length > 0"
+            class="mt-5 ml-0 mb-1"
+          >
+            Monographien
+          </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
-              v-for="entry in filteredBibliography()"
+              v-for="entry in filteredBibliography('@BOOK')"
               :key="entry"
               class="mb-3"
               style="list-style-type: none; color: black; text-align: left"
@@ -180,7 +169,24 @@ export default {
                     <span class="dist"> . {{ entry.DOI }}</span>
                   </template>
                 </template>
+              </div>
+            </li>
+          </ul>
 
+          <h3
+            v-if="filteredBibliography(['@INCOLLECTION']).length > 0"
+            class="mt-5 ml-0 mb-1"
+          >
+            Buchbeiträge
+          </h3>
+          <ul class="mr-4 ml-1 px-0">
+            <li
+              v-for="entry in filteredBibliography(['@INCOLLECTION'])"
+              :key="entry"
+              class="mb-3"
+              style="list-style-type: none; color: black; text-align: left"
+            >
+              <div class="">
                 <template v-if="entry.BIBTEXTYPEKEY === '@INCOLLECTION'">
                   <template v-if="entry.AUTHOR">
                     <span class="dist"> {{ entry.AUTHOR }}.</span>
@@ -209,7 +215,24 @@ export default {
                     >
                   </template>
                 </template>
+              </div>
+            </li>
+          </ul>
 
+          <h3
+            v-if="filteredBibliography(['@ARTICLE']).length > 0"
+            class="mt-5 ml-0 mb-1"
+          >
+            Zeitschriftenartikel
+          </h3>
+          <ul class="mr-4 ml-1 px-0">
+            <li
+              v-for="entry in filteredBibliography(['@ARTICLE'])"
+              :key="entry"
+              class="mb-3"
+              style="list-style-type: none; color: black; text-align: left"
+            >
+              <div class="">
                 <template v-if="entry.BIBTEXTYPEKEY === '@ARTICLE'">
                   <template v-if="entry.AUTHOR">
                     <span class="dist"> {{ entry.AUTHOR }}.</span>
@@ -238,7 +261,64 @@ export default {
                     <a class="dist" :href="entry.URL">URL</a>
                   </template>
                 </template>
+              </div>
+            </li>
+          </ul>
 
+          <h3
+            v-if="filteredBibliography(['@INPROCEDINGS']).length > 0"
+            class="mt-5 ml-0 mb-1"
+          >
+            Tagungsbeiträge
+          </h3>
+          <ul class="mr-4 ml-1 px-0">
+            <li
+              v-for="entry in filteredBibliography(['@INPROCEDINGS'])"
+              :key="entry"
+              class="mb-3"
+              style="list-style-type: none; color: black; text-align: left"
+            >
+              <div class="">
+                <template v-if="entry.BIBTEXTYPEKEY === '@INPROCEEDINGS'">
+                  <template v-if="entry.AUTHOR">
+                    <span class="dist"> {{ entry.AUTHOR }}.</span>
+                  </template>
+                  <template v-if="entry.YEAR">
+                    <span class="dist"> ({{ entry.YEAR }}).</span>
+                  </template>
+                  <template v-if="entry.TITLE">
+                    <span class="dist"> {{ entry.TITLE }}.</span>
+                  </template>
+                  <template v-if="entry.BOOKTITLE">
+                    <span class="dist"> {{ entry.BOOKTITLE }}.</span>
+                  </template>
+                  <template v-if="entry.PAGES">
+                    <span class="dist"> (pp.{{ entry.PAGES }}).</span>
+                  </template>
+                </template>
+              </div>
+            </li>
+          </ul>
+
+          <h3
+            v-if="
+              filteredBibliography(['@PHDTHESIS', '@MASTERTHESIS']).length > 0
+            "
+            class="mt-5 ml-0 mb-1"
+          >
+            Dissertationen
+          </h3>
+          <ul class="mr-4 ml-1 px-0">
+            <li
+              v-for="entry in filteredBibliography([
+                '@PHDTHESIS',
+                '@MASTERSTHESIS',
+              ])"
+              :key="entry"
+              class="mb-3"
+              style="list-style-type: none; color: black; text-align: left"
+            >
+              <div class="">
                 <template
                   v-if="
                     entry.BIBTEXTYPEKEY === '@PHDTHESIS' ||
@@ -261,7 +341,24 @@ export default {
                     <a class="dist" :href="entry.URL">URL</a>
                   </template>
                 </template>
+              </div>
+            </li>
+          </ul>
 
+          <h3
+            v-if="filteredBibliography(['@MISC']).length > 0"
+            class="mt-5 ml-0 mb-1"
+          >
+            Sonstige
+          </h3>
+          <ul class="mr-4 ml-1 px-0">
+            <li
+              v-for="entry in filteredBibliography(['@MISC'])"
+              :key="entry"
+              class="mb-3"
+              style="list-style-type: none; color: black; text-align: left"
+            >
+              <div class="">
                 <template v-if="entry.BIBTEXTYPEKEY === '@MISC'">
                   <template v-if="entry.AUTHOR">
                     <span class="dist"> {{ entry.AUTHOR }}.</span>
@@ -282,30 +379,12 @@ export default {
                     <span class="dist"> (pp.{{ entry.PAGES }})</span>
                   </template>
                   <template v-if="entry.PAGES && entry.VOLUME">
-                    <span class="dist"
-                      > ({{ entry.VOLUME }} ed. pp.{{ entry.PAGES }})</span
+                    <span class="dist">
+                      ({{ entry.VOLUME }} ed. pp.{{ entry.PAGES }})</span
                     >
                   </template>
                   <template v-if="entry.PUBLISHER">
                     <span class="dist"> {{ entry.PUBLISHER }}</span>
-                  </template>
-                </template>
-
-                <template v-if="entry.BIBTEXTYPEKEY === '@INPROCEEDINGS'">
-                  <template v-if="entry.AUTHOR">
-                    <span class="dist"> {{ entry.AUTHOR }}.</span>
-                  </template>
-                  <template v-if="entry.YEAR">
-                    <span class="dist"> ({{ entry.YEAR }}).</span>
-                  </template>
-                  <template v-if="entry.TITLE">
-                    <span class="dist"> {{ entry.TITLE }}.</span>
-                  </template>
-                  <template v-if="entry.BOOKTITLE">
-                    <span class="dist"> {{ entry.BOOKTITLE }}.</span>
-                  </template>
-                  <template v-if="entry.PAGES">
-                    <span class="dist"> (pp.{{ entry.PAGES }}).</span>
                   </template>
                 </template>
               </div>
@@ -322,27 +401,42 @@ export default {
   content: " ";
 }
 
+h4 {
+  color: #555;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-left: 0;
+}
+
+h3 {
+  color: #555;
+  font-weight: bold;
+}
+
 .dist {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1;
   font-weight: 100;
   display: inline;
-  line-height: 1.2em;
+  line-height: 1.1em;
   word-wrap: break-word !important;
 }
 .tag-link {
-  cursor:pointer;
-  font-size:0.8;
+  cursor: pointer;
+  font-size: 0.8;
   color: #555;
   font-family: Arial, Helvetica, sans-serif;
 }
-.tag-link:hover{
-  color:#c10000;
+.tag-link:hover {
+  color: #c10000;
 }
-.normal-text{
+.normal-text {
   font-family: Arial, Helvetica, sans-serif;
-  font-size:1em;
+  font-size: 1em;
+  padding-left: 0;
 }
-.film-headline{
-  color:black;
-  font-size: 1.1em;
+.film-headline {
+  color: black;
+  font-size: 1.2em;
 }
 </style>
