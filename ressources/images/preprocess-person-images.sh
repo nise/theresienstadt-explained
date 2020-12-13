@@ -4,8 +4,8 @@ cd persons-raw
 
 # copy to public folder
 rm ./../../client/src/assets/persons/*
-cp ./* ./../../client/src/assets/persons/
-cd ./../../../client/src/assets/persons/
+cp ./* ./../../../client/src/assets/persons/
+cd ./../../../../client/src/assets/persons/
 
 # normalize file extension
 for file in *.JPG; do
@@ -40,8 +40,11 @@ find ./ -type f -iname "*.jpg" -exec mogrify -scale 500 {} \;
 
 find ./ -type f -iname "*.jpg" -exec mogrify -quality 95 {} \;
 
-rm ./../../../public/img/persons/*.jpg
-cp ./* ./../../../public/img/persons/
+rm ./../../../client/public/img/persons/*,jpg
+#ls ./../../../client/public/img/persons
+cp ./* ./../../../client/public/img/persons
+
+#/client/public/img/persons
 
 exit;
 
