@@ -60,6 +60,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "map" */ './views/Map.vue'),
     },
     {
+      path: '/pages/news',
+      name: 'news',
+      component: () => import(/* webpackChunkName: "history" */ './views/News.vue'),
+    },
+    {
       path: '/pages/history',
       name: 'history',
       component: () => import(/* webpackChunkName: "history" */ './views/History.vue'),
