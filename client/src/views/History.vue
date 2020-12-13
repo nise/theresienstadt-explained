@@ -1,12 +1,10 @@
 <template>
 
-<div class="container">
-    <h1>Entstehungsgeschichte</h1>
-
-    <div class="page">
-      
-  
-		
+<div class="container" style="text-align: left">
+    <h1 class="mt-4 mb-1" style="text-align: left">
+    Entstehungsgeschichte
+    </h1>
+    <div style="background-color: white" class="page mt-3 mb-5 pt-4 pb-3 px-3">	
     <editor-content :editor="editor" />
     
       <div class="container">
@@ -477,7 +475,7 @@
 
 <script>
 // Import the editor: https://github.com/scrumpy/tiptap
-import { Editor, EditorContent } from 'tiptap'
+import { Editor, EditorContent } from "tiptap";
 
 export default {
   components: {
@@ -486,15 +484,15 @@ export default {
   data() {
     return {
       editor: null,
-    }
+    };
   },
   mounted() {
     this.editor = new Editor({
-      content: '',
-    })
+      content: "",
+    });
   },
   beforeDestroy() {
-    this.editor.destroy()
+    this.editor.destroy();
   },
-}
+};
 </script>

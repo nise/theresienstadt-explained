@@ -1,13 +1,16 @@
 <template>
-  <div class="container">
-    <h1>FakeVideo</h1>
+   <div class="container" style="text-align: left">
+    <h1 class="mt-4 mb-1" style="text-align: left">
+    Fake Video
+    </h1>
+    <div style="background-color: white" class="page mt-3 mb-5 pt-4 pb-3 px-3">
     <!--
 - Digital video tampering detection: An overview of passive techniques, https://www.sciencedirect.com/science/article/pii/S1742287616300718
 - DLF Framing
 - Deep Fake
 
     -->
-    <div class="page">
+
 
       Für den Theresienstadt-Film hatte die SS eine aufwendige Stadtverschönerung veranlasst 
       und eine große Zahl von Protagonisten zu Filmaufnahmen gezwungen. 

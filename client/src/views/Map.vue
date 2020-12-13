@@ -1,20 +1,33 @@
 <template>
-  <div>
-    <div style="height: 20%; overflow: auto;">
-      <h3>Simple map</h3>
+  <div class="container" style="text-align: left">
+    <h1 class="mt-4 mb-1" style="text-align: left">Karte</h1>
+    <div style="background-color: white" class="mt-3 mb-5 pt-4 pb-3 px-3">
+      <template>
+
+  <div style="height: 500px; width: 100%">
+    <div style="height: 200px overflow: auto;">
       <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
       <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-      <button @click="showLongText">Toggle long popup</button>
+      <button @click="showLongText">
+        Toggle long popup
+      </button>
+      <button @click="showMap = !showMap">
+        Toggle map
+      </button>
     </div>
     <l-map
+      v-if="showMap"
       :zoom="zoom"
       :center="center"
       :options="mapOptions"
-      style="height: 300px; width:300px; overflow:none;"
+      style="height: 80%"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
     >
-      <l-tile-layer :url="url" :attribution="attribution" />
+      <l-tile-layer
+        :url="url"
+        :attribution="attribution"
+      />
       <l-marker :lat-lng="withPopup">
         <l-popup>
           <div @click="innerClick">
@@ -42,27 +55,29 @@
     </l-map>
   </div>
 </template>
+      
+    </div>
+  </div>
+</template>
 
 <script>
-import { latLng } from 'leaflet'
-import {
-  LMap, LTileLayer, LMarker, LPopup, LTooltip,
-} from 'vue2-leaflet'
+import { latLng } from "leaflet";
+import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
 
 export default {
-  name: 'Example',
+  name: "Example",
   components: {
     LMap,
     LTileLayer,
     LMarker,
     LPopup,
-    LTooltip,
+    LTooltip
   },
   data() {
     return {
       zoom: 13,
       center: latLng(47.41322, -1.219482),
-      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       withPopup: latLng(47.41322, -1.219482),
@@ -71,23 +86,24 @@ export default {
       currentCenter: latLng(47.41322, -1.219482),
       showParagraph: false,
       mapOptions: {
-        zoomSnap: 0.5,
+        zoomSnap: 0.5
       },
-    }
+      showMap: true
+    };
   },
   methods: {
     zoomUpdate(zoom) {
-      // this.currentZoom = zoom;
+      this.currentZoom = zoom;
     },
     centerUpdate(center) {
-      this.currentCenter = center
+      this.currentCenter = center;
     },
     showLongText() {
-      this.showParagraph = !this.showParagraph
+      this.showParagraph = !this.showParagraph;
     },
     innerClick() {
-      alert('Click!')
-    },
-  },
-}
+      alert("Click!");
+    }
+  }
+};
 </script>

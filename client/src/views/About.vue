@@ -1,8 +1,10 @@
 <template>
-  <div class="container">
-    <h1>Über Theresienstadt Explained</h1><div></div>
-    <div class="page">
-      <h2>Idee und Konzept</h2>
+  <div class="container" style="text-align: left">
+    <h1 class="mt-4 mb-1" style="text-align: left">
+    Über Theresienstadt Explained
+    </h1>
+    <div style="background-color: white" class="mt-3 mb-5 pt-4 pb-3 px-3">
+     <h2>Idee und Konzept</h2>
         <ul class="page-list">
           <li>Niels Seidel</li>
           <li>Armin Pietsch, <a href="https://jugendbegegnung.de/dresden/">Förderverein Jugendbegegnung in Theresienstadt/Terezin</a></li>
@@ -20,7 +22,7 @@
             <li>ArgueGraph Video Analyse: Michael Desch, Bachelorand am Lehrgebiet Kooperative Systeme, 2020</li>
           </ul>
         </li>
-        <li><strong>Design:</strong><a href="http://dioptrin.de/">Marcel Hüsni, dioptrin</a></li>
+        <li><strong>Design:</strong><a href="http://dioptrin.de/"> Marcel Hüsni, dioptrin</a></li>
         <li hidden><strong>Inhaltliche Begutachtung:</strong> Dr. Karel Margry</li>
         <li><strong>PR:</strong> Frauke Wenzel</li>
         
@@ -52,5 +54,4 @@
 
 
 <style>
-
 </style>
