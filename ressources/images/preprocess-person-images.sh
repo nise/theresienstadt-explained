@@ -36,11 +36,13 @@ rm ./*.gif
 
 # scale images to the same with
 
-find ./ -type f -iname "*.jpg" -exec mogrify -scale 500 {} \;
+find ./ -type f -iname "*.jpg" -exec mogrify -scale 210 {} \;
 
 find ./ -type f -iname "*.jpg" -exec mogrify -quality 95 {} \;
 
-rm ./../../../client/public/img/persons/*,jpg
+find ./ -type f -iname "*.jpg" -exec mogrify -colorspace gray {} \;
+
+rm ./../../../client/public/img/persons/*.jpg
 #ls ./../../../client/public/img/persons
 cp ./* ./../../../client/public/img/persons
 
