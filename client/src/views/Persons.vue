@@ -1,20 +1,40 @@
 <template>
   <div class="home">
     <h1 class="my-5">Protagonisten</h1>
-    <b-container fluid>
-      <b-row>
+    <b-container fluid class="mx-auto col-10">
+      <b-row class="mb-4">
         <b-col sm="6">
           <input
             type="text"
-            style="float: right; width: 400px"
+            style="
+              width: 400px;
+              border: solid 2px #fff;
+              border-radius: 18px;
+              color: #fff;
+              background-color:#000;
+              "
             v-model="searchquery"
             @keyup="getsearchquery"
             class="mx-1 form-control"
-            placeholder="Suchen..."
+            placeholder="Suche ..."
             id="searchfield"
           />
+        </b-col>
+        <b-col sm="6">
+          <input
+            hidden
+            type="text"
+            style="float: left; width: 400px;"
+            class="mx-1 form-control"
+            placeholder="Filter"
+            id="filerfield"
+          />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col sm="6">
           <personcard
-            class="mb-4 mt-5 mr-1"
+            class="mb-4 mt-0 mr-4"
             v-for="(person, index) in persons1"
             :key="index"
             :person="person"
@@ -23,15 +43,8 @@
           </personcard>
         </b-col>
         <b-col sm="6">
-          <input
-            type="text"
-            style="float: left; width: 400px; display:none"
-            class="mx-1 form-control"
-            placeholder="Filter"
-            id="filerfield"
-          />
           <personcard
-            class="mb-4 mt-5 ml-1"
+            class="mb-4 mt-0 ml-0"
             v-for="(person, index) in persons2"
             :key="index"
             :person="person"
@@ -64,7 +77,9 @@ export default {
 
   mounted: function () {
     this.splitArrInTwo(this.persons, this.persons1, this.persons2);
-    this.getdata();
+    //this.getdata();
+    this.giveArrID(this.persons);
+    this.splitArrInTwo(this.persons, this.persons1, this.persons2);
   },
 
   methods: {
@@ -181,7 +196,7 @@ export default {
     images: Array,
     updated_at: Date
  */
-/*
+
     persons: [
       {
         selected: "",
@@ -625,7 +640,7 @@ export default {
       },
     ],
 
-    */
+
   }),
 };
 </script>
