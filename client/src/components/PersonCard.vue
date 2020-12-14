@@ -1,12 +1,12 @@
 <template>
   <b-container
     class="odd bg-light"
-    style="min-height: 210px; overflow-y: visible"
+    style="height: 210px; overflow-y: visible"
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
     <b-row>
       <img
-        style="height: auto; width: 180px"
+        style="height: 210px; width: 180px; overflow:hidden;"
         :id="'personcard' + person.id"
         :src="getImagePath(person)"
         onerror="this.src='/img/person_icon.png'"
