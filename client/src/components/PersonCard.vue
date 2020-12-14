@@ -1,12 +1,17 @@
 <template>
   <b-container
-    class="ld xld odd bg-light"
-    style="height: 210px; overflow-y: visible; height: auto"
+    class="odd bg-light"
+    style="min-height: 210px; overflow-y: visible"
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
     <b-row>
-      <img style="height: 210px; width: 180px" :id="'personcard' + person.id"  :src="getImagePath(person)" onerror="this.src='/img/persons/person_icon.png'"/>
-      
+      <img
+        style="height: auto; width: 180px"
+        :id="'personcard' + person.id"
+        :src="getImagePath(person)"
+        onerror="this.src='/img/person_icon.png'"
+      />
+
       <b-col>
         <h3 class="text-left ml-3">{{ person.shortname }}</h3>
         <p class="text-left ml-3">
@@ -16,19 +21,19 @@
         <br />
         <br />
         <b-row class="ml-3">
-          <p class="text-left">{{ person.profession }}</p>
+          <p class="text-left">{{ person.profession_short }}</p>
           <b-button
             v-b-toggle="'collapse-' + person.id"
-            class="mr-3"
+            class="mr-3 mb-3"
             @click="togglebio"
             size="sm"
             squared
             variant="dark"
             style="
               background-color: black;
-              height: 25px;
               position: absolute;
               right: 0px;
+              bottom: 0px;
             "
             :style="{ display: this.isopenbio }"
             >Mehr...
@@ -37,32 +42,42 @@
       </b-col>
     </b-row>
     <b-row style="width: inherit">
+      <div class="col-12">
       <b-collapse
         :id="'collapse-' + person.id"
         class="mt-2"
         style="width: inherit"
       >
         <br />
-        <p v-if="person.bio" class="text-left px-3 text-break">{{ person.bio }}</p>
+        <p v-if="person.bio" class="text-left px-3 text-break">
+          {{ person.bio }}
+        </p>
         <hr />
 
         <h5 class="text-left px-3">Sichtbar im Film</h5>
         <b-row>
           <b-col v-for="entries in moviescenes" v-bind:key="entries"
-            ><img class="movieshotodd movieshotxld movieshotld" /></b-col>
+            ><img class="movieshotodd movieshotxld movieshotld"
+          /></b-col>
         </b-row>
         <br />
         <b-button
           v-b-toggle="'collapse-' + person.id"
-          class="mr-4 mb-4"
+          class="mr-3 mb-3"
           @click="togglebio"
           size="sm"
           squared
           variant="dark"
-          style="background-color: black; height: 25px; float: right"
+          style="
+            background-color: black;
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+          "
           >Weniger...
         </b-button>
       </b-collapse>
+      </div>
     </b-row>
   </b-container>
 </template>
@@ -84,18 +99,10 @@ export default {
     togglebio: function () {
       this.isopenbio = this.isopenbio == "block" ? "none" : "block";
     },
-    getImagePath(p){
-        // If shortname is reintroduced again, dont forget {{ person.name }} {{person.surename}}</h3> in html
-
-          // Remove diacritics and accents
-
-        //let cleanName = p.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        //let cleanSurename = p.surename.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        let t = p.shortname.split(' ');
-        return '/img/persons/'+t[1]+'_'+t[0]+'.jpg';
-        //return '/img/persons/'+cleanSurename+'_'+cleanName+'.jpg';
-        //return '/img/persons/'+p.surename+'_'+p.name+'.jpg';
-    }
+    getImagePath(p) {
+      let t = p.shortname.split(" ");
+      return "/img/persons/" + t[1] + "_" + t[0] + ".jpg";
+    },
   },
 };
 </script>
@@ -103,9 +110,6 @@ export default {
 <style>
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-  .xsd {
-    width: 200px;
-  }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
@@ -118,34 +122,13 @@ export default {
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  .ld {
-    width: 500px;
-  }
-  .movieshotld {
-    width: 108px;
-    height: 84px;
-  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .xld {
-    width: 600px;
-  }
-  .movieshotxld {
-    width: 144px;
-    height: 112px;
-  }
 }
 
 /* Original design devices (screens 1900px and up) */
 @media only screen and (min-width: 1900px) {
-  .odd {
-    width: 655px;
-  }
-  .movieshotodd {
-    width: 180px;
-    height: 140px;
-  }
 }
 </style>
