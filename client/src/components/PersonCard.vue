@@ -5,7 +5,7 @@
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
     <b-row>
-      <img style="height: 210px; width: 180px" :id="'personcard' + person.id" :src="getImagePath(person)" />
+      <img style="height: 210px; width: 180px" :id="'personcard' + person.id"  :src="getImagePath(person)" onerror="this.src='/img/persons/person_icon.png'"/>
       
       <b-col>
         <h3 class="text-left ml-3">{{ person.shortname }}</h3>
@@ -85,8 +85,15 @@ export default {
       this.isopenbio = this.isopenbio == "block" ? "none" : "block";
     },
     getImagePath(p){
+        // If shortname is reintroduced again, dont forget {{ person.name }} {{person.surename}}</h3> in html
+
+          // Remove diacritics and accents
+
+        //let cleanName = p.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //let cleanSurename = p.surename.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         let t = p.shortname.split(' ');
         return '/img/persons/'+t[1]+'_'+t[0]+'.jpg';
+        //return '/img/persons/'+cleanSurename+'_'+cleanName+'.jpg';
         //return '/img/persons/'+p.surename+'_'+p.name+'.jpg';
     }
   },
