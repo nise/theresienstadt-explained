@@ -7,7 +7,7 @@ module.exports = function (db, app) {
     const mongoose = require('mongoose');
     const express = require('express');
     const fs = require('fs');
-
+    
     app.use(express.static('client/dist'));
     
     // GET is not working
