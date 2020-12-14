@@ -9,12 +9,12 @@
             style="float: right; width: 400px"
             v-model="searchquery"
             @keyup="getsearchquery"
-            class="mx-1 mb-4 form-control"
+            class="mx-1 form-control"
             placeholder="Suchen..."
             id="searchfield"
           />
           <personcard
-            class="my-4 mr-1"
+            class="mb-4 mt-5 mr-1"
             v-for="(person, index) in persons1"
             :key="index"
             :person="person"
@@ -22,17 +22,16 @@
           >
           </personcard>
         </b-col>
-
-        <b-col sm="6" hidden>
+        <b-col sm="6">
           <input
             type="text"
-            style="float: left; width: 400px"
-            class="mx-1 mb-4 form-control"
+            style="float: left; width: 400px; display:none"
+            class="mx-1 form-control"
             placeholder="Filter"
             id="filerfield"
           />
           <personcard
-            class="my-4 ml-1"
+            class="mb-4 mt-5 ml-1"
             v-for="(person, index) in persons2"
             :key="index"
             :person="person"
@@ -88,9 +87,21 @@ export default {
     },
 
     search: function (haystack, needle) {
+      
+      
       let result = haystack.filter(
         (el) => el.shortname.toLowerCase().indexOf(needle.toLowerCase()) != -1
       );
+      
+
+     // If shortname is reintroduced again, dont forget PersonCard.vue
+     /*
+      let result = haystack.filter(
+        (el) => (el.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          + " " + el.surename.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
+          .toLowerCase().indexOf(needle.toLowerCase()) != -1
+      );
+      */
       this.displaySearchResult(result);
     },
 
@@ -145,7 +156,8 @@ export default {
 
   data: () => ({
     error: "",
-    persons: persons_data,
+    //persons: persons_data,
+    persons: [],
     persons1: [],
     persons2: [],
     searchquery: "",
@@ -169,7 +181,7 @@ export default {
     images: Array,
     updated_at: Date
  */
-
+/*
     persons: [
       {
         selected: "",
@@ -612,6 +624,8 @@ export default {
           "http://www.ghetto-theresienstadt.de/images/prominente/Bild101.gif",
       },
     ],
+
+    */
   }),
 };
 </script>
