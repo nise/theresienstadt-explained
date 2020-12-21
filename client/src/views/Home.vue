@@ -15,6 +15,39 @@
       <b-alert v-model="show" class="mt-3" dismissible @dismissed="dismissed">Hello {{ name }}!</b-alert>
     </div>
     -->
+    <div class="rubrik-background">
+      <div>
+        <div class="rubrik-header">
+          DER FILM
+        </div>
+      <div class="rubrik-container">
+        
+        <div class="rubrik-element">
+          <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
+          <hr style="background-color:blue">
+          <p style="color:blue"> <b>ALLTAG</b> </p>
+          <p style="color:white">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,
+            Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,
+          </p>
+        </div>
+
+        <div class="rubrik-element">
+          <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
+          <hr style="background-color:green">
+          <p style="color:green"> <b>ARBEIT</b> </p>
+          <p style="color:white;">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,</p>
+        </div>
+
+        <div class="rubrik-element">
+          <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
+          <hr style="background-color:yellow">
+          <p style="color:yellow"> <b>KULTUR</b> </p> 
+          <p style="color:white">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,</p>
+        </div>
+      </div>
+      </div>
+    </div>
+
 
     <router-link to="/film/player">Zum Film</router-link>
 
@@ -145,7 +178,7 @@
 </template>
 
 <script>
-const API_URL = 'http://localhost:4000/message'
+//const API_URL = 'http://localhost:4000/message'
 // {{ message }}
 export default {
   name: 'home',
@@ -155,17 +188,84 @@ export default {
   }),
 
   mounted() {
-    fetch(API_URL)
+    /* fetch(API_URL)
       .then(response => response.json())
       .then((result) => {
         this.message = result
-      })
+      }) */
   },
+  methods: {
+    test(){
+      console.log("test");
+    }
+  }
 }
 </script>
 
 
 <style>
+.rubrik-background{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 62.5vw;
+  background-image: url(../assets/home-personen.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.rubrik-container{
+  display: flex;
+  justify-content: center;
+  /*align-items: center;*/
+  width: 95vw;
+  height: 44.5vw;             /**odd width and height dimensions calculated as ratios specified in reference design */
+  min-height: 600px;
+  background-color: #000;
+  opacity: 0.7;
+  backdrop-filter: blur(5px);           /*backdrop filters still not working*/
+  -webkit-backdrop-filter: blur(5px);
+}
+.rubrik-element{
+  width: 21.87vw;
+  height: 33.33vw;
+  padding-top: 7.7%;
+  padding-left: 1.37%;
+  padding-right: 1.37%;
+  text-align: left;
+  box-sizing: content-box;
+  font-size: large;
+}
+.rubrik-img{
+  width: 21.87vw;
+  height: 20.31vw;
+  cursor: pointer;
+  /*width: 100%;
+  height: 61%;*/
+}
+.rubrik-img:hover{
+  filter: brightness(120%);
+}
+.rubrik-header{     
+  width: 21.87vw;
+  height: 100px;
+  top: 0%;
+  left: -25.7%;
+  z-index: 100;
+  transform: translate(0%, 50%);
+  display: inline-block;  /**taken from h1 in app.vue */
+  position: relative;
+  text-align: left;
+  padding: 27px 47px 27px 47px;
+  background-color:#C10000;
+  color:white;
+  letter-spacing: 2.8px;
+  font-family: Jost;
+  font-size:2em;
+  font-weight:bold;
+  text-transform: uppercase;
+}
 .cell-headline a{
   color:#2a2a2a;
 }
