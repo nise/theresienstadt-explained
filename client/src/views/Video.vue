@@ -63,7 +63,8 @@ export default {
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
-      clickTimelineNotify: false
+      clickTimelineNotify: false,
+      vidCtrlActive: false,
     };
   },
   methods: {
@@ -149,6 +150,12 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    onEnableVidCtrl() {
+      this.vidCtrlActive = true;
+    },
+    onDisableVidCtrl() {
+      this.vidCtrlActive = false;
+    }
   },
   computed: {
     playing() {
@@ -210,7 +217,7 @@ var annoLength = this.annotations.length;
       <div class="col-8 video-panel">
         <Video-InfoMarker
           :currentTime="currentTime"
-          :videoID="videoplayer"
+          :videoID="'videoplayer'"
           :paused="paused"
           :clickedTimeline="clickTimelineNotify"
           @ackclickTimeline="clickTimelineNotify = false"
@@ -228,12 +235,14 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript>
+          <Video-Transcript v-if="isModusFeatures('transcript')"
+            :videoCtrlActive="vidCtrlActive">
+          </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
-        <div class="video-controls col-12">
+        <div class="video-controls col-12" @mouseover="onEnableVidCtrl()" @mouseleave="onDisableVidCtrl()">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
