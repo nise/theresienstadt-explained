@@ -63,7 +63,8 @@ export default {
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
-      clickTimelineNotify: false
+      clickTimelineNotify: false,
+      showTranskript: true,
     };
   },
   methods: {
@@ -149,6 +150,11 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    toggleTranskript() {
+      this.showTranskript = this.showTranskript 
+      ? !this.showTranskript 
+      : !this.showTranskript;
+    },
   },
   computed: {
     playing() {
@@ -210,7 +216,7 @@ var annoLength = this.annotations.length;
       <div class="col-8 video-panel">
         <Video-InfoMarker
           :currentTime="currentTime"
-          :videoID="videoplayer"
+          :videoID="'videoplayer'"
           :paused="paused"
           :clickedTimeline="clickTimelineNotify"
           @ackclickTimeline="clickTimelineNotify = false"
@@ -228,7 +234,7 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript>
+          <Video-Transcript v-if="isModusFeatures('transcript') && showTranskript"></Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
@@ -273,6 +279,14 @@ var annoLength = this.annotations.length;
               />
             </div>
             <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
+            <button class="video-toggle-transkript"
+              :class="{active: showTranskript}"
+              @click="toggleTranskript" 
+              title="Untertitel an/aus">
+              <img 
+                class="subtitleIcon"
+                src="../assets/icons/subtitleIcon.svg"/>
+            </button>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
@@ -490,6 +504,22 @@ video {
   top: 30px;
   left: 10px;
   font-size: 0.9em;
+}
+.video-toggle-transkript {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  background-color: gray; 
+  border-radius: 20%;
+}
+
+.video-toggle-transkript.active {
+  background-color: white;
+}
+
+.subtitleIcon {
+  width: 25px;
+  height: 25px;
 }
 
 /** Annotations */
