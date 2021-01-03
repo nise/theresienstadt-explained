@@ -1,5 +1,5 @@
 <template>
-  <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default />
+  <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default id ="Vidtranskript"/>
 </template>
 
 <style>
