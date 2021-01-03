@@ -236,7 +236,6 @@ var annoLength = this.annotations.length;
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
           <Video-Transcript v-if="isModusFeatures('transcript')"
-            id ="Vidtranskript"
             :videoCtrlActive="vidCtrlActive">
           </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
