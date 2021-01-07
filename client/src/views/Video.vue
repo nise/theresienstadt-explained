@@ -150,12 +150,14 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
-    onEnableVidCtrl() {
+    showVideoControls(id) { // keep changes from #20!
+      document.getElementsByClassName(id)[0].style.display = 'block';
       this.vidCtrlActive = true;
     },
-    onDisableVidCtrl() {
+    hideVideoControls(id) {
+      document.getElementsByClassName(id)[0].style.display = 'none';
       this.vidCtrlActive = false;
-    }
+    },
   },
   computed: {
     playing() {
@@ -215,8 +217,8 @@ var annoLength = this.annotations.length;
   <div id="video">
     <div class="row">
       <div class="col-8 video-panel"
-        @mouseover="onEnableVidCtrl()" 
-        @mouseleave="onDisableVidCtrl()">
+        @mouseover="showVideoControls('video-controls')" 
+        @mouseleave="hideVideoControls('video-controls')">
         <Video-InfoMarker
           :currentTime="currentTime"
           :videoID="'videoplayer'"
@@ -434,19 +436,22 @@ video {
   height: 70px;
   opacity: 0.5;
   background-color: #3b3b3bec;
+  position: absolute;
+  bottom: 12px;
+  z-index: 90;
 }
 
 .video-panel video {
   z-index: 1;
 }
-
+/*
 .video-panel:hover .video-controls {
   display: block;
   position: absolute;
   bottom: 12px;
   z-index: 90;
 }
-
+*/
 .control-bar {
   padding-top: 20px;
   color: #fff;
