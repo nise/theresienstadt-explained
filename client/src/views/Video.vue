@@ -150,12 +150,6 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
-    showVideoControls(id) {
-      document.getElementsByClassName(id)[0].style.display = 'block';
-    },
-    hideVideoControls(id) {
-      document.getElementsByClassName(id)[0].style.display = 'none';
-    }
   },
   computed: {
     playing() {
@@ -214,9 +208,7 @@ var annoLength = this.annotations.length;
 <template>
   <div id="video">
     <div class="row">
-      <div class="col-8 video-panel"
-        @mouseover="showVideoControls('video-controls')"
-        @mouseout="hideVideoControls('video-controls')">
+      <div class="col-8 video-panel">
         <Video-InfoMarker
           :currentTime="currentTime"
           :videoID="'videoplayer'"
@@ -289,9 +281,7 @@ var annoLength = this.annotations.length;
         </div>
       </div>
       <!-- left bar-->
-      <div class="col-4 pt-1 left-bar"
-        @mouseover="showVideoControls('video-controls')"
-        @mouseout="hideVideoControls('video-controls')">
+      <div class="col-4 pt-1 left-bar">
         <Video-TOC 
           v-if="isModusFeatures('toc') && videoElement"
           :videoElementduration="videoElement.duration"
@@ -383,23 +373,20 @@ video {
   display: none;
   height: 70px;
   opacity: 0.5;
-  position: absolute;
-  bottom: 12px;
-  z-index: 90;
   background-color: #3b3b3bec;
 }
 
 .video-panel video {
   z-index: 1;
 }
-/*
+
 .video-panel:hover .video-controls {
   display: block;
   position: absolute;
   bottom: 12px;
   z-index: 90;
 }
-*/
+
 .control-bar {
   padding-top: 20px;
   color: #fff;
