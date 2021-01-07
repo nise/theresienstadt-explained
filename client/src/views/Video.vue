@@ -119,6 +119,7 @@ export default {
       return (time / this.videoElement.duration) * 100;
     },
     getProgressWidth() {
+
       if (!this.videoElement) {
         return 0;
       }
@@ -149,6 +150,12 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    showVideoControls(id) {
+      document.getElementsByClassName(id)[0].style.display = 'block';
+    },
+    hideVideoControls(id) {
+      document.getElementsByClassName(id)[0].style.display = 'none';
+    }
   },
   computed: {
     playing() {
@@ -207,10 +214,12 @@ var annoLength = this.annotations.length;
 <template>
   <div id="video">
     <div class="row">
-      <div class="col-8 video-panel">
+      <div class="col-8 video-panel"
+        @mouseover="showVideoControls('video-controls')"
+        @mouseout="hideVideoControls('video-controls')">
         <Video-InfoMarker
           :currentTime="currentTime"
-          :videoID="videoplayer"
+          :videoID="'videoplayer'"
           :paused="paused"
           :clickedTimeline="clickTimelineNotify"
           @ackclickTimeline="clickTimelineNotify = false"
@@ -239,8 +248,10 @@ var annoLength = this.annotations.length;
             <div class="timeline-top">
               <portal-target name="timeline-annotation-marker"> </portal-target>
             </div>
+            <portal-target name="timeline-scene-marker"> </portal-target>
 
-            <div @click="clickTimeline" class="timeline-main"></div>
+            <div @click="clickTimeline" class="timeline-main">
+            </div>
             <div class="timeline-bottom"></div>
             <div
               :style="'width:' + getProgressWidth() + '%;'"
@@ -278,9 +289,12 @@ var annoLength = this.annotations.length;
         </div>
       </div>
       <!-- left bar-->
-      <div class="col-4 pt-1 left-bar">
+      <div class="col-4 pt-1 left-bar"
+        @mouseover="showVideoControls('video-controls')"
+        @mouseout="hideVideoControls('video-controls')">
         <Video-TOC 
-          v-if="isModusFeatures('toc')"
+          v-if="isModusFeatures('toc') && videoElement"
+          :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
         <Video-Annotations
@@ -348,59 +362,6 @@ h4 {
   padding-top: 6px;
 }
 
-.video-bar.topics .row {
-  content-align: center;
-}
-.video-bar.topics button {
-  padding: 1px 10px;
-  margin: 4px 10px;
-  border-radius: 10px;
-}
-
-.scene-list {
-  padding-left: 10px;
-  text-align: left;
-}
-.scene-list li {
-  list-style: none;
-  display: block;
-  width: auto;
-}
-.scene-list li a.scene {
-  display: inline-block;
-  padding: 1px 8px;
-  white-space: nowrap;
-}
-
-a.kultur {
-  color: #2ca500;
-}
-
-a.kultur:hover {
-  background-color: #2ca500;
-  border-radius: 10px;
-  color: #fff;
-}
-
-a.alltag {
-  color: #ffd800;
-}
-
-a.alltag:hover {
-  background-color: #ffd800;
-  border-radius: 10px;
-  color: #111;
-}
-
-a.arbeit {
-  color: #0081c6;
-}
-
-a.arbeit:hover {
-  background-color: #0081c6;
-  border-radius: 10px;
-  color: #fff;
-}
 
 .left-bar {
   max-height: 100vh;
@@ -422,20 +383,23 @@ video {
   display: none;
   height: 70px;
   opacity: 0.5;
+  position: absolute;
+  bottom: 12px;
+  z-index: 90;
   background-color: #3b3b3bec;
 }
 
 .video-panel video {
   z-index: 1;
 }
-
+/*
 .video-panel:hover .video-controls {
   display: block;
   position: absolute;
   bottom: 12px;
   z-index: 90;
 }
-
+*/
 .control-bar {
   padding-top: 20px;
   color: #fff;
