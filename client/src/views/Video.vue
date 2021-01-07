@@ -214,7 +214,9 @@ var annoLength = this.annotations.length;
 <template>
   <div id="video">
     <div class="row">
-      <div class="col-8 video-panel">
+      <div class="col-8 video-panel"
+        @mouseover="onEnableVidCtrl()" 
+        @mouseleave="onDisableVidCtrl()">
         <Video-InfoMarker
           :currentTime="currentTime"
           :videoID="'videoplayer'"
@@ -242,7 +244,7 @@ var annoLength = this.annotations.length;
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
-        <div class="video-controls col-12" @mouseover="onEnableVidCtrl()" @mouseleave="onDisableVidCtrl()">
+        <div class="video-controls col-12">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
