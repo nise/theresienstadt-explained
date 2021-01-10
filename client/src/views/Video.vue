@@ -165,6 +165,7 @@ export default {
       }
     },
     stopCountdown() {
+      this.videoPanel.style.cursor = 'auto';
       clearTimeout(this.timerCursor);
       if (!this.paused) {
         this.showVideoControls = false;
@@ -177,7 +178,7 @@ export default {
     },
   },
   // eslint-disable-next-line object-shorthand
-  mounted: function () { 
+  mounted: function () {
     this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
   },
@@ -231,9 +232,7 @@ var annoLength = this.annotations.length;
     @mousemove="updateCountdown('video-panel')"
     @mouseleave="stopCountdown()">
     <div class="row">
-      <div class="col-8 video-panel"
-        @mouseover="showVideoControls('video-controls')" 
-        @mouseleave="hideVideoControls('video-controls')">
+      <div class="col-8 video-panel">
         <Video-InfoMarker
           :currentTime="currentTime"
           :videoID="'videoplayer'"
@@ -255,7 +254,7 @@ var annoLength = this.annotations.length;
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
           <Video-Transcript v-if="isModusFeatures('transcript')"
-            :videoCtrlActive="vidCtrlActive">
+            :videoCtrlActive="showVideoControls">
           </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video

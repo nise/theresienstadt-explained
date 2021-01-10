@@ -1,5 +1,6 @@
 <template>
-  <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default id ="Vidtranskript"/>
+  <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default id ="Vidtranskript" 
+    @load="initFirstCue"/>
 </template>
 
 <style>
@@ -17,6 +18,13 @@ export default {
   name: "Video-Transcript",
   props: {
     videoCtrlActive: Boolean,
+  },
+  methods: {
+    initFirstCue() {
+      let firstCue = document.getElementById("Vidtranskript").track.cues[0];
+      firstCue.snapToLines = false;
+      firstCue.line = 85;
+    }
   },
   watch: {
     videoCtrlActive: function() {
