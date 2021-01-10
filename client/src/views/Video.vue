@@ -64,7 +64,9 @@ export default {
       formatedTime: "00:00",
       timer: null,
       clickTimelineNotify: false,
-      vidCtrlActive: false,
+      timerCursor: null,
+      videoPanel: null,
+      showVideoControls: true,
     };
   },
   methods: {
@@ -150,14 +152,24 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
-    showVideoControls(id) { // keep changes from #20!
-      document.getElementsByClassName(id)[0].style.display = 'block';
-      this.vidCtrlActive = true;
+    updateCountdown() {
+      if (!this.paused) {
+        clearTimeout(this.timerCursor);
+        this.videoPanel.style.cursor = 'auto';
+        let _this = this;
+        this.showVideoControls = true;
+        this.timerCursor = setTimeout(function(){
+          _this.videoPanel.style.cursor = 'none';
+          _this.showVideoControls = false;
+        }, 5000);
+      }
     },
-    hideVideoControls(id) {
-      document.getElementsByClassName(id)[0].style.display = 'none';
-      this.vidCtrlActive = false;
-    },
+    stopCountdown() {
+      clearTimeout(this.timerCursor);
+      if (!this.paused) {
+        this.showVideoControls = false;
+      }
+    }
   },
   computed: {
     playing() {
@@ -166,6 +178,7 @@ export default {
   },
   // eslint-disable-next-line object-shorthand
   mounted: function () { 
+    this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
   },
   watch: {
@@ -214,7 +227,9 @@ var annoLength = this.annotations.length;
 </script>
 
 <template>
-  <div id="video">
+  <div id="video"
+    @mousemove="updateCountdown('video-panel')"
+    @mouseleave="stopCountdown()">
     <div class="row">
       <div class="col-8 video-panel"
         @mouseover="showVideoControls('video-controls')" 
@@ -246,7 +261,8 @@ var annoLength = this.annotations.length;
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
-        <div class="video-controls col-12">
+        <div class="video-controls col-12"
+          v-if="showVideoControls">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
@@ -432,9 +448,12 @@ video {
 }
 
 .video-panel .video-controls {
-  display: none;
+  display: block;
   height: 70px;
   opacity: 0.5;
+  bottom: 12px;
+  z-index: 90;
+  position: absolute;
   background-color: #3b3b3bec;
   position: absolute;
   bottom: 12px;
