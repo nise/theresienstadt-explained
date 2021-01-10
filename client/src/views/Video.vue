@@ -166,6 +166,7 @@ export default {
       }
     },
     stopCountdown() {
+      this.videoPanel.style.cursor = 'auto';
       clearTimeout(this.timerCursor);
       if (!this.paused) {
         this.showVideoControls = false;
