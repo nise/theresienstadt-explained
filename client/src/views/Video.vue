@@ -173,6 +173,10 @@ export default {
     }
   },
   computed: {
+    visibleVidCtrl() {
+      if (this.showVideoControls) return "display: block";
+        else return 'display: none';
+    },
     playing() {
       return !this.paused;
     },
@@ -259,7 +263,7 @@ var annoLength = this.annotations.length;
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
         <div class="video-controls col-12"
-          v-if="showVideoControls">
+          :style="visibleVidCtrl">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
