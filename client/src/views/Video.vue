@@ -66,6 +66,7 @@ export default {
       clickTimelineNotify: false,
       timerCursor: null,
       videoPanel: null,
+      showVideoControls: true,
     };
   },
   methods: {
@@ -156,13 +157,18 @@ export default {
         clearTimeout(this.timerCursor);
         this.videoPanel.style.cursor = 'auto';
         let _this = this;
+        this.showVideoControls = true;
         this.timerCursor = setTimeout(function(){
           _this.videoPanel.style.cursor = 'none';
+          _this.showVideoControls = false;
         }, 5000);
       }
     },
     stopCountdown() {
       clearTimeout(this.timerCursor);
+      if (!this.paused) {
+        this.showVideoControls = false;
+      }
     }
   },
   computed: {
@@ -221,15 +227,14 @@ var annoLength = this.annotations.length;
 </script>
 
 <template>
-  <div id="video">
+  <div id="video"
+    @mousemove="updateCountdown('video-panel')"
+    @mouseleave="stopCountdown()">
     <div class="row">
-      <div class="col-8 video-panel"
-      @mousemove="updateCountdown('video-panel')"
-      @mouseleave="stopCountdown()"
-      >
+      <div class="col-8 video-panel">
         <Video-InfoMarker
           :currentTime="currentTime"
-          :videoID="videoplayer"
+          :videoID="'videoplayer'"
           :paused="paused"
           :clickedTimeline="clickTimelineNotify"
           @ackclickTimeline="clickTimelineNotify = false"
@@ -252,7 +257,8 @@ var annoLength = this.annotations.length;
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
-        <div class="video-controls col-12">
+        <div class="video-controls col-12"
+          v-if="showVideoControls">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
@@ -438,23 +444,26 @@ video {
 }
 
 .video-panel .video-controls {
-  display: none;
+  display: block;
   height: 70px;
   opacity: 0.5;
+  bottom: 12px;
+  z-index: 90;
+  position: absolute;
   background-color: #3b3b3bec;
 }
 
 .video-panel video {
   z-index: 1;
 }
-
+/*
 .video-panel:hover .video-controls {
   display: block;
   position: absolute;
   bottom: 12px;
   z-index: 90;
 }
-
+*/
 .control-bar {
   padding-top: 20px;
   color: #fff;
