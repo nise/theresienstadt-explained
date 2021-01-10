@@ -63,7 +63,9 @@ export default {
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
-      clickTimelineNotify: false
+      clickTimelineNotify: false,
+      timerCursor: null,
+      videoPanel: null,
     };
   },
   methods: {
@@ -150,6 +152,19 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    updateCountdown() {
+      if (!this.paused) {
+        clearTimeout(this.timerCursor);
+        this.videoPanel.style.cursor = 'auto';
+        let _this = this;
+        this.timerCursor = setTimeout(function(){
+          _this.videoPanel.style.cursor = 'none';
+        }, 5000);
+      }
+    },
+    stopCountdown() {
+      clearTimeout(this.timerCursor);
+    }
   },
   computed: {
     playing() {
@@ -158,6 +173,7 @@ export default {
   },
   // eslint-disable-next-line object-shorthand
   mounted: function () { 
+    this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
   },
   watch: {
@@ -208,7 +224,10 @@ var annoLength = this.annotations.length;
 <template>
   <div id="video">
     <div class="row">
-      <div class="col-8 video-panel">
+      <div class="col-8 video-panel"
+      @mousemove="updateCountdown('video-panel')"
+      @mouseleave="stopCountdown()"
+      >
         <Video-InfoMarker
           :currentTime="currentTime"
           :videoID="'videoplayer'"
