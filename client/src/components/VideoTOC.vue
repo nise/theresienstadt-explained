@@ -34,6 +34,9 @@ export default {
         width: ((scene.end-scene.start)/videoElementduration)*100 +'%',
       }
     },
+    /**
+     * highlights markers '| |' on timeline when user hovers mouse over corresponding scene entry 
+     */
     highlightSceneMarker(markerid, event) {
       if (event.type === 'mouseover') {
         document.getElementById(markerid).style.borderWidth = "5px";
@@ -44,6 +47,10 @@ export default {
         return;
       }
     },
+    /**
+     * highlights scene entry when user hovers mouse over corresponding marker on timeline
+     * (disputable UX in this state)
+     */
     highlightSceneLi(sceneLiID, event) {
       var sceneLiElement = document.getElementById(sceneLiID);
       if (event.type === 'mouseover') {
@@ -75,7 +82,27 @@ export default {
           return;
         }
       }
-    }
+    },
+    setFilter(buttonNumber, buttonGroup) {
+      if (this.selectedFilter === buttonGroup[buttonNumber].category) this.selectedFilter = 'none';
+      else this.selectedFilter = buttonGroup[buttonNumber].category;
+      this.toggleButtonLook(buttonNumber, buttonGroup);
+    },
+    toggleButtonLook(buttonNumber, buttonGroup) {
+      if (buttonGroup[buttonNumber].pressed) {    // user presses an already active button? toggle it off
+        buttonGroup[buttonNumber].pressed = false;
+        document.getElementById(buttonGroup[buttonNumber].id).classList.remove(buttonGroup[buttonNumber].class);
+      } else {    // user wants to switch to another filter
+        for (let i = 0; i < buttonGroup.length; i++){
+          if (buttonGroup[i].pressed) {
+            buttonGroup[i].pressed = false;
+            document.getElementById(buttonGroup[i].id).classList.remove(buttonGroup[i].class);
+          }
+        }
+        buttonGroup[buttonNumber].pressed = true;
+        document.getElementById(buttonGroup[buttonNumber].id).classList.add(buttonGroup[buttonNumber].class);
+      }
+    },
 
   },
   mounted: function () {
@@ -83,6 +110,27 @@ export default {
   },
   data() {
     return {
+      selectedFilter: 'none',
+      sceneSelectButtonGroup: [
+        {
+          category: 'Alltag',
+          id: 'alltagbutton',
+          class: 'alltaghover',
+          pressed: false
+        },
+        {
+          category: 'Kultur',
+          id: 'kulturbutton',
+          class: 'kulturhover',
+          pressed: false
+        },
+        {
+          category: 'Arbeit',
+          id: 'arbeitbutton',
+          class: 'arbeithover',
+          pressed: false
+        }
+      ],
       scenes: [
         {
           _id: {
@@ -167,9 +215,12 @@ export default {
     <div class="row video-bar topics ml-1 mt-2">
       <h4>Themenauswahl</h4>
       <div class="row">
-        <button class="btn btn-sm btn-outline-warning">Alltag</button>
-        <button class="btn btn-sm btn-outline-primary">Kultur</button>
-        <button class="btn btn-sm btn-outline-success">Arbeit</button>
+        <button class="btn btn-sm btn-outline-primary" 
+          :id="sceneSelectButtonGroup[0].id" @click="setFilter(0, sceneSelectButtonGroup)">Alltag</button>
+        <button class="btn btn-sm btn-outline-warning" 
+          :id="sceneSelectButtonGroup[1].id" @click="setFilter(1, sceneSelectButtonGroup)">Kultur</button>
+        <button class="btn btn-sm btn-outline-success" 
+          :id="sceneSelectButtonGroup[2].id" @click="setFilter(2, sceneSelectButtonGroup)">Arbeit</button>
       </div>
     </div>
     <div class="row video-bar scenes ml-1 mt-2">
@@ -177,6 +228,7 @@ export default {
       <ul class="scene-list">
         <li v-for="scene in search()" :key="scene.number">
           <a
+            v-show="(scene.category === selectedFilter || selectedFilter === 'none') ? true : false"
             :id ="scene.number+'li'"
             :class="'scene ' + scene.category.toLowerCase()"
             @mouseover="highlightSceneMarker(scene.number+'marker', $event)"
@@ -190,6 +242,7 @@ export default {
     </div>
     <portal to="timeline-scene-marker">
       <div v-for ="scene in search()" :key ="scene.number+'marker'"
+        v-show="(scene.category === selectedFilter || selectedFilter === 'none') ? true : false"
         :id ="scene.number+'marker'"
         class ="scenemarker" 
         :style ="styleSceneMarker(scene, videoElementduration)"
@@ -246,42 +299,42 @@ export default {
   transform: translate(0%,-25%);
 }
 /**special classes to emulate ':hover' but triggered by mouseover from a distant html element*/
-.kulturhover {            
-  background-color: #2ca500;
-  border-radius: 10px;
-  color: #fff !important;
-}
-.alltaghover {
-  background-color: #ffd800;
+.kulturhover {         
+  background-color: #ffd800;   
   border-radius: 10px;
   color: #111 !important;
 }
-.arbeithover {
+.alltaghover {
   background-color: #0081c6;
+  border-radius: 10px;
+  color: #fff !important;
+}
+.arbeithover {
+  background-color: #2ca500;
   border-radius: 10px;
   color: #fff !important;
 }
 a.kultur {
-  color: #2ca500;
+  color: #ffd800;
 }
 a.kultur:hover {
-  background-color: #2ca500;
+  background-color: #ffd800;
   border-radius: 10px;
   color: #fff;
 }
 a.alltag {
-  color: #ffd800;
+  color: #0081c6;
 }
 a.alltag:hover {
-  background-color: #ffd800;
+  background-color: #0081c6;
   border-radius: 10px;
   color: #111;
 }
 a.arbeit {
-  color: #0081c6;
+  color: #2ca500;
 }
 a.arbeit:hover {
-  background-color: #0081c6;
+  background-color: #2ca500;
   border-radius: 10px;
   color: #fff;
 }
