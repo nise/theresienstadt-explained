@@ -59,7 +59,7 @@ export default {
         'analysis': ['annotations']
       },
       videoElement: null,
-      paused: null,
+      paused: true,
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
@@ -101,11 +101,19 @@ export default {
     },
     play() {
       this.timer = setInterval(this.updateAnnotaions, 500);
+      this.paused = false;
+      this.updateCountdown();
       this.videoElement.play();
     },
+    /**
+     * "this.paused" is updated by event handler of <video> calling "updatePaused" when <video> enters paused state
+     * however this change on "paused" comes in too late when stopCountdown() is called, so its already changed here 
+     */
     pause() {
       this.videoElement.pause();
+      this.paused = true;          
       clearInterval(this.timer);
+      this.stopCountdown();
     },
     forward() {},
     backward() {},
@@ -153,24 +161,40 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    videoControlAddCommand() {
+      let _this = this;
+      window.addEventListener("keypress", function(){_this.togglePlayPause(event)});
+    },
+    togglePlayPause(event) {
+      if (event.code == "Space") {
+        if (this.playing) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+    },
     updateCountdown() {
       if (!this.paused) {
         clearTimeout(this.timerCursor);
         this.videoPanel.style.cursor = 'auto';
-        let _this = this;
         this.showVideoControls = true;
-        this.timerCursor = setTimeout(function(){
-          _this.videoPanel.style.cursor = 'none';
-          _this.showVideoControls = false;
-        }, 5000);
+        this.timerCursor = setTimeout(this.timeoutServiceRoutine, 5000);
       }
+      
     },
     stopCountdown() {
       this.videoPanel.style.cursor = 'auto';
       clearTimeout(this.timerCursor);
       if (!this.paused) {
         this.showVideoControls = false;
+      } else {
+        this.showVideoControls = true;
       }
+    },
+    timeoutServiceRoutine(){
+      this.videoPanel.style.cursor = 'none';
+      this.showVideoControls = false;
     }
   },
   computed: {
@@ -186,6 +210,7 @@ export default {
   mounted: function () { 
     this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
+    this.videoControlAddCommand();
   },
   watch: {
     // eslint-disable-next-line object-shorthand
