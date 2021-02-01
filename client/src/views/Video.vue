@@ -30,6 +30,9 @@ import moment from "moment";
 import VueMoment from "vue-moment";
 Vue.use(VueMoment, { moment });
 
+import leafleft from "leaflet";
+import "leaflet/dist/leaflet.css";
+
 import axios from "axios";
 import VueAxios from "vue-axios";
 Vue.use(VueAxios, axios);
@@ -63,7 +66,8 @@ export default {
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
-      clickTimelineNotify: false
+      clickTimelineNotify: false,
+      leafletmap: null
     };
   },
   methods: {
@@ -99,6 +103,8 @@ export default {
     play() {
       this.timer = setInterval(this.updateAnnotaions, 500);
       this.videoElement.play();
+      this.leafletmap.invalidateSize();
+
     },
     pause() {
       this.videoElement.pause();
@@ -149,6 +155,10 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    lon2tile(lon,zoom) { return (Math.floor((lon+180)/360*Math.pow(2,zoom))); },
+    lat2tile(lat,zoom)  {
+       return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom))); 
+       }
   },
   computed: {
     playing() {
@@ -158,6 +168,25 @@ export default {
   // eslint-disable-next-line object-shorthand
   mounted: function () { 
     this.session = Math.ceil(Math.random() * 100000);
+    this.leafletmap = leafleft.map('leaflet-map');
+    /* this.leafletmap = leafleft.map('leaflet-map', {
+      center: [50.513, 14.16],
+      zoom: 13,
+      preferCanvas: true,
+      dragging: false
+    }); */
+    leafleft.tileLayer( 'https://api.mapbox.com/styles/v1/followerofnux/ckkfkh0wz038c17pc28efm6l7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZm9sbG93ZXJvZm51eCIsImEiOiJja2tmaGV6YTkwYnB1MnZud2V6bDVlaWc1In0.gFN0_B9BR5KjzltaD9Sbuw', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: ['a','b','c','d'],
+    //z: 10,
+    //x: this.lat2tile(50.513, 10),
+    //y: this.lon2tile(14.16,10)
+
+    }).addTo( this.leafletmap );
+    this.leafletmap.setView([50.513, 14.16],13);
+    this.leafletmap.eachLayer(function(layer){
+    console.log(layer);
+});
   },
   watch: {
     // eslint-disable-next-line object-shorthand
@@ -296,8 +325,11 @@ var annoLength = this.annotations.length;
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>
-        <div hidden class="row video-bar places ml-1 mt-2">
+        <div class="row video-bar places ml-1 mt-2">
           <h4>Orte</h4>
+          <div class="mx-1" id="leaflet-map">
+
+          </div>
         </div>
       </div>
     </div>
@@ -305,6 +337,13 @@ var annoLength = this.annotations.length;
 </template>
 
 <style>
+#leaflet-map {
+  width: 98%;
+  height: 256px;
+  background-color: gray;
+  color:gray;
+}
+
 .bigger {
   font-size: 1.4em;
 }
