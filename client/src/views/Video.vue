@@ -43,7 +43,7 @@ import videoInfoMarker from "../components/VideoInfoMarker";
 //moment.locale('de');
 
 export default {
-  props: ['modus'],
+  props: ['modus', 'timejump'],
   components: {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
@@ -85,6 +85,45 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+    },
+    afterVideoLoad() {
+      this.processURLProps();
+    },
+
+    // only processes URL prop 'timejump'
+    processURLProps() {
+      if (this.timejump) {
+        this.decodeTimejump(this.timejump);
+      }
+    },
+    decodeTimejump(propTimeJump) {
+      let testNonDigit = RegExp(/\D/g);
+      let testMinutesAndSeconds = RegExp(/(\d*:\d*)/g);
+
+      let mins;
+      let secs;
+      let desiredTime;
+
+      if (!testNonDigit.test(propTimeJump)) {
+        // desired time is in [s]
+        desiredTime = parseInt(propTimeJump);
+        this.gotoTime(desiredTime);
+        return;
+      }
+      if (testMinutesAndSeconds.test(propTimeJump)) {
+        // desired time is in [m:s]
+        mins = propTimeJump.match(/(\d+):/g);
+        secs = propTimeJump.match(/:(\d+)/g);
+        if (mins) {
+          mins = mins[0].replace(":", "");
+        } else mins = 0;
+        if (secs) {
+          secs = secs[0].replace(":", "");
+        } else secs = 0;
+
+        desiredTime = parseInt(mins)*60 + parseInt(secs);
+        this.gotoTime(desiredTime);
+      }
     },
     isModusFeatures(feature){
       return this.featureSets[this.modus].indexOf(feature) !== -1;
@@ -138,7 +177,7 @@ export default {
     },
     gotoTime(time) {
       if (!this.videoElement) {
-        return 0;
+        return 0;        
       }
       this.videoElement.currentTime = time;
       this.currentTime = time;
@@ -158,6 +197,7 @@ export default {
   // eslint-disable-next-line object-shorthand
   mounted: function () { 
     this.session = Math.ceil(Math.random() * 100000);
+    //this.processURLProps();
   },
   watch: {
     // eslint-disable-next-line object-shorthand
@@ -223,6 +263,7 @@ var annoLength = this.annotations.length;
           @canplay="updatePaused"
           @playing="updatePaused"
           @pause="updatePaused"
+          @canplaythrough.once="afterVideoLoad()"
           class="col-12"
           disablepictureinpicture
           controlslist="nodownload"
