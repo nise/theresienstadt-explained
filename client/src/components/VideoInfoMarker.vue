@@ -1,8 +1,5 @@
 <script>
 
-import axios from 'axios';
-
-
 export default {
   name: "VideoInfoMarker",
   props: {
@@ -11,144 +8,145 @@ export default {
     paused: Boolean,
     clickedTimeline: Boolean,
   },
-  methods: {
-    getdata: function(){
-      let _this = this;
-      axios.get('/markerdata').then(function (response) {
-        _this.markerStore = response.data.slice(0);
-        _this.markers = _this.markerStore.slice(0);
-        _this.sortbystart(_this.markers);
-        _this.textbox = _this.markers[0];
-      });
-    },
-    closeTextBox(){
+
+  methods:{
+
+    closeTextBox(event){
       this.$emit("playrequest");
-      this.infoTextBoxVisible = false;
+      event.target.parentElement.style.display = "none";
     },
-    displayTextBox(event){
+
+    displayTextBox(id){
+      let cuelist = document.getElementById("infomarkertrack").track.activeCues;
+      for (let i = 0; i < cuelist.length; i++){
+        document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+      }
+      document.getElementById(id).style.display = "block";
       this.$emit("pauserequest");
-      if (this.infoTextBoxVisible == true){
-        this.infoTextBoxVisible = false;
-      }
-      this.textbox = this.getpayload(event.target.id);
-      this.infoTextBoxVisible = true;
     },
 
-    getpayload(id){
-      for (let i = 0; i < this.activeMarkers.length; i++){
-        if (this.activeMarkers[i].title === id){
-          return this.activeMarkers[i];
+    setup(event){
+      let _this = this;
+      var player = document.getElementById(this.videoID);
+      var videoPanel = document.querySelector(".video-panel");
+      var ttrack = event.target.track;
+      ttrack.mode = "hidden";
+
+      for (let i=0; i < ttrack.cues.length; i++){
+        var newmark = document.createElement("div");
+        newmark.id = ttrack.cues[i].id;
+        newmark.style.display = "none";
+        newmark.innerHTML = "i";
+        newmark.style.fontSize = "1.5em";
+        newmark.style.color = "white";
+        newmark.style.left = ttrack.cues[i].position+"%";
+        newmark.style.top = ttrack.cues[i].line+"%";
+        newmark.style.width = "40px";
+        newmark.style.height = "40px";
+        newmark.style.paddingTop = "2px";
+        newmark.style.paddingBottom = "1px";
+        newmark.style.backgroundColor = "red";
+        newmark.style.position = "absolute";
+        newmark.style.zIndex = 101;
+        newmark.style.borderRadius = "50%";
+        newmark.style.cursor = "pointer";
+        newmark.onclick = function(){
+          _this.displayTextBox(ttrack.cues[i].id+"textbox")
         }
-      }
-    },
-    sortbystart(markers){
-      markers.sort(function(a,b){
-        if (a.start < b.start) return -1;
-        if (a.start > b.start) return 1;
-        return 0;
-      });
-    },
-    displayMarker(marker){
-      this.activeMarkers.push(marker);
-      document.getElementById(marker.title).style.display = 'block';
-    },
-    hideMarker(marker){
-      document.getElementById(marker.title).style.display = 'none';
-    }
-  },
-  mounted: function(){
-    this.getdata();
+        videoPanel.appendChild(newmark);
 
+        var newtextbox = document.createElement("div");
+        newtextbox.id =  ttrack.cues[i].id+"textbox";
+        newtextbox.style.display = "none";
+        newtextbox.style.opacity = "0.6";
+        newtextbox.style.width = "72%";
+        newtextbox.style.height = "150px";
+        newtextbox.style.left = "50%";
+        newtextbox.style.position = "absolute";
+        newtextbox.style.zIndex = 100;
+        newtextbox.style.transform = "translate(-50%)";
+        if (ttrack.cues[i].line > 50){
+          newtextbox.style.top = "50px";
+        } else {
+          newtextbox.style.bottom = "100px";
+        }
+
+        newtextbox.style.backgroundColor = "black";
+        newtextbox.style.color = "white";
+        newtextbox.innerHTML = ttrack.cues[i].text;
+        newtextbox.style.textJustify = "auto";
+        newtextbox.style.overflowWrap = "break-word";
+
+        var textboxbutton = document.createElement("button");
+        textboxbutton.style.width = "28px";
+        textboxbutton.style.height = "28px";
+        textboxbutton.style.borderRadius = "50%";
+        textboxbutton.style.left = "-0.5%"
+        textboxbutton.style.top = "-0.5%";
+        textboxbutton.style.transform = "translate(-50%,-50%)";
+        textboxbutton.style.backgroundColor = "white";
+        textboxbutton.style.position =  "absolute";
+        textboxbutton.style.color = "black";
+        textboxbutton.innerHTML = "&times";
+        textboxbutton.onclick = this.closeTextBox;
+
+        newtextbox.appendChild(textboxbutton);
+
+        videoPanel.appendChild(newtextbox);
+
+      }
+      ttrack.addEventListener("cuechange", function(){
+        for (let i = 0; i < this.cues.length; i++){
+          document.getElementById(this.cues[i].id).style.display = "none";
+        }
+        for (let i = 0; i < this.activeCues.length; i++){
+          document.getElementById(this.activeCues[i].id).style.display = "block";
+        }
+      })
+
+    },
   },
   watch: {
     clickedTimeline: function(){
       if (this.clickedTimeline == true){
         this.$emit("ackclickTimeline");
-        for (let i = 0; i < this.activeMarkers.length; i++){
-          this.hideMarker(this.activeMarkers[i]);
+        let cuelist = document.getElementById("infomarkertrack").track.activeCues;
+        for (let i = 0; i < cuelist.length; i++){
+          document.getElementById(cuelist[i].id+"textbox").style.display = "none";
         }
-        this.activeMarkers.splice(0);
-        this.markerstart = 0;
-        this.closeTextBox();
       }
     },
     paused: function(){
-      if (this.paused == false && this.infoTextBoxVisible){
-        this.closeTextBox();
+      if (this.paused == false){
+        let cuelist = document.getElementById("infomarkertrack").track.activeCues;
+        for (let i = 0; i < cuelist.length; i++){
+          document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+        }
       }
     },
-    currentTime: function(){
-      
-      if (this.markerstart + 5 > this.markers.length){
-        this.markerend = this.markers.length
-      } else {
-        this.markerend = this.markerstart + 5;
-      }
-
-
-      for (let i = this.markerstart; i < this.markerend; i++){
-        if (this.currentTime > this.markers[i].start && this.currentTime < this.markers[i].end){
-          this.displayMarker(this.markers[i]);
-          this.markerstart = i+1;
-        }
-      }
-
-      for (let i = 0; i < this.activeMarkers.length; i++){
-        if (this.currentTime > this.activeMarkers[i].end){
-          this.hideMarker(this.activeMarkers[i]);
-          this.activeMarkers.splice(i, 1);
-        }
-      }
-      
-      this.lastInterval = this.currentTime;
-    }
   },
+  mounted: function(){
+  },
+  
   data(){
     return {
-      markerstart: 0,
-      markerend: 0,
-      infoTextBoxVisible: false,
-      textbox: null,
-      lastInterval: 0,
-      activeInfoTextBox: [],
-      activeMarkers: [],
-      markers: [],
-      markerStore: []
     }
   }
 }
 </script>
   
 <template>
-<div>
-  <div v-if="markerStore.length > 0">   <!-- v-if to prevent error on missing key when arr is empty -->
-    <div v-for="marker in markerStore" :key = "marker.title"
-      @click="displayTextBox"
-      :id = "marker.title"
-      class = "redInfoIconStyle"
-      :style="{left: marker.posX+'%', top: marker.posY+'%'}">
-      &#x0069;
-    </div>
-  </div>
-
-  <transition name="fade">
-    <div v-if="infoTextBoxVisible"
-      
-      :id = "textbox.title + 'textbox'"
-      class = "infoTextBoxStyle" 
-      :style = "[(textbox.posY > 50) ? {top: '50px'} : {bottom: '100px'}]"
-      >
-      <span v-html="textbox.content"></span>
-      <b-button class = "infoTextBoxExitbuttonStyle"
-        @click="closeTextBox">
-        &times;
-      </b-button>
-    </div>
-  </transition>
-</div>
+  <track src="../assets/videos/infomarker/infomarker.de.vtt" default id="infomarkertrack" @load="setup($event)"/>
 </template>
 
 <style>
+video::cue {
+  color: white;
+  font-size: 2rem;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/** REFERENCE. NOT USED */
 .redInfoIconStyle{
   display: none;
   font-size: 1.5em;
