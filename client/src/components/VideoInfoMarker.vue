@@ -136,7 +136,7 @@ export default {
 </script>
   
 <template>
-  <track src="../assets/videos/infomarker/infomarker.de.vtt" default id="infomarkertrack" @load="setup($event)"/>
+  <track src="../assets/videos/infomarker/infomarker.de.vtt" id="infomarkertrack" @load="setup($event)"/>
 </template>
 
 <style>

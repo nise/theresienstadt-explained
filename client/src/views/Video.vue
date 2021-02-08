@@ -253,6 +253,10 @@ export default {
     this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
     this.videoControlAddCommand();
+    let videoTT = document.getElementById('videoplayer').textTracks;
+    for (let i = 0; i < videoTT.length; i++) {
+      if (videoTT[i].mode == "disabled") videoTT[i].mode = "showing";
+    }
   },
   watch: {
     // eslint-disable-next-line object-shorthand
@@ -317,7 +321,7 @@ var annoLength = this.annotations.length;
           disablepictureinpicture
           controlslist="nodownload"
         >
-        <!--<Video-InfoMarker
+        <Video-InfoMarker
           :currentTime="currentTime"
           :videoID="'videoplayer'"
           :paused="paused"
@@ -325,9 +329,9 @@ var annoLength = this.annotations.length;
           @ackclickTimeline="clickTimelineNotify = false"
           @pauserequest="pause"
           @playrequest="play">
-        </Video-InfoMarker>-->
+        </Video-InfoMarker>
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"
+          <Video-Transcript v-if="isModusFeatures('transcript') && showTranskript"
             :videoCtrlActive="showVideoControls">
           </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
