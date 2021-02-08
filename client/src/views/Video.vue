@@ -64,6 +64,7 @@ export default {
       formatedTime: "00:00",
       timer: null,
       clickTimelineNotify: false,
+      showTranskript: true,
       timerCursor: null,
       videoPanel: null,
       showVideoControls: true,
@@ -173,6 +174,10 @@ export default {
           this.play();
         }
       }
+    toggleTranskript() {
+      this.showTranskript = this.showTranskript 
+      ? !this.showTranskript 
+      : !this.showTranskript;
     },
     updateCountdown() {
       if (!this.paused) {
@@ -207,7 +212,7 @@ export default {
     },
   },
   // eslint-disable-next-line object-shorthand
-  mounted: function () { 
+  mounted: function () {
     this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
     this.videoControlAddCommand();
@@ -283,7 +288,9 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript>
+          <Video-Transcript v-if="isModusFeatures('transcript')"
+            :videoCtrlActive="showVideoControls">
+          </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
@@ -331,6 +338,14 @@ var annoLength = this.annotations.length;
               />
             </div>
             <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
+            <button class="video-toggle-transkript"
+              :class="{active: showTranskript}"
+              @click="toggleTranskript" 
+              title="Untertitel an/aus">
+              <img 
+                class="subtitleIcon"
+                src="../assets/icons/subtitleIcon.svg"/>
+            </button>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
@@ -432,6 +447,9 @@ video {
   z-index: 90;
   position: absolute;
   background-color: #3b3b3bec;
+  position: absolute;
+  bottom: 12px;
+  z-index: 90;
 }
 
 .video-panel video {
@@ -499,6 +517,22 @@ video {
   top: 30px;
   left: 10px;
   font-size: 0.9em;
+}
+.video-toggle-transkript {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  background-color: gray; 
+  border-radius: 20%;
+}
+
+.video-toggle-transkript.active {
+  background-color: white;
+}
+
+.subtitleIcon {
+  width: 25px;
+  height: 25px;
 }
 
 /** Annotations */
