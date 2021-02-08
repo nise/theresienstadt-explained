@@ -64,6 +64,7 @@ export default {
       formatedTime: "00:00",
       timer: null,
       clickTimelineNotify: false,
+      showTranskript: true,
       timerCursor: null,
       videoPanel: null,
       showVideoControls: true,
@@ -151,6 +152,11 @@ export default {
     },
     toggleForm() {
       this.showAnnotationForm = true;
+    },
+    toggleTranskript() {
+      this.showTranskript = this.showTranskript 
+      ? !this.showTranskript 
+      : !this.showTranskript;
     },
     updateCountdown() {
       if (!this.paused) {
@@ -301,6 +307,14 @@ var annoLength = this.annotations.length;
               />
             </div>
             <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
+            <button class="video-toggle-transkript"
+              :class="{active: showTranskript}"
+              @click="toggleTranskript" 
+              title="Untertitel an/aus">
+              <img 
+                class="subtitleIcon"
+                src="../assets/icons/subtitleIcon.svg"/>
+            </button>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
@@ -524,6 +538,22 @@ video {
   top: 30px;
   left: 10px;
   font-size: 0.9em;
+}
+.video-toggle-transkript {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  background-color: gray; 
+  border-radius: 20%;
+}
+
+.video-toggle-transkript.active {
+  background-color: white;
+}
+
+.subtitleIcon {
+  width: 25px;
+  height: 25px;
 }
 
 /** Annotations */
