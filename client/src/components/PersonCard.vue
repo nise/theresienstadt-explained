@@ -46,46 +46,50 @@
         </b-row>
       </b-col>
     </b-row>
-    <b-row style="width: inherit">
-      <div class="col-12">
-      <b-collapse
-        :id="'collapse-' + person.id"
-        class="mt-2"
-        style="width: inherit"
-      >
-        <p v-if="person.bio" class="px-3 text-break">{{ person.bio }}</p>
-        <hr />
-        <ul class="ml-1 pl-1 mb-5" style="list-style-type: '- ';">
-        <li v-if="person.nationality" class="mb-1">Nationalität: {{ person.nationality }}</li>
-        <li v-if="person.profession" class="mb-1">Beruf: {{ person.profession }}</li>
-        <li v-if="person.spouse" class="mb-1">Ehepartner: {{person.spouse}}</li> 
-        <li v-if="person.children" class="mb-1">Kind/er: {{person.children}}</li>
-        </ul>
+    <b-row>
+          <!-- b-button (Weniger...) in b-collapse had different position than b-button above (Mehr...) 
+          (see issue #41). fixed by removing style="width: inherit" from b-row (was obsolete anyway)
+          Additional: b-button also had different position during transition phase of b-collapse.
+          fixed by removing padding from parent of b-collapse, assumingly because padding is not animated.
+          put the padding on b-collapse instead -->
+      <b-col class ="px-0">
+        <b-collapse
+          :id="'collapse-' + person.id"
+          class="px-3"      
+          >
+          <p v-if="person.bio" class="px-3 text-break">{{ person.bio }}</p>
+          <hr />
+          <ul class="ml-1 pl-1 mb-5" style="list-style-type: '- ';">
+          <li v-if="person.nationality" class="mb-1">Nationalität: {{ person.nationality }}</li>
+          <li v-if="person.profession" class="mb-1">Beruf: {{ person.profession }}</li>
+          <li v-if="person.spouse" class="mb-1">Ehepartner: {{person.spouse}}</li> 
+          <li v-if="person.children" class="mb-1">Kind/er: {{person.children}}</li>
+          </ul>
+          
+          <h5 v-if="person.moviescenes" class="pr-3">Im Film</h5>
+          <b-row class="mb-1">
+            <b-col v-for="entries in person.moviescenes" v-bind:key="entries"> 
+              <img class="movieshotodd movieshotxld movieshotld"/>
+            </b-col>
+          </b-row>
         
-        <h5 v-if="person.moviescenes" class="pr-3">Im Film</h5>
-        <b-row class="mb-1">
-          <b-col v-for="entries in person.moviescenes" v-bind:key="entries"> 
-            <img class="movieshotodd movieshotxld movieshotld"/>
-          </b-col>
-        </b-row>
-      
-        <b-button
-          v-b-toggle="'collapse-' + person.id"
-          class="mr-3 mb-3"
-          @click="togglebio"
-          size="sm"
-          squared
-          variant="dark"
-          style="
-            background-color: black;
-            position: absolute;
-            bottom: 0px;
-            right: 0px;
-          "
-          >Weniger...
-        </b-button>
-      </b-collapse>
-      </div>
+          <b-button
+            v-b-toggle="'collapse-' + person.id"
+            class="mr-3 mb-3"
+            @click="togglebio"
+            size="sm"
+            squared
+            variant="dark"
+            style="
+              background-color: black;
+              position: absolute;
+              bottom: 0px;
+              right: 0px;
+            "
+            >Weniger...
+          </b-button>
+        </b-collapse>
+      </b-col>
     </b-row>
   </b-container>
 </template>
@@ -120,6 +124,10 @@ export default {
 </script>
 
 <style>
+.collapsing {
+  padding-right: 0px;
+  margin-right: 0px;
+}
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
 }
