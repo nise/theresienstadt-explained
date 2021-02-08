@@ -223,23 +223,20 @@ export default {
       if (!this.paused) {
         clearTimeout(this.timerCursor);
         this.videoPanel.style.cursor = 'auto';
+        let _this = this;
         this.showVideoControls = true;
-        this.timerCursor = setTimeout(this.timeoutServiceRoutine, 5000);
+        this.timerCursor = setTimeout(function(){
+          _this.videoPanel.style.cursor = 'none';
+          _this.showVideoControls = false;
+        }, 5000);
       }
-      
     },
     stopCountdown() {
       this.videoPanel.style.cursor = 'auto';
       clearTimeout(this.timerCursor);
       if (!this.paused) {
         this.showVideoControls = false;
-      } else {
-        this.showVideoControls = true;
       }
-    },
-    timeoutServiceRoutine(){
-      this.videoPanel.style.cursor = 'none';
-      this.showVideoControls = false;
     }
   },
   computed: {
