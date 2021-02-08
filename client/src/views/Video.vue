@@ -59,11 +59,15 @@ export default {
         'analysis': ['annotations']
       },
       videoElement: null,
-      paused: null,
+      paused: true,
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
-      clickTimelineNotify: false
+      clickTimelineNotify: false,
+      showTranskript: true,
+      timerCursor: null,
+      videoPanel: null,
+      showVideoControls: true,
     };
   },
   methods: {
@@ -137,11 +141,19 @@ export default {
     },
     play() {
       this.timer = setInterval(this.updateAnnotaions, 500);
+      this.paused = false;
+      this.updateCountdown();
       this.videoElement.play();
     },
+    /**
+     * "this.paused" is updated by event handler of <video> calling "updatePaused" when <video> enters paused state
+     * however this change on "paused" comes in too late when stopCountdown() is called, so its already changed here 
+     */
     pause() {
       this.videoElement.pause();
+      this.paused = true;          
       clearInterval(this.timer);
+      this.stopCountdown();
     },
     forward() {},
     backward() {},
@@ -158,6 +170,7 @@ export default {
       return (time / this.videoElement.duration) * 100;
     },
     getProgressWidth() {
+
       if (!this.videoElement) {
         return 0;
       }
@@ -188,16 +201,60 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    videoControlAddCommand() {
+      let _this = this;
+      window.addEventListener("keypress", function(){_this.togglePlayPause(event)});
+    },
+    togglePlayPause(event) {
+      if (event.code == "Space") {
+        if (this.playing) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+    toggleTranskript() {
+      this.showTranskript = this.showTranskript 
+      ? !this.showTranskript 
+      : !this.showTranskript;
+    },
+    updateCountdown() {
+      if (!this.paused) {
+        clearTimeout(this.timerCursor);
+        this.videoPanel.style.cursor = 'auto';
+        this.showVideoControls = true;
+        this.timerCursor = setTimeout(this.timeoutServiceRoutine, 5000);
+      }
+      
+    },
+    stopCountdown() {
+      this.videoPanel.style.cursor = 'auto';
+      clearTimeout(this.timerCursor);
+      if (!this.paused) {
+        this.showVideoControls = false;
+      } else {
+        this.showVideoControls = true;
+      }
+    },
+    timeoutServiceRoutine(){
+      this.videoPanel.style.cursor = 'none';
+      this.showVideoControls = false;
+    }
   },
   computed: {
+    visibleVidCtrl() {
+      if (this.showVideoControls) return "display: block";
+        else return 'display: none';
+    },
     playing() {
       return !this.paused;
     },
   },
   // eslint-disable-next-line object-shorthand
-  mounted: function () { 
+  mounted: function () {
+    this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
-    //this.processURLProps();
+    this.videoControlAddCommand();
   },
   watch: {
     // eslint-disable-next-line object-shorthand
@@ -245,12 +302,14 @@ var annoLength = this.annotations.length;
 </script>
 
 <template>
-  <div id="video">
+  <div id="video"
+    @mousemove="updateCountdown('video-panel')"
+    @mouseleave="stopCountdown()">
     <div class="row">
       <div class="col-8 video-panel">
         <Video-InfoMarker
           :currentTime="currentTime"
-          :videoID="videoplayer"
+          :videoID="'videoplayer'"
           :paused="paused"
           :clickedTimeline="clickTimelineNotify"
           @ackclickTimeline="clickTimelineNotify = false"
@@ -269,19 +328,24 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript>
+          <Video-Transcript v-if="isModusFeatures('transcript')"
+            :videoCtrlActive="showVideoControls">
+          </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
-        <div class="video-controls col-12">
+        <div class="video-controls col-12"
+          :style="visibleVidCtrl">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
               <portal-target name="timeline-annotation-marker"> </portal-target>
             </div>
+            <portal-target name="timeline-scene-marker"> </portal-target>
 
-            <div @click="clickTimeline" class="timeline-main"></div>
+            <div @click="clickTimeline" class="timeline-main">
+            </div>
             <div class="timeline-bottom"></div>
             <div
               :style="'width:' + getProgressWidth() + '%;'"
@@ -314,6 +378,14 @@ var annoLength = this.annotations.length;
               />
             </div>
             <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
+            <button class="video-toggle-transkript"
+              :class="{active: showTranskript}"
+              @click="toggleTranskript" 
+              title="Untertitel an/aus">
+              <img 
+                class="subtitleIcon"
+                src="../assets/icons/subtitleIcon.svg"/>
+            </button>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
@@ -321,7 +393,8 @@ var annoLength = this.annotations.length;
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
         <Video-TOC 
-          v-if="isModusFeatures('toc')"
+          v-if="isModusFeatures('toc') && videoElement"
+          :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
         <Video-Annotations
@@ -389,59 +462,6 @@ h4 {
   padding-top: 6px;
 }
 
-.video-bar.topics .row {
-  content-align: center;
-}
-.video-bar.topics button {
-  padding: 1px 10px;
-  margin: 4px 10px;
-  border-radius: 10px;
-}
-
-.scene-list {
-  padding-left: 10px;
-  text-align: left;
-}
-.scene-list li {
-  list-style: none;
-  display: block;
-  width: auto;
-}
-.scene-list li a.scene {
-  display: inline-block;
-  padding: 1px 8px;
-  white-space: nowrap;
-}
-
-a.kultur {
-  color: #2ca500;
-}
-
-a.kultur:hover {
-  background-color: #2ca500;
-  border-radius: 10px;
-  color: #fff;
-}
-
-a.alltag {
-  color: #ffd800;
-}
-
-a.alltag:hover {
-  background-color: #ffd800;
-  border-radius: 10px;
-  color: #111;
-}
-
-a.arbeit {
-  color: #0081c6;
-}
-
-a.arbeit:hover {
-  background-color: #0081c6;
-  border-radius: 10px;
-  color: #fff;
-}
 
 .left-bar {
   max-height: 100vh;
@@ -460,23 +480,29 @@ video {
 }
 
 .video-panel .video-controls {
-  display: none;
+  display: block;
   height: 70px;
   opacity: 0.5;
+  bottom: 12px;
+  z-index: 90;
+  position: absolute;
   background-color: #3b3b3bec;
+  position: absolute;
+  bottom: 12px;
+  z-index: 90;
 }
 
 .video-panel video {
   z-index: 1;
 }
-
+/*
 .video-panel:hover .video-controls {
   display: block;
   position: absolute;
   bottom: 12px;
   z-index: 90;
 }
-
+*/
 .control-bar {
   padding-top: 20px;
   color: #fff;
@@ -531,6 +557,22 @@ video {
   top: 30px;
   left: 10px;
   font-size: 0.9em;
+}
+.video-toggle-transkript {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  background-color: gray; 
+  border-radius: 20%;
+}
+
+.video-toggle-transkript.active {
+  background-color: white;
+}
+
+.subtitleIcon {
+  width: 25px;
+  height: 25px;
 }
 
 /** Annotations */
