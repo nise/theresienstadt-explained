@@ -1,10 +1,12 @@
 <template>
+  
   <b-container
     :id="getShortName(person)"
     class="odd bg-light"
     style="min-height: 210px; overflow-y: visible; text-align:left;"
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
+  
     <b-row>
       <img
         style="height: 210px; width: 180px; overflow:hidden;"
@@ -16,8 +18,8 @@
       <b-col>
         <h3 class="ml-0 mt-2">{{ person.title }} {{ person.name }} {{ person.surename }}</h3>
         <p class="ml-1">
-          <div v-if="person.birth != 'unbekannt' || person.birth_place != 'unbekannt'"> 
-            geb. {{ person.birth }} in {{ person.birth_place }}
+          <div v-if="person.birth_date != 'unbekannt' || person.birth_place != 'unbekannt'"> 
+            geb. {{ person.birth_date }} in {{ person.birth_place }}
           </div>
           <div v-if="person.death != 'unbekannt' || person.death_place != 'unbekannt'">
             gest. {{ person.death }}, {{ person.death_place }}
@@ -39,7 +41,7 @@
               bottom: 0px;
             "
             :style="{ display: this.isopenbio }"
-            >Mehr...
+            >Mehr ...
           </b-button>
         </b-row>
       </b-col>
@@ -51,11 +53,9 @@
         class="mt-2"
         style="width: inherit"
       >
-        <p v-if="person.bio" class="px-3 text-break">
-        Bioooo {{ person.bio }}
-        </p>
+        <p v-if="person.bio" class="px-3 text-break">{{ person.bio }}</p>
         <hr />
-        <ul class="ml-1 pl-1" style="list-style-type: '- ';">
+        <ul class="ml-1 pl-1 mb-5" style="list-style-type: '- ';">
         <li v-if="person.nationality" class="mb-1">Nationalität: {{ person.nationality }}</li>
         <li v-if="person.profession" class="mb-1">Beruf: {{ person.profession }}</li>
         <li v-if="person.spouse" class="mb-1">Ehepartner: {{person.spouse}}</li> 
@@ -110,17 +110,16 @@ export default {
     getImagePath(p) {
       return "/img/persons/" + this.getShortName(p) + ".jpg";
     },
-    getShortName(p){
-      let t = p.shortname.split(" ");
-      return t[1] + "_" + t[0];
-    }
+    getShortName(p) {
+      //let t = p.shortname.split(" ");
+      //return t[0] + "_" + t[1];
+      return p.shortname.replace(/\ /g, '_');
+    },
   },
 };
 </script>
 
 <style>
-
-
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
 }
