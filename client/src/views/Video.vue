@@ -308,15 +308,7 @@ var annoLength = this.annotations.length;
     @mouseleave="stopCountdown()">
     <div class="row">
       <div class="col-8 video-panel">
-        <Video-InfoMarker
-          :currentTime="currentTime"
-          :videoID="'videoplayer'"
-          :paused="paused"
-          :clickedTimeline="clickTimelineNotify"
-          @ackclickTimeline="clickTimelineNotify = false"
-          @pauserequest="pause"
-          @playrequest="play">
-        </Video-InfoMarker>
+        
         <video
           ref="video"
           id="videoplayer"
@@ -328,6 +320,15 @@ var annoLength = this.annotations.length;
           disablepictureinpicture
           controlslist="nodownload"
         >
+        <!--<Video-InfoMarker
+          :currentTime="currentTime"
+          :videoID="'videoplayer'"
+          :paused="paused"
+          :clickedTimeline="clickTimelineNotify"
+          @ackclickTimeline="clickTimelineNotify = false"
+          @pauserequest="pause"
+          @playrequest="play">
+        </Video-InfoMarker>-->
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
           <Video-Transcript v-if="isModusFeatures('transcript')"
             :videoCtrlActive="showVideoControls">
