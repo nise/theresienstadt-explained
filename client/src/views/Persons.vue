@@ -115,16 +115,16 @@ export default {
     },
 
     search: function (arr, needle) {
-      
+      /* 
       let result = arr.filter(
         (el) => JSON.stringify(el).toLowerCase().indexOf(needle.toLowerCase()) != -1
       );
-     /*
-      let result = haystack.filter(
+      */
+      let result = arr.filter(
         (el) => (el.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
           + " " + el.surename.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
           .toLowerCase().indexOf(needle.toLowerCase()) != -1
-      );*/
+      );
       
       this.displaySearchResult(result);
     },
