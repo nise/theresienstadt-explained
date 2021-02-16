@@ -59,6 +59,7 @@ export default {
         'analysis': ['annotations']
       },
       videoElement: null,
+      videoPlayerID: 'videoplayer',
       paused: true,
       currentTime: 0,
       formatedTime: "00:00",
@@ -215,9 +216,23 @@ export default {
       }
     },
     toggleTranskript() {
-      this.showTranskript = this.showTranskript 
-      ? !this.showTranskript 
-      : !this.showTranskript;
+      let videoTT = document.getElementById('videoplayer').textTracks;
+      if (this.showTranskript) {
+        for (let i = 0; i < videoTT.length; i++) {
+          videoTT[i].mode = "disabled";
+          }
+      } else {
+        for (let i = 0; i < videoTT.length; i++) {
+          videoTT[i].mode = "showing";
+          }
+      }
+      this.showTranskript = !this.showTranskript;
+    },
+    enableAllTextTracks() {
+      let videoTT = document.getElementById('videoplayer').textTracks;
+      for (let i = 0; i < videoTT.length; i++) {
+        if (videoTT[i].mode == "disabled") videoTT[i].mode = "showing";
+      }
     },
     updateCountdown() {
       if (!this.paused) {
@@ -253,9 +268,8 @@ export default {
     this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
     this.videoControlAddCommand();
-    let videoTT = document.getElementById('videoplayer').textTracks;
-    for (let i = 0; i < videoTT.length; i++) {
-      if (videoTT[i].mode == "disabled") videoTT[i].mode = "showing";
+    if (isModusFeatures('transcript')) {
+      this.enableAllTextTracks();
     }
   },
   watch: {
@@ -312,7 +326,7 @@ var annoLength = this.annotations.length;
         
         <video
           ref="video"
-          id="videoplayer"
+          :id="videoPlayerID"
           @canplay="updatePaused"
           @playing="updatePaused"
           @pause="updatePaused"
@@ -321,9 +335,9 @@ var annoLength = this.annotations.length;
           disablepictureinpicture
           controlslist="nodownload"
         >
-        <Video-InfoMarker
+        <Video-InfoMarker v-if="isModusFeatures('transcript')"
           :currentTime="currentTime"
-          :videoID="'videoplayer'"
+          :videoID="videoPlayerID"
           :paused="paused"
           :clickedTimeline="clickTimelineNotify"
           @ackclickTimeline="clickTimelineNotify = false"
@@ -331,7 +345,7 @@ var annoLength = this.annotations.length;
           @playrequest="play">
         </Video-InfoMarker>
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript') && showTranskript"
+          <Video-Transcript v-if="isModusFeatures('transcript')"
             :videoCtrlActive="showVideoControls">
           </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
@@ -381,7 +395,8 @@ var annoLength = this.annotations.length;
               />
             </div>
             <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
-            <button class="video-toggle-transkript"
+            <button v-if="isModusFeatures('transcript')" 
+              class="video-toggle-transkript"
               :class="{active: showTranskript}"
               @click="toggleTranskript" 
               title="Untertitel an/aus">
