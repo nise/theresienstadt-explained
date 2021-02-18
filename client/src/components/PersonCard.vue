@@ -8,11 +8,16 @@
   >
   
     <b-row>
-      <img
+      <img v-if="person.image==='JA'"
         style="height: 210px; width: 180px; overflow:hidden;"
         :id="'personcard' + person.id"
         :src="getImagePath(person)"
         onerror="this.src='/img/person_icon.png'"
+      />
+      <img v-if="person.image!=='JA'"
+        style="height: 210px; width: 180px; overflow:hidden;"
+        :id="'personcard' + person.id"
+        :src="'/img/person_icon.png'"
       />
 
       <b-col>
