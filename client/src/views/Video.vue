@@ -268,7 +268,7 @@ export default {
     this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
     this.videoControlAddCommand();
-    if (isModusFeatures('transcript')) {
+    if (this.isModusFeatures('transcript')) {
       this.enableAllTextTracks();
     }
   },

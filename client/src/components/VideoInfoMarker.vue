@@ -95,9 +95,10 @@ export default {
         videoPanel.appendChild(newtextbox);
 
       }
+      //TODO: redo first for loop
       ttrack.addEventListener("cuechange", function(){
         for (let i = 0; i < this.cues.length; i++){
-          document.getElementById(this.cues[i].id).style.display = "none";
+          document.getElementById(this.cues[i].id).style.display = "none";    // sets red info marker (see var newmark in setup())
         }
         for (let i = 0; i < this.activeCues.length; i++){
           document.getElementById(this.activeCues[i].id).style.display = "block";
@@ -110,17 +111,21 @@ export default {
     clickedTimeline: function(){
       if (this.clickedTimeline == true){
         this.$emit("ackclickTimeline");
-        let cuelist = document.getElementById("infomarkertrack").track.activeCues;
-        for (let i = 0; i < cuelist.length; i++){
-          document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+        let cuelist;
+        if (cuelist = document.getElementById("infomarkertrack").track.activeCues) {
+          for (let i = 0; i < cuelist.length; i++){
+            document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+          }
         }
       }
     },
     paused: function(){
       if (this.paused == false){
-        let cuelist = document.getElementById("infomarkertrack").track.activeCues;
-        for (let i = 0; i < cuelist.length; i++){
-          document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+        let cuelist;
+        if (cuelist = document.getElementById("infomarkertrack").track.activeCues) {
+          for (let i = 0; i < cuelist.length; i++){
+            document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+          }
         }
       }
     },
