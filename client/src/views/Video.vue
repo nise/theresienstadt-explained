@@ -47,7 +47,7 @@ import leafletMap from "../components/LeafletMap";
 //moment.locale('de');
 
 export default {
-  props: ['modus'],
+  props: ['modus', 'timejump'],
   components: {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
@@ -64,12 +64,16 @@ export default {
         'analysis': ['annotations']
       },
       videoElement: null,
-      paused: null,
+      videoPlayerID: 'videoplayer',
+      paused: true,
       currentTime: 0,
       formatedTime: "00:00",
       timer: null,
       clickTimelineNotify: false,
-      leafletmap: null
+      showTranskript: true,
+      timerCursor: null,
+      videoPanel: null,
+      showVideoControls: true,
     };
   },
   methods: {
@@ -92,6 +96,45 @@ export default {
           console.log(error);
         });
     },
+    afterVideoLoad() {
+      this.processURLProps();
+    },
+
+    // only processes URL prop 'timejump'
+    processURLProps() {
+      if (this.timejump) {
+        this.decodeTimejump(this.timejump);
+      }
+    },
+    decodeTimejump(propTimeJump) {
+      let testNonDigit = RegExp(/\D/g);
+      let testMinutesAndSeconds = RegExp(/(\d*:\d*)/g);
+
+      let mins;
+      let secs;
+      let desiredTime;
+
+      if (!testNonDigit.test(propTimeJump)) {
+        // desired time is in [s]
+        desiredTime = parseInt(propTimeJump);
+        this.gotoTime(desiredTime);
+        return;
+      }
+      if (testMinutesAndSeconds.test(propTimeJump)) {
+        // desired time is in [m:s]
+        mins = propTimeJump.match(/(\d+):/g);
+        secs = propTimeJump.match(/:(\d+)/g);
+        if (mins) {
+          mins = mins[0].replace(":", "");
+        } else mins = 0;
+        if (secs) {
+          secs = secs[0].replace(":", "");
+        } else secs = 0;
+
+        desiredTime = parseInt(mins)*60 + parseInt(secs);
+        this.gotoTime(desiredTime);
+      }
+    },
     isModusFeatures(feature){
       return this.featureSets[this.modus].indexOf(feature) !== -1;
     },
@@ -104,13 +147,21 @@ export default {
     },
     play() {
       this.timer = setInterval(this.updateAnnotaions, 500);
+      this.paused = false;
+      this.updateCountdown();
       this.videoElement.play();
       this.leafletmap.invalidateSize();
 
     },
+    /**
+     * "this.paused" is updated by event handler of <video> calling "updatePaused" when <video> enters paused state
+     * however this change on "paused" comes in too late when stopCountdown() is called, so its already changed here 
+     */
     pause() {
       this.videoElement.pause();
+      this.paused = true;          
       clearInterval(this.timer);
+      this.stopCountdown();
     },
     forward() {},
     backward() {},
@@ -127,6 +178,7 @@ export default {
       return (time / this.videoElement.duration) * 100;
     },
     getProgressWidth() {
+
       if (!this.videoElement) {
         return 0;
       }
@@ -146,7 +198,7 @@ export default {
     },
     gotoTime(time) {
       if (!this.videoElement) {
-        return 0;
+        return 0;        
       }
       this.videoElement.currentTime = time;
       this.currentTime = time;
@@ -157,15 +209,75 @@ export default {
     toggleForm() {
       this.showAnnotationForm = true;
     },
+    videoControlAddCommand() {
+      let _this = this;
+      window.addEventListener("keypress", function(){_this.togglePlayPause(event)});
+    },
+    togglePlayPause(event) {
+      if (event.code == "Space") {
+        if (this.playing) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+    },
+    toggleTranskript() {
+      let videoTT = document.getElementById('videoplayer').textTracks;
+      if (this.showTranskript) {
+        for (let i = 0; i < videoTT.length; i++) {
+          videoTT[i].mode = "disabled";
+          }
+      } else {
+        for (let i = 0; i < videoTT.length; i++) {
+          videoTT[i].mode = "showing";
+          }
+      }
+      this.showTranskript = !this.showTranskript;
+    },
+    enableAllTextTracks() {
+      let videoTT = document.getElementById('videoplayer').textTracks;
+      for (let i = 0; i < videoTT.length; i++) {
+        if (videoTT[i].mode == "disabled") videoTT[i].mode = "showing";
+      }
+    },
+    updateCountdown() {
+      if (!this.paused) {
+        clearTimeout(this.timerCursor);
+        this.videoPanel.style.cursor = 'auto';
+        let _this = this;
+        this.showVideoControls = true;
+        this.timerCursor = setTimeout(function(){
+          _this.videoPanel.style.cursor = 'none';
+          _this.showVideoControls = false;
+        }, 5000);
+      }
+    },
+    stopCountdown() {
+      this.videoPanel.style.cursor = 'auto';
+      clearTimeout(this.timerCursor);
+      if (!this.paused) {
+        this.showVideoControls = false;
+      }
+    }
   },
   computed: {
+    visibleVidCtrl() {
+      if (this.showVideoControls) return "display: block";
+        else return 'display: none';
+    },
     playing() {
       return !this.paused;
     },
   },
   // eslint-disable-next-line object-shorthand
-  mounted: function () { 
+  mounted: function () {
+    this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
+    this.videoControlAddCommand();
+    if (this.isModusFeatures('transcript')) {
+      this.enableAllTextTracks();
+    }
   },
   watch: {
     // eslint-disable-next-line object-shorthand
@@ -213,42 +325,51 @@ var annoLength = this.annotations.length;
 </script>
 
 <template>
-  <div id="video">
+  <div id="video"
+    @mousemove="updateCountdown('video-panel')"
+    @mouseleave="stopCountdown()">
     <div class="row">
       <div class="col-8 video-panel">
-        <Video-InfoMarker
+        
+        <video
+          ref="video"
+          :id="videoPlayerID"
+          @canplay="updatePaused"
+          @playing="updatePaused"
+          @pause="updatePaused"
+          @canplaythrough.once="afterVideoLoad()"
+          class="col-12"
+          disablepictureinpicture
+          controlslist="nodownload"
+        >
+        <Video-InfoMarker v-if="isModusFeatures('transcript')"
           :currentTime="currentTime"
-          :videoID="videoplayer"
+          :videoID="videoPlayerID"
           :paused="paused"
           :clickedTimeline="clickTimelineNotify"
           @ackclickTimeline="clickTimelineNotify = false"
           @pauserequest="pause"
           @playrequest="play">
         </Video-InfoMarker>
-        <video
-          ref="video"
-          id="videoplayer"
-          @canplay="updatePaused"
-          @playing="updatePaused"
-          @pause="updatePaused"
-          class="col-12"
-          disablepictureinpicture
-          controlslist="nodownload"
-        >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript>
+          <Video-Transcript v-if="isModusFeatures('transcript')"
+            :videoCtrlActive="showVideoControls">
+          </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
-        <div class="video-controls col-12">
+        <div class="video-controls col-12"
+          :style="visibleVidCtrl">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
               <portal-target name="timeline-annotation-marker"> </portal-target>
             </div>
+            <portal-target name="timeline-scene-marker"> </portal-target>
 
-            <div @click="clickTimeline" class="timeline-main"></div>
+            <div @click="clickTimeline" class="timeline-main">
+            </div>
             <div class="timeline-bottom"></div>
             <div
               :style="'width:' + getProgressWidth() + '%;'"
@@ -281,6 +402,15 @@ var annoLength = this.annotations.length;
               />
             </div>
             <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
+            <button v-if="isModusFeatures('transcript')" 
+              class="video-toggle-transkript"
+              :class="{active: showTranskript}"
+              @click="toggleTranskript" 
+              title="Untertitel an/aus">
+              <img 
+                class="subtitleIcon"
+                src="../assets/icons/subtitleIcon.svg"/>
+            </button>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
@@ -288,7 +418,8 @@ var annoLength = this.annotations.length;
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
         <Video-TOC 
-          v-if="isModusFeatures('toc')"
+          v-if="isModusFeatures('toc') && videoElement"
+          :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
         <Video-Annotations
@@ -367,59 +498,6 @@ h4 {
   padding-top: 6px;
 }
 
-.video-bar.topics .row {
-  content-align: center;
-}
-.video-bar.topics button {
-  padding: 1px 10px;
-  margin: 4px 10px;
-  border-radius: 10px;
-}
-
-.scene-list {
-  padding-left: 10px;
-  text-align: left;
-}
-.scene-list li {
-  list-style: none;
-  display: block;
-  width: auto;
-}
-.scene-list li a.scene {
-  display: inline-block;
-  padding: 1px 8px;
-  white-space: nowrap;
-}
-
-a.kultur {
-  color: #2ca500;
-}
-
-a.kultur:hover {
-  background-color: #2ca500;
-  border-radius: 10px;
-  color: #fff;
-}
-
-a.alltag {
-  color: #ffd800;
-}
-
-a.alltag:hover {
-  background-color: #ffd800;
-  border-radius: 10px;
-  color: #111;
-}
-
-a.arbeit {
-  color: #0081c6;
-}
-
-a.arbeit:hover {
-  background-color: #0081c6;
-  border-radius: 10px;
-  color: #fff;
-}
 
 .left-bar {
   max-height: 100vh;
@@ -438,23 +516,29 @@ video {
 }
 
 .video-panel .video-controls {
-  display: none;
+  display: block;
   height: 70px;
   opacity: 0.5;
+  bottom: 12px;
+  z-index: 90;
+  position: absolute;
   background-color: #3b3b3bec;
+  position: absolute;
+  bottom: 12px;
+  z-index: 90;
 }
 
 .video-panel video {
   z-index: 1;
 }
-
+/*
 .video-panel:hover .video-controls {
   display: block;
   position: absolute;
   bottom: 12px;
   z-index: 90;
 }
-
+*/
 .control-bar {
   padding-top: 20px;
   color: #fff;
@@ -509,6 +593,22 @@ video {
   top: 30px;
   left: 10px;
   font-size: 0.9em;
+}
+.video-toggle-transkript {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  background-color: gray; 
+  border-radius: 20%;
+}
+
+.video-toggle-transkript.active {
+  background-color: white;
+}
+
+.subtitleIcon {
+  width: 25px;
+  height: 25px;
 }
 
 /** Annotations */
