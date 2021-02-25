@@ -26,7 +26,7 @@ mounted: function() {
     //y: this.lon2tile(14.16,10)
 
     }).addTo( this.leafletmap );
-    this.leafletmap.setView([50.513, 14.16],13);
+    this.leafletmap.setView([50.510, 14.15],15);
     this.leafletmap.eachLayer(function(layer){
     console.log(layer);
 });
@@ -35,5 +35,9 @@ mounted: function() {
 </script>
 
 <style>
-
+#leaflet-map {
+  width: 98%;
+  height: 256px;
+  bottom: 0px;
+}
 </style>

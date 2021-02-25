@@ -435,7 +435,7 @@ var annoLength = this.annotations.length;
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>
-        <div class="row video-bar places ml-1 mt-2">
+        <div class="row places ml-1 mt-2">
           <h4>Orte</h4>
           <LeafletMap>
 
@@ -448,12 +448,6 @@ var annoLength = this.annotations.length;
 </template>
 
 <style>
-#leaflet-map {
-  width: 98%;
-  height: 256px;
-  background-color: gray;
-  color:gray;
-}
 
 .bigger {
   font-size: 1.4em;
@@ -498,8 +492,15 @@ h4 {
   padding-top: 6px;
 }
 
+.places {
+  display: inline-block;
+  background-color: #3b3b3bec;
+  width: 96%;
+}
+
 
 .left-bar {
+  position: relative;
   max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
