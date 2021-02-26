@@ -150,8 +150,6 @@ export default {
       this.paused = false;
       this.updateCountdown();
       this.videoElement.play();
-      this.leafletmap.invalidateSize();
-
     },
     /**
      * "this.paused" is updated by event handler of <video> calling "updatePaused" when <video> enters paused state

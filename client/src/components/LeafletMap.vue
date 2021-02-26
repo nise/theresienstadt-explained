@@ -1,37 +1,82 @@
 <template>
-  <div class="mx-1" id="leaflet-map">
-  </div>
+  <div class="mx-1" id="leaflet-map"></div>
 </template>
 
 <script>
-import leafleft from "leaflet";
+import leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 export default {
-name: 'LeafletMap',
+  name: "LeafletMap",
+  methods: {
+    data() {
+      return {
+        leafletmap: null,
+      };
+    },
+    setView(latitude, longitude, zoomLevel = 15) {
+      this.leafletmap.setView([latitude, longitude], zoomLevel);
+    },
+    createMarker(latitude, longitude, colour, classIdentifier) {
+      // Reference: https://stackoverflow.com/questions/23567203/leaflet-changing-marker-color
+      // ${...} not part of jQuery but ES6, see https://exploringjs.com/es6/ch_template-literals.html
+      let custommarker = `
+        background-color: ${colour};  
+        width: 1.5rem;
+        height: 1.5rem;
+        display: block;
+        left: -1.5rem;
+        top: -1.5rem;
+        position: relative;
+        border-radius: 3rem 3rem 0;
+        transform: rotate(45deg);
+        border: 1px solid #FFFFFF`;
 
-mounted: function() {
-      this.leafletmap = leafleft.map('leaflet-map');
-    /* this.leafletmap = leafleft.map('leaflet-map', {
-      center: [50.513, 14.16],
-      zoom: 13,
-      preferCanvas: true,
-      dragging: false
-    }); */
-    leafleft.tileLayer( 'https://api.mapbox.com/styles/v1/followerofnux/ckkfkh0wz038c17pc28efm6l7/tiles/256/{z}/{x}/{y}@2x?access_token=MAPBOX_TOKEN_REMOVED', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: ['a','b','c','d'],
-    //z: 10,
-    //x: this.lat2tile(50.513, 10),
-    //y: this.lon2tile(14.16,10)
+      let cIcon = leaflet.divIcon({
+        className: classIdentifier,
+        iconAnchor: [0, 24],
+        labelAnchor: [-6, 0],
+        popupAnchor: [0, -36],
+        html: `<span style="${custommarker}" />`,
+      });
+      let marker = leaflet
+        .marker([latitude, longitude], { icon: cIcon })
+        .addTo(this.leafletmap);
 
-    }).addTo( this.leafletmap );
-    this.leafletmap.setView([50.510, 14.15],15);
-    this.leafletmap.eachLayer(function(layer){
-    console.log(layer);
-});
-}
-}
+      return marker;
+    },
+    changeMarkerColour(markerObj, colour) {
+      markerObj._icon.firstChild.style.backgroundColor = colour;
+    },
+  },
+
+  mounted: function () {
+    this.leafletmap = leaflet.map("leaflet-map");
+    leaflet
+      .tileLayer(
+        "https://api.mapbox.com/styles/v1/followerofnux/ckkfkh0wz038c17pc28efm6l7/tiles/256/{z}/{x}/{y}@2x?access_token=MAPBOX_TOKEN_REMOVED",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: ["a", "b", "c", "d"],
+        }
+      )
+      .addTo(this.leafletmap);
+
+    this.leafletmap.setView([50.51, 14.15], 15);
+
+    this.leafletmap.removeControl(this.leafletmap.zoomControl);
+    this.leafletmap.boxZoom.disable();
+    this.leafletmap.doubleClickZoom.disable();
+    this.leafletmap.dragging.disable();
+    this.leafletmap.keyboard.disable();
+    this.leafletmap.scrollWheelZoom.disable();
+    this.leafletmap.touchZoom.disable();
+
+    let test = this.createMarker(50.51, 14.15, "blue", "mark1");
+    this.changeMarkerColour(test, "red");
+  },
+};
 </script>
 
 <style>
