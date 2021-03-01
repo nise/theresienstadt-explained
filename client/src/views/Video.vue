@@ -30,6 +30,9 @@ import moment from "moment";
 import VueMoment from "vue-moment";
 Vue.use(VueMoment, { moment });
 
+import leafleft from "leaflet";
+import "leaflet/dist/leaflet.css";
+
 import axios from "axios";
 import VueAxios from "vue-axios";
 Vue.use(VueAxios, axios);
@@ -38,6 +41,7 @@ import videoTranskript from "../components/VideoTranskript";
 import videoTOC from "../components/VideoTOC";
 import videoAnnotations from "../components/VideoAnnotations";
 import videoInfoMarker from "../components/VideoInfoMarker";
+import leafletMap from "../components/LeafletMap";
 
 // Choose Locale
 //moment.locale('de');
@@ -49,6 +53,7 @@ export default {
     "Video-TOC": videoTOC,
     "Video-Annotations": videoAnnotations,
     "Video-InfoMarker": videoInfoMarker,
+    "LeafletMap": leafletMap,
   },
   data() {
     return {
@@ -428,8 +433,12 @@ var annoLength = this.annotations.length;
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>Tonspur</h4>
         </div>
-        <div hidden class="row video-bar places ml-1 mt-2">
+        <div class="row places ml-1 mt-2">
           <h4>Orte</h4>
+          <LeafletMap>
+
+          </LeafletMap>
+
         </div>
       </div>
     </div>
@@ -437,6 +446,7 @@ var annoLength = this.annotations.length;
 </template>
 
 <style>
+
 .bigger {
   font-size: 1.4em;
 }
@@ -480,8 +490,15 @@ h4 {
   padding-top: 6px;
 }
 
+.places {
+  display: inline-block;
+  background-color: #3b3b3bec;
+  width: 96%;
+}
+
 
 .left-bar {
+  position: relative;
   max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
