@@ -41,7 +41,7 @@ import videoTranskript from "../components/VideoTranskript";
 import videoTOC from "../components/VideoTOC";
 import videoAnnotations from "../components/VideoAnnotations";
 import videoInfoMarker from "../components/VideoInfoMarker";
-import leafletMap from "../components/LeafletMap";
+import videoMapMarker from "../components/VideoMapMarker";
 
 // Choose Locale
 //moment.locale('de');
@@ -53,7 +53,7 @@ export default {
     "Video-TOC": videoTOC,
     "Video-Annotations": videoAnnotations,
     "Video-InfoMarker": videoInfoMarker,
-    "LeafletMap": leafletMap,
+    "Video-MapMarker": videoMapMarker,
   },
   data() {
     return {
@@ -106,6 +106,7 @@ export default {
         this.decodeTimejump(this.timejump);
       }
     },
+    /** decodes URL prop to find out which videotime to jump to */
     decodeTimejump(propTimeJump) {
       let testNonDigit = RegExp(/\D/g);
       let testMinutesAndSeconds = RegExp(/(\d*:\d*)/g);
@@ -257,6 +258,9 @@ export default {
       if (!this.paused) {
         this.showVideoControls = false;
       }
+    },
+    test(event){
+      console.log(event);
     }
   },
   computed: {
@@ -328,7 +332,6 @@ var annoLength = this.annotations.length;
     @mouseleave="stopCountdown()">
     <div class="row">
       <div class="col-8 video-panel">
-        
         <video
           ref="video"
           :id="videoPlayerID"
@@ -340,6 +343,9 @@ var annoLength = this.annotations.length;
           disablepictureinpicture
           controlslist="nodownload"
         >
+        <Video-MapMarker>
+        </Video-MapMarker> 
+
         <Video-InfoMarker v-if="isModusFeatures('transcript')"
           :currentTime="currentTime"
           :videoID="videoPlayerID"
@@ -435,9 +441,7 @@ var annoLength = this.annotations.length;
         </div>
         <div class="row places ml-1 mt-2">
           <h4>Orte</h4>
-          <LeafletMap>
-
-          </LeafletMap>
+          <portal-target name="leafletmap"> </portal-target>
 
         </div>
       </div>
