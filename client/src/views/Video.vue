@@ -30,8 +30,6 @@ import moment from "moment";
 import VueMoment from "vue-moment";
 Vue.use(VueMoment, { moment });
 
-import leafleft from "leaflet";
-import "leaflet/dist/leaflet.css";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
@@ -42,6 +40,7 @@ import videoTOC from "../components/VideoTOC";
 import videoAnnotations from "../components/VideoAnnotations";
 import videoInfoMarker from "../components/VideoInfoMarker";
 import videoMapMarker from "../components/VideoMapMarker";
+import leafletmap from "../components/LeafletMap";
 
 // Choose Locale
 //moment.locale('de');
@@ -54,6 +53,8 @@ export default {
     "Video-Annotations": videoAnnotations,
     "Video-InfoMarker": videoInfoMarker,
     "Video-MapMarker": videoMapMarker,
+    "Leaflet-Map": leafletmap,
+
   },
   data() {
     return {
@@ -261,6 +262,11 @@ export default {
     },
     test(event){
       console.log(event);
+    },
+    acquireMM(event){
+      console.log(event);
+      let test = this.$refs["leafletref"].createMarker(event.lat, event.long, "black");
+      console.log(test);
     }
   },
   computed: {
@@ -343,7 +349,8 @@ var annoLength = this.annotations.length;
           disablepictureinpicture
           controlslist="nodownload"
         >
-        <Video-MapMarker>
+        <Video-MapMarker
+          @requestMM="acquireMM">
         </Video-MapMarker> 
 
         <Video-InfoMarker v-if="isModusFeatures('transcript')"
@@ -441,8 +448,8 @@ var annoLength = this.annotations.length;
         </div>
         <div class="row places ml-1 mt-2">
           <h4>Orte</h4>
-          <portal-target name="leafletmap"> </portal-target>
-
+          <Leaflet-Map ref="leafletref">
+          </Leaflet-Map>
         </div>
       </div>
     </div>
