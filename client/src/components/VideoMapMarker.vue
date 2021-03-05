@@ -1,32 +1,33 @@
 <template>
-<div>
-    <track
-      src="../assets/videos/mapMarker/mapMarker.vtt"
-      id="mapmarkertrack"
-      @load="setup($event)"
-      @error="setup($event)"
-    />
-    <portal target="leafletmap">
-      <LeafletMap> </LeafletMap>
-    </portal>
-</div>
+  <track
+    src="../assets/videos/mapMarker/mapMarker.vtt"
+    id="mapmarkertrack"
+    @load="setup($event)"
+    @error="setup($event)"
+  />
 </template>
 
 <script>
 
-import leafletmap from "./LeafletMap";
-
 export default {
   name: "VideoMapMarker",
-  components: {
-    LeafletMap: leafletmap,
-  },
+
 
   methods: {
     setup(event) {
-      //var ttrack = event.target.track;
-      //ttrack.mode = "hidden";
-      console.log(event.target.track);
+      var ttrack = event.target.track;
+      ttrack.mode = "hidden";
+      let test = event.target.track.cues[0].text;
+      let t1 = JSON.parse(test);
+      console.log(t1.lat);
+
+      for (let i = 0; i < ttrack.cues.length; i++){
+        this.$emit("requestMM", JSON.parse(ttrack.cues[i].text));
+      }
+
+      ttrack.addEventListener("cuechange", function(){
+        
+      })
     },
   },
   mounted: function () {},
