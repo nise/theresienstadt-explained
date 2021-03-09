@@ -208,15 +208,7 @@ var annoLength = this.annotations.length;
   <div id="video">
     <div class="row">
       <div class="col-8 video-panel">
-        <Video-InfoMarker
-          :currentTime="currentTime"
-          :videoID="videoplayer"
-          :paused="paused"
-          :clickedTimeline="clickTimelineNotify"
-          @ackclickTimeline="clickTimelineNotify = false"
-          @pauserequest="pause"
-          @playrequest="play">
-        </Video-InfoMarker>
+        
         <video
           ref="video"
           id="videoplayer"
@@ -228,7 +220,16 @@ var annoLength = this.annotations.length;
           controlslist="nodownload"
         >
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript>
+          <Video-InfoMarker
+          :currentTime="currentTime"
+          :videoID="'videoplayer'"
+          :paused="paused"
+          :clickedTimeline="clickTimelineNotify"
+          @ackclickTimeline="clickTimelineNotify = false"
+          @pauserequest="pause"
+          @playrequest="play">
+        </Video-InfoMarker>
+          <!-- <Video-Transcript v-if="isModusFeatures('transcript')"></Video-Transcript> -->
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
