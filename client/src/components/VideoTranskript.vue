@@ -1,6 +1,5 @@
 <template>
-  <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default id ="Vidtranskript" 
-    @load="initFirstCue"/>
+  <track src="../assets/videos/transkript/theresienstadtmp4.de.vtt" default id ="Vidtranskript"/>
 </template>
 
 <style>
