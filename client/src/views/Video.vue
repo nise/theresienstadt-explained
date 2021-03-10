@@ -30,9 +30,6 @@ import moment from "moment";
 import VueMoment from "vue-moment";
 Vue.use(VueMoment, { moment });
 
-import leafleft from "leaflet";
-import "leaflet/dist/leaflet.css";
-
 import axios from "axios";
 import VueAxios from "vue-axios";
 Vue.use(VueAxios, axios);
@@ -41,30 +38,32 @@ import videoTranskript from "../components/VideoTranskript";
 import videoTOC from "../components/VideoTOC";
 import videoAnnotations from "../components/VideoAnnotations";
 import videoInfoMarker from "../components/VideoInfoMarker";
-import leafletMap from "../components/LeafletMap";
+import videoMapMarker from "../components/VideoMapMarker";
+import leafletmap from "../components/LeafletMap";
 
 // Choose Locale
 //moment.locale('de');
 
 export default {
-  props: ['modus', 'timejump'],
+  props: ["modus", "timejump"],
   components: {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
     "Video-Annotations": videoAnnotations,
     "Video-InfoMarker": videoInfoMarker,
-    "LeafletMap": leafletMap,
+    "Video-MapMarker": videoMapMarker,
+    "Leaflet-Map": leafletmap,
   },
   data() {
     return {
       session: 0,
-      featureSets:{
-        'basic': [],
-        'player': ['toc', 'transcript'],
-        'analysis': ['annotations']
+      featureSets: {
+        basic: [],
+        player: ["toc", "transcript"],
+        analysis: ["annotations"],
       },
       videoElement: null,
-      videoPlayerID: 'videoplayer',
+      videoPlayerID: "videoplayer",
       paused: true,
       currentTime: 0,
       formatedTime: "00:00",
@@ -74,9 +73,14 @@ export default {
       timerCursor: null,
       videoPanel: null,
       showVideoControls: true,
+      /**VideoMapMarker and Leafletmap */
+      mapMarkerStore: Array,
     };
   },
   methods: {
+    init() {
+      this.mapMarkerStore = new Array();
+    },
     log(data) {
       data.session = this.session;
       axios
@@ -106,6 +110,7 @@ export default {
         this.decodeTimejump(this.timejump);
       }
     },
+    /** decodes URL prop to find out which videotime to jump to */
     decodeTimejump(propTimeJump) {
       let testNonDigit = RegExp(/\D/g);
       let testMinutesAndSeconds = RegExp(/(\d*:\d*)/g);
@@ -131,11 +136,11 @@ export default {
           secs = secs[0].replace(":", "");
         } else secs = 0;
 
-        desiredTime = parseInt(mins)*60 + parseInt(secs);
+        desiredTime = parseInt(mins) * 60 + parseInt(secs);
         this.gotoTime(desiredTime);
       }
     },
-    isModusFeatures(feature){
+    isModusFeatures(feature) {
       return this.featureSets[this.modus].indexOf(feature) !== -1;
     },
     search() {
@@ -153,11 +158,11 @@ export default {
     },
     /**
      * "this.paused" is updated by event handler of <video> calling "updatePaused" when <video> enters paused state
-     * however this change on "paused" comes in too late when stopCountdown() is called, so its already changed here 
+     * however this change on "paused" comes in too late when stopCountdown() is called, so its already changed here
      */
     pause() {
       this.videoElement.pause();
-      this.paused = true;          
+      this.paused = true;
       clearInterval(this.timer);
       this.stopCountdown();
     },
@@ -176,7 +181,6 @@ export default {
       return (time / this.videoElement.duration) * 100;
     },
     getProgressWidth() {
-
       if (!this.videoElement) {
         return 0;
       }
@@ -196,7 +200,7 @@ export default {
     },
     gotoTime(time) {
       if (!this.videoElement) {
-        return 0;        
+        return 0;
       }
       this.videoElement.currentTime = time;
       this.currentTime = time;
@@ -209,7 +213,9 @@ export default {
     },
     videoControlAddCommand() {
       let _this = this;
-      window.addEventListener("keypress", function(){_this.togglePlayPause(event)});
+      window.addEventListener("keypress", function () {
+        _this.togglePlayPause(event);
+      });
     },
     togglePlayPause(event) {
       if (event.code == "Space") {
@@ -221,20 +227,20 @@ export default {
       }
     },
     toggleTranskript() {
-      let videoTT = document.getElementById('videoplayer').textTracks;
+      let videoTT = document.getElementById("videoplayer").textTracks;
       if (this.showTranskript) {
         for (let i = 0; i < videoTT.length; i++) {
           videoTT[i].mode = "disabled";
-          }
+        }
       } else {
         for (let i = 0; i < videoTT.length; i++) {
           videoTT[i].mode = "showing";
-          }
+        }
       }
       this.showTranskript = !this.showTranskript;
     },
     enableAllTextTracks() {
-      let videoTT = document.getElementById('videoplayer').textTracks;
+      let videoTT = document.getElementById("videoplayer").textTracks;
       for (let i = 0; i < videoTT.length; i++) {
         if (videoTT[i].mode == "disabled") videoTT[i].mode = "showing";
       }
@@ -242,27 +248,62 @@ export default {
     updateCountdown() {
       if (!this.paused) {
         clearTimeout(this.timerCursor);
-        this.videoPanel.style.cursor = 'auto';
+        this.videoPanel.style.cursor = "auto";
         let _this = this;
         this.showVideoControls = true;
-        this.timerCursor = setTimeout(function(){
-          _this.videoPanel.style.cursor = 'none';
+        this.timerCursor = setTimeout(function () {
+          _this.videoPanel.style.cursor = "none";
           _this.showVideoControls = false;
         }, 5000);
       }
     },
     stopCountdown() {
-      this.videoPanel.style.cursor = 'auto';
+      this.videoPanel.style.cursor = "auto";
       clearTimeout(this.timerCursor);
       if (!this.paused) {
         this.showVideoControls = false;
       }
-    }
+    },
+    test(event) {
+      console.log(event);
+    },
+    /** Creates and returns a marker on the leafletmap
+     *  Caller: <Video-MapMarker>
+     *  Target: <Leaflet-Map>
+     */
+    acquireMM(event) {
+      this.mapMarkerStore.push(
+        this.$refs["leafletref"].createMarker(
+          event.lat,
+          event.long,
+          "black",
+          event.id
+        )
+      );
+    },
+    /** Changes colour of a marker on the leafletmap
+     *  Caller: <Video-MapMarker>
+     *  Target: <Leaflet-Map>
+     */
+    changeMMColour(event) {
+      if (event.enter != -1) {
+        this.$refs["leafletref"].changeMarkerColour(
+          this.mapMarkerStore[event.enter.id-1],
+          "white"
+        );
+      }
+      if (event.exit != -1) {
+        this.$refs["leafletref"].changeMarkerColour(
+          this.mapMarkerStore[event.exit.id-1],
+          "black"
+        );
+      }
+    },
   },
   computed: {
     visibleVidCtrl() {
       if (this.showVideoControls) return "display: block";
-        else return 'display: none';
+      else return "display: none";
     },
     playing() {
       return !this.paused;
@@ -273,9 +314,10 @@ export default {
     this.videoPanel = document.getElementsByClassName("video-panel")[0];
     this.session = Math.ceil(Math.random() * 100000);
     this.videoControlAddCommand();
-    if (this.isModusFeatures('transcript')) {
+    if (this.isModusFeatures("transcript")) {
       this.enableAllTextTracks();
     }
+    this.init();
   },
   watch: {
     // eslint-disable-next-line object-shorthand
@@ -285,8 +327,12 @@ export default {
         playback: c,
         utc: new Date().getTime(),
       });
-      if (this.isModusFeatures('annotations')){
-        for (var i = 0; i < this.$refs.annotationscomp.annotations.length; i++) {
+      if (this.isModusFeatures("annotations")) {
+        for (
+          var i = 0;
+          i < this.$refs.annotationscomp.annotations.length;
+          i++
+        ) {
           if (
             c >= this.$refs.annotationscomp.annotations[i].start &&
             c < this.$refs.annotationscomp.annotations[i].end
@@ -323,12 +369,13 @@ var annoLength = this.annotations.length;
 </script>
 
 <template>
-  <div id="video"
+  <div
+    id="video"
     @mousemove="updateCountdown('video-panel')"
-    @mouseleave="stopCountdown()">
+    @mouseleave="stopCountdown()"
+  >
     <div class="row">
       <div class="col-8 video-panel">
-        
         <video
           ref="video"
           :id="videoPlayerID"
@@ -340,25 +387,34 @@ var annoLength = this.annotations.length;
           disablepictureinpicture
           controlslist="nodownload"
         >
-        <Video-InfoMarker v-if="isModusFeatures('transcript')"
-          :currentTime="currentTime"
-          :videoID="videoPlayerID"
-          :paused="paused"
-          :clickedTimeline="clickTimelineNotify"
-          @ackclickTimeline="clickTimelineNotify = false"
-          @pauserequest="pause"
-          @playrequest="play">
-        </Video-InfoMarker>
+          <Video-MapMarker
+            @requestMM="acquireMM"
+            @requestMMColourChange="changeMMColour"
+          >
+          </Video-MapMarker>
+
+          <Video-InfoMarker
+            v-if="isModusFeatures('transcript')"
+            :currentTime="currentTime"
+            :videoID="videoPlayerID"
+            :paused="paused"
+            :clickedTimeline="clickTimelineNotify"
+            @ackclickTimeline="clickTimelineNotify = false"
+            @pauserequest="pause"
+            @playrequest="play"
+          >
+          </Video-InfoMarker>
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
-          <Video-Transcript v-if="isModusFeatures('transcript')"
-            :videoCtrlActive="showVideoControls">
+          <Video-Transcript
+            v-if="isModusFeatures('transcript')"
+            :videoCtrlActive="showVideoControls"
+          >
           </Video-Transcript>
           <!--<source src="../assets/videos/theresienstadt.webm" type='video/webm; codecs="vp8, vorbis"' />-->
           Video tag not supported. Download the video
           <a href="../assets/videos/theresienstadt.mp4">here</a>.
         </video>
-        <div class="video-controls col-12"
-          :style="visibleVidCtrl">
+        <div class="video-controls col-12" :style="visibleVidCtrl">
           <div class="timelines">
             <!--<div class="vi2-video-seeklink vi2-btn"></div>-->
             <div class="timeline-top">
@@ -366,8 +422,7 @@ var annoLength = this.annotations.length;
             </div>
             <portal-target name="timeline-scene-marker"> </portal-target>
 
-            <div @click="clickTimeline" class="timeline-main">
-            </div>
+            <div @click="clickTimeline" class="timeline-main"></div>
             <div class="timeline-bottom"></div>
             <div
               :style="'width:' + getProgressWidth() + '%;'"
@@ -400,14 +455,17 @@ var annoLength = this.annotations.length;
               />
             </div>
             <div class="video-timer">{{ currentTime | moment("mm:ss") }}</div>
-            <button v-if="isModusFeatures('transcript')" 
+            <button
+              v-if="isModusFeatures('transcript')"
               class="video-toggle-transkript"
-              :class="{active: showTranskript}"
-              @click="toggleTranskript" 
-              title="Untertitel an/aus">
-              <img 
+              :class="{ active: showTranskript }"
+              @click="toggleTranskript"
+              title="Untertitel an/aus"
+            >
+              <img
                 class="subtitleIcon"
-                src="../assets/icons/subtitleIcon.svg"/>
+                src="../assets/icons/subtitleIcon.svg"
+              />
             </button>
             <div class="vi2-volume-controls right"></div>
           </div>
@@ -415,7 +473,7 @@ var annoLength = this.annotations.length;
       </div>
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
-        <Video-TOC 
+        <Video-TOC
           v-if="isModusFeatures('toc') && videoElement"
           :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
@@ -435,10 +493,7 @@ var annoLength = this.annotations.length;
         </div>
         <div class="row places ml-1 mt-2">
           <h4>Orte</h4>
-          <LeafletMap>
-
-          </LeafletMap>
-
+          <Leaflet-Map ref="leafletref"> </Leaflet-Map>
         </div>
       </div>
     </div>
@@ -446,7 +501,6 @@ var annoLength = this.annotations.length;
 </template>
 
 <style>
-
 .bigger {
   font-size: 1.4em;
 }
@@ -495,7 +549,6 @@ h4 {
   background-color: #3b3b3bec;
   width: 96%;
 }
-
 
 .left-bar {
   position: relative;
@@ -597,7 +650,7 @@ video {
   position: absolute;
   top: 25px;
   right: 5px;
-  background-color: gray; 
+  background-color: gray;
   border-radius: 20%;
 }
 

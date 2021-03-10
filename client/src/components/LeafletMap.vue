@@ -17,7 +17,7 @@ export default {
     setView(latitude, longitude, zoomLevel = 15) {
       this.leafletmap.setView([latitude, longitude], zoomLevel);
     },
-    createMarker(latitude, longitude, colour, classIdentifier) {
+    createMarker(latitude, longitude, colour, Identifier) {
       // Reference: https://stackoverflow.com/questions/23567203/leaflet-changing-marker-color
       // ${...} not part of jQuery but ES6, see https://exploringjs.com/es6/ch_template-literals.html
       let custommarker = `
@@ -33,7 +33,7 @@ export default {
         border: 1px solid #FFFFFF`;
 
       let cIcon = leaflet.divIcon({
-        className: classIdentifier,
+        className: "customMarker",
         iconAnchor: [0, 24],
         labelAnchor: [-6, 0],
         popupAnchor: [0, -36],
@@ -42,6 +42,8 @@ export default {
       let marker = leaflet
         .marker([latitude, longitude], { icon: cIcon })
         .addTo(this.leafletmap);
+
+      marker._icon.id = Identifier;
 
       return marker;
     },
@@ -73,8 +75,6 @@ export default {
     this.leafletmap.scrollWheelZoom.disable();
     this.leafletmap.touchZoom.disable();
 
-    let test = this.createMarker(50.51, 14.15, "blue", "mark1");
-    this.changeMarkerColour(test, "red");
   },
 };
 </script>
