@@ -213,6 +213,7 @@ export default {
           this.play();
         }
       }
+    },
     toggleTranskript() {
       this.showTranskript = this.showTranskript 
       ? !this.showTranskript 
