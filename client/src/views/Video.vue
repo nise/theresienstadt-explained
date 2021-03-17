@@ -221,8 +221,10 @@ export default {
       if (event.code == "Space") {
         if (this.playing) {
           this.pause();
+          this.showVideoControls = true;
         } else {
           this.play();
+          this.updateCountdown();
         }
       }
     },
