@@ -286,17 +286,21 @@ export default {
      *  Target: <Leaflet-Map>
      */
     changeMMColour(event) {
-      if (event.enter != -1) {
-        this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[event.enter.id-1],
-          "white"
-        );
+      if (event.enter.length > 0) {
+        for (let i = 0; i < event.enter.length; i++) {
+          this.$refs["leafletref"].changeMarkerColour(
+            this.mapMarkerStore[event.enter[i].id - 1],
+            "white"
+          );
+        }
       }
-      if (event.exit != -1) {
-        this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[event.exit.id-1],
-          "black"
-        );
+      if (event.exit.length > 0) {
+        for (let i = 0; i < event.exit.length; i++) {
+          this.$refs["leafletref"].changeMarkerColour(
+            this.mapMarkerStore[event.exit[i].id - 1],
+            "black"
+          );
+        }
       }
     },
   },
