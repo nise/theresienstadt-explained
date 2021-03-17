@@ -45,19 +45,19 @@ export default {
 /** Tracks if event "cuechange" is caused by a cue becoming active or inactive */
     trackingActiveCues(activeCueArr, activeCueTextTrack){
       let returnval = new Object();
-      returnval.exit = -1;
-      returnval.enter = -1;
+      returnval.exit = new Array();
+      returnval.enter = new Array();
       
       for(let i = 0; i < activeCueArr.length; i++){
         if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1){
-          returnval.exit = activeCueArr[i];
+          returnval.exit.push(activeCueArr[i]);
           activeCueArr.splice(i, 1);
         }
       }     
       
       for (let i = 0; i < activeCueTextTrack.length; i++){
         if (activeCueArr.indexOf(activeCueTextTrack[i]) == -1){
-          returnval.enter = activeCueTextTrack[i];
+          returnval.enter.push(activeCueTextTrack[i]);
           activeCueArr.push(activeCueTextTrack[i]);
         }
       }
