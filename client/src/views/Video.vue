@@ -216,16 +216,33 @@ export default {
       window.addEventListener("keypress", function () {
         _this.togglePlayPause(event);
       });
+      window.addEventListener("keydown", function() {
+        _this.skipTime(event);
+      });
     },
     togglePlayPause(event) {
-      if (event.code == "Space") {
-        if (this.playing) {
-          this.pause();
-          this.showVideoControls = true;
-        } else {
-          this.play();
-          this.updateCountdown();
-        }
+      switch (event.code) {
+        case "Space":
+          if (this.playing) {
+            this.pause();
+            this.showVideoControls = true;
+          } else {
+            this.play();
+            this.updateCountdown();
+          }
+          break;
+      default:
+      }
+    },
+    skipTime(event) {
+      switch (event.code) {
+        case "ArrowLeft":
+          this.videoElement.currentTime = this.videoElement.currentTime -5;
+          break;
+
+        case "ArrowRight":
+          this.videoElement.currentTime = this.videoElement.currentTime +5;
+          break;
       }
     },
     toggleTranskript() {
