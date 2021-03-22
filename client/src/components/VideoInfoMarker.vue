@@ -14,6 +14,8 @@ export default {
     closeTextBox(event){
       this.$emit("playrequest");
       event.target.parentElement.style.display = "none";
+      //       event.target.parentElement.remove();  add this and redo watcher routines and add new textboxes to array for easier accesss
+
     },
 
     displayTextBox(id){
@@ -114,14 +116,14 @@ export default {
       returnval.enter = new Array();
       
       for(let i = 0; i < activeCueArr.length; i++){
-        if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1){
+        if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1){  // has an active Cue become inactive ?
           returnval.exit.push(activeCueArr[i]);
           activeCueArr.splice(i, 1);
         }
       }     
       
       for (let i = 0; i < activeCueTextTrack.length; i++){
-        if (activeCueArr.indexOf(activeCueTextTrack[i]) == -1){
+        if (activeCueArr.indexOf(activeCueTextTrack[i]) == -1){ // has an inactive cue become active ?
           returnval.enter.push(activeCueTextTrack[i]);
           activeCueArr.push(activeCueTextTrack[i]);
         }
