@@ -97,15 +97,37 @@ export default {
       }
       //TODO: redo first for loop
       ttrack.addEventListener("cuechange", function(){
-        for (let i = 0; i < this.cues.length; i++){
-          document.getElementById(this.cues[i].id).style.display = "none";    // sets red info marker (see var newmark in setup())
+        let changingCue = _this.trackingActiveCues(_this.activeCueArr, this.activeCues);
+        for (let i = 0; i < changingCue.exit.length; i++){
+          document.getElementById(changingCue.exit[i].id).style.display = "none";    // sets red info marker (see var newmark in setup())
         }
-        for (let i = 0; i < this.activeCues.length; i++){
-          document.getElementById(this.activeCues[i].id).style.display = "block";
+        for (let i = 0; i < changingCue.enter.length; i++){
+          document.getElementById(changingCue.enter[i].id).style.display = "block";
         }
       })
 
     },
+    /** Tracks if event "cuechange" is caused by a cue becoming active or inactive */
+    trackingActiveCues(activeCueArr, activeCueTextTrack){
+      let returnval = new Object();
+      returnval.exit = new Array();
+      returnval.enter = new Array();
+      
+      for(let i = 0; i < activeCueArr.length; i++){
+        if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1){
+          returnval.exit.push(activeCueArr[i]);
+          activeCueArr.splice(i, 1);
+        }
+      }     
+      
+      for (let i = 0; i < activeCueTextTrack.length; i++){
+        if (activeCueArr.indexOf(activeCueTextTrack[i]) == -1){
+          returnval.enter.push(activeCueTextTrack[i]);
+          activeCueArr.push(activeCueTextTrack[i]);
+        }
+      }
+      return returnval;
+    }
   },
   watch: {
     clickedTimeline: function(){
@@ -131,10 +153,12 @@ export default {
     },
   },
   mounted: function(){
+    this.activeCueArr = new Array();
   },
   
   data(){
     return {
+      activeCueArr: Array
     }
   }
 }
