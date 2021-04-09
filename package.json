@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve --open",
-    "start": "npm run build --prefix ./client  && node ./server",
+    "start": "node ./JSONtoVTT && npm run build --prefix ./client  && node ./server",
     "test": "npm run serve --prefix ./client"
   },
   "keywords": [

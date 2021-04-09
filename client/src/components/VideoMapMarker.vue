@@ -13,10 +13,8 @@ export default {
   data() {
     return {
       activeCueArr: Array,
-
-    }
+    };
   },
-
 
   methods: {
     setup(event) {
@@ -25,46 +23,46 @@ export default {
       var ttrack = event.target.track;
       ttrack.mode = "hidden";
 
-
-      for (let i = 0; i < ttrack.cues.length; i++){
+      for (let i = 0; i < ttrack.cues.length; i++) {
         let cuetextObj = JSON.parse(ttrack.cues[i].text);
-        cuetextObj.id = i+1;
+        cuetextObj.id = i + 1;
         ttrack.cues[i].text = JSON.stringify(cuetextObj);
       }
 
-
-      for (let i = 0; i < ttrack.cues.length; i++){
+      for (let i = 0; i < ttrack.cues.length; i++) {
         this.$emit("requestMM", JSON.parse(ttrack.cues[i].text));
       }
 
-      ttrack.addEventListener("cuechange", function(){
+      ttrack.addEventListener("cuechange", function () {
         let t = _this.trackingActiveCues(_this.activeCueArr, ttrack.activeCues);
-        _this.$emit("requestMMColourChange",t);
-      })
+        _this.$emit("requestMMColourChange", t);
+      });
     },
-/** Tracks if event "cuechange" is caused by a cue becoming active or inactive */
-    trackingActiveCues(activeCueArr, activeCueTextTrack){
+    /** Tracks if event "cuechange" is caused by a cue becoming active or inactive */
+    trackingActiveCues(activeCueArr, activeCueTextTrack) {
       let returnval = new Object();
       returnval.exit = new Array();
       returnval.enter = new Array();
-      
-      for(let i = 0; i < activeCueArr.length; i++){
-        if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1){
+
+      for (let i = 0; i < activeCueArr.length; i++) {
+        if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1) {
           returnval.exit.push(activeCueArr[i]);
           activeCueArr.splice(i, 1);
         }
-      }     
-      
-      for (let i = 0; i < activeCueTextTrack.length; i++){
-        if (activeCueArr.indexOf(activeCueTextTrack[i]) == -1){
+      }
+
+      for (let i = 0; i < activeCueTextTrack.length; i++) {
+        if (activeCueArr.indexOf(activeCueTextTrack[i]) == -1) {
           returnval.enter.push(activeCueTextTrack[i]);
           activeCueArr.push(activeCueTextTrack[i]);
         }
       }
       return returnval;
-    }
+    },
   },
-  mounted: function () {},
+  mounted: function () {
+    
+  },
 };
 </script>
 
