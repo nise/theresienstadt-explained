@@ -28,6 +28,7 @@ const findData = function (rawannodata) {
     let precue = new Object();
     let precueList = new Array();
     let name, x, y;
+    let j = 0;
 
     for (let i = 0; i < annodata.length; i++) {
         precue = new Object();
@@ -39,6 +40,7 @@ const findData = function (rawannodata) {
             precue.begin = annodata[i].begin;
             precue.end = annodata[i].end;
             payload.name = name[1];
+            payload.id = j++;
 
 
             if (x = findX.exec(annodata[i].content)) {
@@ -77,10 +79,14 @@ const createCue = function (precue) {
     let begin = time(precue.begin);
     let end = time(precue.end);
     let cue = `${id}\n${begin} --> ${end}\n`;
+    if (precue.payload.length > 1) cue += "[";
 
     for (let i = 0; i < precue.payload.length; i++) {
         cue += JSON.stringify(precue.payload[i]) + "\n";
+        if (i < precue.payload.length -1) cue += ",";
     }
+
+    if (precue.payload.length > 1) cue += "]\n";
     return cue;
 };
 
