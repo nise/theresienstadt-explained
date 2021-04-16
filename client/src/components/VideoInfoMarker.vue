@@ -1,4 +1,6 @@
 <script>
+import axios from "axios";
+
 export default {
   name: "VideoInfoMarker",
   props: {
@@ -31,12 +33,18 @@ export default {
       document.getElementById(id).style.display = "block";
       this.$emit("pauserequest");
     },
+    presetup(event){
+      let dat = event.target.track;
+      this.getPersonData().then((data) => {
+        this.setup(dat);
+      })
+    },
 
-    setup(event) {
+    setup(track) {
       let _this = this;
       var player = document.getElementById(this.videoID);
       var videoPanel = document.querySelector(".video-panel");
-      var ttrack = event.target.track;
+      var ttrack = track;
       ttrack.mode = "hidden";
 
       for (let i = 0; i < ttrack.cues.length; i++) {
@@ -70,7 +78,7 @@ export default {
               document.getElementById(data[j].id).style.display = "none";
             }
           } else {
-            document.getElementById(data.id).style.display = "none"; // sets red info marker (see var newmark in setup())
+            document.getElementById(data.id).style.display = "none"; // sets red info marker (see var newmark in presetup())
           }
         }
 
@@ -113,6 +121,10 @@ export default {
       return newmark;
     },
     createTextBox(data) {
+      let textboxContent;
+      let personData = this.searchPerson(this.persons, data.name);
+      if (personData == -1) textboxContent = "Kein Eintrag";            //TODO fill personData if -1
+      else textboxContent = personData[0].profession;
       var newtextbox = document.createElement("div");
       newtextbox.id = data.id + "textbox";
       newtextbox.style.display = "none";
@@ -131,7 +143,7 @@ export default {
 
       newtextbox.style.backgroundColor = "black";
       newtextbox.style.color = "white";
-      newtextbox.innerHTML = data.name;
+      newtextbox.innerHTML = textboxContent;
       newtextbox.style.textJustify = "auto";
       newtextbox.style.overflowWrap = "break-word";
 
@@ -174,6 +186,42 @@ export default {
         }
       }
       return returnval;
+    },
+    searchPerson: function (arr, needle) {
+      /* 
+      let result = arr.filter(
+        (el) => JSON.stringify(el).toLowerCase().indexOf(needle.toLowerCase()) != -1
+      );
+      */
+      let results = arr.filter(
+        (el) =>
+          (
+            el.shortname.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          )
+            .toLowerCase()
+            .indexOf(needle.toLowerCase()) != -1
+        // (el) =>
+        //   (
+        //     el.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "") +
+        //     " " +
+        //     el.surename.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        //   )
+        //     .toLowerCase()
+        //     .indexOf(needle.toLowerCase()) != -1
+      );
+      if (results.length == 0) return -1;
+      return results;
+    },
+    getPersonData: function () {
+      let _this = this;
+      return new Promise((res, rej) => {
+        axios.get("/persondata").then(function (response) {
+          _this.persons = response.data;
+          //console.log(response.data);
+          res(response.data);
+          rej(-1);
+        });
+      });
     },
   },
   watch: {
@@ -218,11 +266,13 @@ export default {
   },
   mounted: function () {
     this.activeCueArr = new Array();
+    this.persons = new Array();
   },
 
   data() {
     return {
       activeCueArr: Array,
+      persons: Array,
     };
   },
 };
@@ -232,7 +282,7 @@ export default {
   <track
     src="../assets/videos/infomarker/infomarker.de.vtt"
     id="infomarkertrack"
-    @load="setup($event)"
+    @load="presetup($event)"
   />
 </template>
 
