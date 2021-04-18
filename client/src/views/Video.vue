@@ -217,6 +217,9 @@ export default {
       window.addEventListener("keypress", function () {
         _this.togglePlayPause(event);
       });
+      window.addEventListener("keydown", function () {
+        _this.skip5s(event);
+      });
     },
     togglePlayPause(event) {
       if (event.code == "Space") {
@@ -225,6 +228,21 @@ export default {
         } else {
           this.play();
         }
+      }
+    },
+    skip5s(event) {
+      switch (event.keyCode) {
+        case 37:
+          this.videoElement.currentTime -= 5;
+          this.currentTime = this.videoElement.currentTime;
+          this.updateCountdown();
+          break;
+
+        case 39:
+          this.videoElement.currentTime += 5;
+          this.currentTime = this.videoElement.currentTime;
+          this.updateCountdown();
+          break;
       }
     },
     toggleTranskript() {
@@ -248,7 +266,8 @@ export default {
         if (videoTT[i].mode == "disabled") videoTT[i].mode = "showing";
       }
     },
-    updateCountdown() { // hides video control elements x seconds after user moved mouse
+    updateCountdown() {
+      // hides video control elements x seconds after user moved mouse
       if (!this.paused) {
         clearTimeout(this.timerCursor);
         this.videoPanel.style.cursor = "auto";
