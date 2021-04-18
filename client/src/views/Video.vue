@@ -78,7 +78,7 @@ export default {
     };
   },
   methods: {
-    init() {
+    initVars() {
       this.mapMarkerStore = new Array();
     },
     log(data) {
@@ -288,13 +288,13 @@ export default {
     changeMMColour(event) {
       if (event.enter != -1) {
         this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[event.enter.id-1],
+          this.mapMarkerStore[event.enter.id],
           "white"
         );
       }
       if (event.exit != -1) {
         this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[event.exit.id-1],
+          this.mapMarkerStore[event.exit.id],
           "black"
         );
       }
@@ -317,7 +317,7 @@ export default {
     if (this.isModusFeatures("transcript")) {
       this.enableAllTextTracks();
     }
-    this.init();
+    this.initVars();
   },
   watch: {
     // eslint-disable-next-line object-shorthand
