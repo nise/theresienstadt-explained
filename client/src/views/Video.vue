@@ -165,6 +165,7 @@ export default {
       this.paused = true;
       clearInterval(this.timer);
       this.stopCountdown();
+      this.showVideoControls = true;
     },
     forward() {},
     backward() {},
@@ -235,6 +236,8 @@ export default {
       } else {
         for (let i = 0; i < videoTT.length; i++) {
           videoTT[i].mode = "showing";
+          if (videoTT[i].id == "mapmarkertrack") videoTT[i].mode = "hidden";
+          if (videoTT[i].id == "infomarkertrack") videoTT[i].mode = "hidden";
         }
       }
       this.showTranskript = !this.showTranskript;
@@ -245,7 +248,7 @@ export default {
         if (videoTT[i].mode == "disabled") videoTT[i].mode = "showing";
       }
     },
-    updateCountdown() {
+    updateCountdown() { // hides video control elements x seconds after user moved mouse
       if (!this.paused) {
         clearTimeout(this.timerCursor);
         this.videoPanel.style.cursor = "auto";
@@ -288,13 +291,13 @@ export default {
     changeMMColour(event) {
       if (event.enter != -1) {
         this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[event.enter.id],
+          this.mapMarkerStore[JSON.parse(event.enter.text).id],
           "white"
         );
       }
       if (event.exit != -1) {
         this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[event.exit.id],
+          this.mapMarkerStore[JSON.parse(event.exit.text).id],
           "black"
         );
       }
