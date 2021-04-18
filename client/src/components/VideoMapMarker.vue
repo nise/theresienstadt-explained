@@ -7,6 +7,15 @@
 </template>
 
 <script>
+/** To be used with LeafletMap.vue
+ * 
+ * This Module draws data from the .vtt and controls behaviour of LeafletMap.vue,
+ * namely through emitting events "requestM(ap)M(arker)" and "requestM(ap)M(arker)ColourChange"
+ * to parent module Video.vue. 
+ * Video.vue then calls functions from LeafletMap.vue to respectively create a marker on the leaflet map
+ * or change the colour of an existing marker 
+ *
+ */
 
 export default {
   name: "VideoMapMarker",
@@ -28,10 +37,9 @@ export default {
 
       for (let i = 0; i < ttrack.cues.length; i++){
         let cuetextObj = JSON.parse(ttrack.cues[i].text);
-        cuetextObj.id = i+1;
+        cuetextObj.id = i;
         ttrack.cues[i].text = JSON.stringify(cuetextObj);
       }
-
 
       for (let i = 0; i < ttrack.cues.length; i++){
         this.$emit("requestMM", JSON.parse(ttrack.cues[i].text));

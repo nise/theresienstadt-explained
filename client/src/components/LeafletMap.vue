@@ -3,6 +3,10 @@
 </template>
 
 <script>
+/**
+ * To be used with VideoMapMarker.vue
+ * Description: see VideoMapMarker.vue
+ */
 import leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
 
