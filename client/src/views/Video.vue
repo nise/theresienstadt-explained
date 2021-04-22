@@ -218,7 +218,7 @@ export default {
         _this.togglePlayPause(event);
       });
       window.addEventListener("keydown", function() {
-        _this.skipTime(event);
+        _this.skip5s(event);
       });
     },
     togglePlayPause(event) {
@@ -233,17 +233,6 @@ export default {
           }
           break;
       default:
-      }
-    },
-    skipTime(event) {
-      switch (event.code) {
-        case "ArrowLeft":
-          this.videoElement.currentTime = this.videoElement.currentTime -5;
-          break;
-
-        case "ArrowRight":
-          this.videoElement.currentTime = this.videoElement.currentTime +5;
-          break;
       }
     },
     skip5s(event) {
@@ -326,17 +315,21 @@ export default {
      *  Target: <Leaflet-Map>
      */
     changeMMColour(event) {
-      if (event.enter != -1) {
+      if (event.enter.length > 0) {
+        for (let i = 0; i < event.enter.length; i++){
         this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[JSON.parse(event.enter.text).id],
+          this.mapMarkerStore[JSON.parse(event.enter[i].text).id],
           "white"
         );
+        }
       }
-      if (event.exit != -1) {
+      if (event.exit.length > 0) {
+        for (let i = 0; i < event.exit.length; i++){
         this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[JSON.parse(event.exit.text).id],
+          this.mapMarkerStore[JSON.parse(event.exit[i].text).id],
           "black"
         );
+        }
       }
     },
   },
