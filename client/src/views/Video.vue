@@ -247,17 +247,19 @@ export default {
     },
     toggleTranskript() {
       let videoTT = document.getElementById("videoplayer").textTracks;
-      if (this.showTranskript) {
-        for (let i = 0; i < videoTT.length; i++) {
-          videoTT[i].mode = "disabled";
-        }
-      } else {
-        for (let i = 0; i < videoTT.length; i++) {
-          videoTT[i].mode = "showing";
-          if (videoTT[i].id == "mapmarkertrack") videoTT[i].mode = "hidden";
-          if (videoTT[i].id == "infomarkertrack") videoTT[i].mode = "hidden";
-        }
-      }
+
+      // if (this.showTranskript) {
+      //   for (let i = 0; i < videoTT.length; i++) {
+      //     videoTT[i].mode = "disabled";
+      //   }
+      // } else {
+      //   for (let i = 0; i < videoTT.length; i++) {
+      //     videoTT[i].mode = "showing";
+      //     if (videoTT[i].id == "mapmarkertrack") videoTT[i].mode = "hidden";
+      //     if (videoTT[i].id == "infomarkertrack") videoTT[i].mode = "hidden";
+      //   }
+      // }
+
       this.showTranskript = !this.showTranskript;
     },
     enableAllTextTracks() {
@@ -416,7 +418,7 @@ var annoLength = this.annotations.length;
           </Video-MapMarker>
 
           <Video-InfoMarker
-            v-if="isModusFeatures('transcript')"
+            v-if="isModusFeatures('transcript') && showTranskript"
             :currentTime="currentTime"
             :videoID="videoPlayerID"
             :paused="paused"
