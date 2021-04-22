@@ -44,7 +44,7 @@ module.exports = function (db, app) {
         fs.readFile('./ressources/markers.json', function (err, data) {
             res.send(data);
         })
-    })
+    });
 
 
     var bodyParser = require('body-parser')
