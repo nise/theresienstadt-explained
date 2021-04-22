@@ -131,10 +131,24 @@ export default {
     },
   },
   mounted: function(){
+    this.track = document.getElementById("infomarkertrack").track;    // important for beforeDestroy: el "track" no longer available in DOM when beforeDestroy is called
+  },
+
+  beforeDestroy: function(){
+    let cuelist = this.track.cues;
+        if (cuelist) {
+          for (let i = 0; i < cuelist.length; i++){
+            document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+            document.getElementById(cuelist[i].id).style.display = "none";
+
+          }
+        }
+
   },
   
   data(){
     return {
+      track: null,
     }
   }
 }
