@@ -217,7 +217,7 @@ export default {
       window.addEventListener("keypress", function () {
         _this.togglePlayPause(event);
       });
-      window.addEventListener("keydown", function() {
+      window.addEventListener("keydown", function () {
         _this.skip5s(event);
       });
     },
@@ -232,7 +232,7 @@ export default {
             this.updateCountdown();
           }
           break;
-      default:
+        default:
       }
     },
     skip5s(event) {
@@ -306,7 +306,8 @@ export default {
           event.lat,
           event.long,
           "black",
-          event.id
+          event.id,
+          event.time
         )
       );
     },
@@ -316,19 +317,20 @@ export default {
      */
     changeMMColour(event) {
       if (event.enter.length > 0) {
-        for (let i = 0; i < event.enter.length; i++){
-        this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[JSON.parse(event.enter[i].text).id],
-          "white"
-        );
+        for (let i = 0; i < event.enter.length; i++) {
+          this.$refs["leafletref"].changeMarkerColour(
+            this.mapMarkerStore[JSON.parse(event.enter[i].text).id],
+            "white"
+          );
         }
       }
       if (event.exit.length > 0) {
-        for (let i = 0; i < event.exit.length; i++){
-        this.$refs["leafletref"].changeMarkerColour(
-          this.mapMarkerStore[JSON.parse(event.exit[i].text).id],
-          "black"
-        );
+        console.log(event.exit);
+        for (let i = 0; i < event.exit.length; i++) {
+          this.$refs["leafletref"].changeMarkerColour(
+            this.mapMarkerStore[JSON.parse(event.exit[i].text).id],
+            "black"
+          );
         }
       }
     },
@@ -526,7 +528,8 @@ var annoLength = this.annotations.length;
         </div>
         <div class="row places ml-1 mt-2">
           <h4>Orte</h4>
-          <Leaflet-Map ref="leafletref"> </Leaflet-Map>
+          <Leaflet-Map ref="leafletref" @gotoTimerequest="gotoTime">
+          </Leaflet-Map>
         </div>
       </div>
     </div>
