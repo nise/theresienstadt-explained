@@ -6,7 +6,9 @@
       <video class="intro-video" autoplay muted loop >
         <source src="../assets/intro.mp4" type="video/mp4">
       </video>
-      <div class="intro-box">Menschen, Orte und Propaganda im Film »Thersienstadt«</div>
+      <div class="intro-box">
+        Fake News aus dem Jahre 1945. Der NS-Propagandafilm »Theresienstadt« täuscht durch seine Bilder und Musik über die wahren Zustände im Konzentrationslager hinweg. Wir entlarven die Propaganda und Manipulation, berichten über die unfreiwilligen Protagonisten und zeigen die Drehorte.
+</div>
       <div class="intro-box2"></div>
     </div>
 
@@ -26,8 +28,8 @@
           <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
           <hr style="background-color:blue">
           <p style="color:blue"> <b>ALLTAG</b> </p>
-          <p style="color:white">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,
-            Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,
+          <p style="color:white">
+            Der Film suggeriert einen unbeschwerten Alltag, der durch Freizeit, Sport und Spiel gerägt ist.
           </p>
         </div>
 
@@ -35,14 +37,18 @@
           <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
           <hr style="background-color:green">
           <p style="color:green"> <b>ARBEIT</b> </p>
-          <p style="color:white;">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,</p>
+          <p style="color:white;">
+            Manufakturen, Werkstätten und Landbewirtschftung unterstreichen wirtschaftliche Unabhängigkeit.
+          </p>
         </div>
 
         <div class="rubrik-element">
           <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
           <hr style="background-color:yellow">
           <p style="color:yellow"> <b>KULTUR</b> </p> 
-          <p style="color:white">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,</p>
+          <p style="color:white">
+            Öffentliche aufgeführte Konzerte und Opern sowie Vorträge suggieren Kunstfreiheit auf einem hohen Niveau. 
+          </p>
         </div>
       </div>
       </div>
