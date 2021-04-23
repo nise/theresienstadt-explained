@@ -325,7 +325,6 @@ export default {
         }
       }
       if (event.exit.length > 0) {
-        console.log(event.exit);
         for (let i = 0; i < event.exit.length; i++) {
           this.$refs["leafletref"].changeMarkerColour(
             this.mapMarkerStore[JSON.parse(event.exit[i].text).id],
