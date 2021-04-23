@@ -8,12 +8,12 @@
 
 <script>
 /** To be used with LeafletMap.vue
- * 
+ *
  * This Module draws data from the .vtt and controls behaviour of LeafletMap.vue,
  * namely through emitting events "requestM(ap)M(arker)" and "requestM(ap)M(arker)ColourChange"
- * to parent module Video.vue. 
+ * to parent module Video.vue.
  * Video.vue then calls functions from LeafletMap.vue to respectively create a marker on the leaflet map
- * or change the colour of an existing marker 
+ * or change the colour of an existing marker
  *
  */
 
@@ -38,7 +38,7 @@ export default {
         ttrack.cues[i].text = JSON.stringify(cuetextObj);
       }
 
-      for (let i = 0; i < ttrack.cues.length; i++){
+      for (let i = 0; i < ttrack.cues.length; i++) {
         this.$emit("requestMM", JSON.parse(ttrack.cues[i].text));
       }
 
@@ -53,8 +53,7 @@ export default {
       returnval.exit = new Array();
       returnval.enter = new Array();
 
-      for (let i = 0; i < activeCueArr.length; i++) {
-        console.log(activeCueArr[i]);
+      for (let i = activeCueArr.length -1; i >= 0; i--) {
         if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1) {
           returnval.exit.push(activeCueArr[i]);
           activeCueArr.splice(i, 1);
@@ -71,7 +70,7 @@ export default {
     },
   },
   mounted: function () {
-    
+    this.activeCueArr = new Array();
   },
 };
 </script>

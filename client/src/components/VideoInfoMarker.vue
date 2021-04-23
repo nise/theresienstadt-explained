@@ -170,9 +170,9 @@ export default {
       returnval.exit = new Array();
       returnval.enter = new Array();
 
-      for (let i = 0; i < activeCueArr.length; i++) {
+      for (let i = activeCueArr.length -1; i >= 0; i--) {
         if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1) {
-          // has an active Cue become inactive ?
+          // has an active cue become inactive ?
           returnval.exit.push(activeCueArr[i]);
           activeCueArr.splice(i, 1);
         }
