@@ -18,12 +18,16 @@ export default {
         leafletmap: null,
       };
     },
+    gotoTime(time) {
+      this.$emit("gotoTimerequest", time);
+    },
     setView(latitude, longitude, zoomLevel = 15) {
       this.leafletmap.setView([latitude, longitude], zoomLevel);
     },
-    createMarker(latitude, longitude, colour, Identifier) {
+    createMarker(latitude, longitude, colour, Identifier, time) {
       // Reference: https://stackoverflow.com/questions/23567203/leaflet-changing-marker-color
       // ${...} not part of jQuery but ES6, see https://exploringjs.com/es6/ch_template-literals.html
+      let _this = this;
       let custommarker = `
         background-color: ${colour};  
         width: 1.5rem;
@@ -43,11 +47,19 @@ export default {
         popupAnchor: [0, -36],
         html: `<span style="${custommarker}" />`,
       });
+      // cIcon.addEventListener("click", function(){
+      //   console.log("ah");
+      // });
       let marker = leaflet
         .marker([latitude, longitude], { icon: cIcon })
         .addTo(this.leafletmap);
 
       marker._icon.id = Identifier;
+      marker.addEventListener("click", function(){
+        _this.gotoTime(time);
+      })
+
+      
 
       return marker;
     },
