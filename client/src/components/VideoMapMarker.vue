@@ -54,6 +54,7 @@ export default {
       returnval.enter = new Array();
 
       for (let i = 0; i < activeCueArr.length; i++) {
+        console.log(activeCueArr[i]);
         if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1) {
           returnval.exit.push(activeCueArr[i]);
           activeCueArr.splice(i, 1);
