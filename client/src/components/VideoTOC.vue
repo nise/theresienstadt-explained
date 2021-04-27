@@ -320,7 +320,7 @@ a.kultur {
 a.kultur:hover {
   background-color: #ffd800;
   border-radius: 10px;
-  color: #fff;
+  color: #111;
 }
 a.alltag {
   color: #0081c6;
