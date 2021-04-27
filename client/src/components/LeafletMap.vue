@@ -100,5 +100,12 @@ export default {
   width: 98%;
   height: 256px;
   bottom: 0px;
+  color: gray;
+}
+.leaflet-control-attribution{
+  color: gray;
+}
+.leaflet-control-attribution a{
+  color: gray;
 }
 </style>
