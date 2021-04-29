@@ -440,7 +440,7 @@ var annoLength = this.annotations.length;
           </Video-InfoMarker>
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
           <Video-Transcript
-            v-if="isModusFeatures('transcript')"
+            v-if="isModusFeatures('transcript') && showTranskript"
             :videoCtrlActive="showVideoControls"
           >
           </Video-Transcript>
@@ -492,8 +492,9 @@ var annoLength = this.annotations.length;
             <button
               v-if="isModusFeatures('transcript')"
               class="video-toggle-transkript"
+              type = "button"
               :class="{ active: showTranskript }"
-              @click="toggleTranskript"
+              @mousedown="toggleTranskript"
               title="Untertitel an/aus"
             >
               <img
@@ -683,14 +684,34 @@ video {
 }
 .video-toggle-transkript {
   position: absolute;
-  top: 25px;
+  top: 28px;
   right: 5px;
   background-color: gray;
+  opacity: 0.8;
   border-radius: 20%;
+  border: none;
+
 }
 
 .video-toggle-transkript.active {
   background-color: white;
+  opacity: 0.8;
+}
+
+.video-toggle-transkript.active:hover {
+  background-color: white;
+  opacity: 1;
+}
+
+.video-toggle-transkript:focus {
+  border: none;
+  outline: none;
+}
+
+.video-toggle-transkript:hover {
+    background-color: gray;
+    opacity: 1;
+
 }
 
 .subtitleIcon {
