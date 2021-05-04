@@ -1,5 +1,6 @@
 <script>
 import PortalVue from "portal-vue";
+import axios from "axios";
 //Vue.use(PortalVue);
 
 export default {
