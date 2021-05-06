@@ -26,7 +26,7 @@ export default {
   methods: {
     initFirstCue() {
       let cueList = document.getElementById("Vidtranskript").track.cues;
-      for (let i = 0; i < cueList.length; i++){
+      for (let i = 0; i < cueList.length; i++) {
         cueList[i].snapToLines = false;
         cueList[i].line = 85;
       }
@@ -34,40 +34,34 @@ export default {
   },
   watch: {
     videoCtrlActive: function () {
-      let activeCueList;
       let track = document.getElementById("Vidtranskript").track;
-      if (
-        (activeCueList = document.getElementById("Vidtranskript").track
-          .activeCues)
-      ) {
+      //let activeCueList = track.activeCues;
+      let activeCueList = document.getElementById("Vidtranskript").track.activeCues;
+      let cueList = track.cues;
+
+      if (cueList.length > 0) {
         if (this.videoCtrlActive) {
           for (let i = 0; i < activeCueList.length; i++) {
             activeCueList[i].snapToLines = false;
             activeCueList[i].line = 85;
           }
-          track.oncuechange = function () {
-            for (let i = 0; i < this.activeCues.length; i++) {
-              this.activeCues[i].snapToLines = false;
-              this.activeCues[i].line = 85;
-            }
-          };
+          for (let i = 0; i < cueList.length; i++) {
+            cueList[i].snapToLines = false;
+            cueList[i].line = 85;
+          }
         } else {
           for (let i = 0; i < activeCueList.length; i++) {
             activeCueList[i].snapToLines = false;
-            activeCueList[i].line = "auto";
+            activeCueList[i].line = 100;
           }
-          track.oncuechange = function () {
-            for (let i = 0; i < this.activeCues.length; i++) {
-              this.activeCues[i].snapToLines = false;
-              this.activeCues[i].line = "auto";
-            }
-          };
+          for (let i = 0; i < cueList.length; i++) {
+            cueList[i].snapToLines = false;
+            cueList[i].line = 100;
+          }
         }
       }
     },
   },
-  mounted: function () {
-    
-  },
+  mounted: function () {},
 };
 </script>
