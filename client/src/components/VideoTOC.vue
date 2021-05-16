@@ -29,9 +29,9 @@ export default {
         }
       });
     },
-    addCategory(scenelist){
-      for (let i = 0; i < scenelist.length; i++){
-        if (typeof(scenelist[i].category) == 'undefined'){
+    addCategory(scenelist) {
+      for (let i = 0; i < scenelist.length; i++) {
+        if (typeof scenelist[i].category == "undefined") {
           scenelist[i].category = "unbekannt";
         }
       }
@@ -39,7 +39,8 @@ export default {
     styleSceneMarker(scene, videoElementduration) {
       return {
         left: (scene.start / videoElementduration) * 100 + "%",
-        width: ((scene.end - scene.start) / videoElementduration) * 100 + "%",
+        //width: ((scene.end - scene.start) / videoElementduration) * 100 + "%",
+        width: "2px",
       };
     },
     /**
@@ -47,11 +48,11 @@ export default {
      */
     highlightSceneMarker(markerid, event) {
       if (event.type === "mouseover") {
-        document.getElementById(markerid).style.borderWidth = "5px";
+        document.getElementById(markerid).style.visibility = "visible";
         return;
       }
       if (event.type === "mouseout") {
-        document.getElementById(markerid).style.borderWidth = "2px";
+        document.getElementById(markerid).style.visibility = "hidden";
         return;
       }
     },
@@ -122,7 +123,7 @@ export default {
     getSceneData: function () {
       let _this = this;
       return new Promise((res, rej) => {
-        axios.get('/scenes/all').then(function (response) {
+        axios.get("/scenes/all").then(function (response) {
           _this.rawscenes = response.data;
           res(response.data);
           rej(-1);
@@ -225,12 +226,15 @@ export default {
             ? true
             : false
         "
-        :id="scene.number + 'marker'"
         class="scenemarker"
         :style="styleSceneMarker(scene, videoElementduration)"
         @mouseover="highlightSceneLi(scene.number + 'li', $event)"
         @mouseout="highlightSceneLi(scene.number + 'li', $event)"
-      ></div>
+      >
+        <div class="scenemarkertext" :id="scene.number + 'marker'">
+          {{ scene.title }}
+        </div>
+      </div>
     </portal>
   </div>
 </template>
@@ -274,13 +278,43 @@ export default {
   position: absolute;
   height: 20px;
   top: 10px;
-  border-color: white;
-  border-left-style: solid;
-  border-right-style: solid;
-  border-width: 2px;
-  z-index: 995;
+  width: 2px;
+  background-color: white;
+  
+  z-index: 1010;
   cursor: pointer;
   transform: translate(0%, -25%);
+}
+
+.scenemarker:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 16px;
+  height: 30px;
+  z-index: 1010;
+  transform: translate(-40%, -20%);
+
+}
+
+.scenemarker:hover .scenemarkertext {
+  visibility: visible !important;
+}
+
+.scenemarker .scenemarkertext {
+  font-size: 1.2rem;
+  position: relative;
+  bottom: 35px;
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: black;
+  color: white;
+  transform: translate(-50%, 0%);
+  border-radius: 10px;
+
+  visibility: hidden;
 }
 /**special classes to emulate ':hover' but triggered by mouseover from a distant html element*/
 .kulturhover {
