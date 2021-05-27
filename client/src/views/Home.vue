@@ -188,6 +188,9 @@
 // {{ message }}
 export default {
   name: 'home',
+  props: {
+    selectedLanguageFromHeader: String
+  },
   data: () => ({
     error: '',
     message: '',
@@ -203,6 +206,11 @@ export default {
   methods: {
     test(){
       console.log("test");
+    }
+  },
+  watch: {
+    selectedLanguageFromHeader: function(){
+      console.log(this.selectedLanguageFromHeader);
     }
   }
 }
