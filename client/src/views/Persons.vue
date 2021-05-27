@@ -16,7 +16,7 @@
             v-model="searchquery"
             @keyup="getsearchquery"
             class="mx-1 form-control"
-            placeholder="Suche ..."
+            :placeholder="$t('searchfield')"
             id="searchfield"
           />
         </b-col>

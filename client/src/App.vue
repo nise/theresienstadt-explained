@@ -1,13 +1,28 @@
 <template>
   <div id="app">
     <div class="nav-head pl-1">
-      <img src="./assets/icons/favicon-32x32.png" class="mr-2" style="width:20px;">
-      <span class="routing" v-if="this.$route.path !== '/home' && this.$route.path !== '/'">
-        <router-link to="/">ZURÜCK</router-link>
+      <img
+        src="./assets/icons/favicon-32x32.png"
+        class="mr-2"
+        style="width: 20px"
+      />
+      <span
+        class="routing"
+        v-if="this.$route.path !== '/home' && this.$route.path !== '/'"
+      >
+        <router-link to="/">{{ $t("backbutton")}}</router-link>
       </span>
+      <div style="float: right">
+        <button style="width: 40px; height: 20px" @click="switchLanguage(0)">
+          Ger
+        </button>
+        <button style="width: 40px; height: 20px" @click="switchLanguage(1)">
+          EN
+        </button>
+      </div>
     </div>
-    
-    <router-view/>
+
+    <router-view :selectedLanguageFromHeader="selectedLanguage"/>
 
     <footer v-if="footershow" class="page-footer">
       <div class="container text-center text-md-left">
@@ -17,7 +32,7 @@
               class="footer-logo"
               alt="Logo Theresienstadt Explained"
               src="./assets/logo-black.png"
-            >
+            />
           </div>
           <div class="col-md-4 mb-md-0 mb-4">
             <ul class="list-unstyled">
@@ -36,9 +51,9 @@
       </div>
       <div class="footer-copyright text-center">
         © 2020 Copyright:
-        <a
-          href="https://jugendbegegnung.de/dresden/"
-        >Förderverein Jugendbegegnung in Theresienstadt/Terezin</a>
+        <a href="https://jugendbegegnung.de/dresden/"
+          >Förderverein Jugendbegegnung in Theresienstadt/Terezin</a
+        >
       </div>
     </footer>
   </div>
@@ -46,22 +61,38 @@
 
 
 <script>
+import {i18n, loadLanguageAsync} from './i18nsetup';
 
+/////////////////////////
 export default {
   data() {
     return {
       footershow: true,
-    }},
+      availableLanguages: ["ger", "en"],
+      selectedLanguage: "ger"       //default
+    };
+  },
+  mounted: function(){    
+
+  },
   watch: {
-   $route: function() {
-    // Check if given route is true, if it is then hide Nav. 
-    if (this.$route.path.substring(0,5) === "/film") {
+    $route: function () {
+      // Check if given route is true, if it is then hide Nav.
+      if (this.$route.path.substring(0, 5) === "/film") {
         this.footershow = false;
-        } else  {
+      } else {
         this.footershow = true;
-    }
-  }
-},
+      }
+    },
+  },
+  methods: {
+    switchLanguage(buttonInput) {
+      if (buttonInput < this.availableLanguages.length) {
+        this.selectedLanguage = this.availableLanguages[buttonInput];
+        loadLanguageAsync(this.selectedLanguage);
+      }
+    },
+  },
 };
 </script>
 
@@ -71,7 +102,7 @@ export default {
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 @import url("./assets/styles/jost.css");
 
-body{
+body {
   font-family: Jost;
 }
 
@@ -118,8 +149,7 @@ body {
 .nav-head a {
   color: black;
   text-decoration: none;
-  margin-top:6px;
-  
+  margin-top: 6px;
 }
 .nav-head a:hover {
   color: black;
@@ -172,7 +202,7 @@ body {
 .intro .intro-box {
   z-index: 3;
   width: 60%;
-  font-family: 'Jost';
+  font-family: "Jost";
   position: absolute;
   top: 80vh;
   left: 17%;
@@ -207,13 +237,13 @@ body {
   height: 300px;
   max-width: 100%;
   overflow: hidden;
-  padding-left:0;
-  padding-right:0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .page-apps .app-cell img {
   z-index: 1;
-  width:100%;
+  width: 100%;
   max-height: 420px;
 }
 
@@ -297,41 +327,41 @@ footer .footer-logo {
 
 .page a {
   text-decoration: underline;
-  color:#000;
+  color: #000;
 }
-.page a:hover{
-  color: #C10000;
+.page a:hover {
+  color: #c10000;
 }
-h1{
+h1 {
   display: inline-block;
   position: relative;
   margin-top: 23px;
   margin-bottom: 23px;
-  margin-left:0px;
+  margin-left: 0px;
   align-content: left;
   text-align: left;
   padding: 20px 47px 27px 47px;
-  background-color:#C10000;
-  color:white;
+  background-color: #c10000;
+  color: white;
   font-family: Jost;
-  font-size:2em;
-  font-weight:bold;
+  font-size: 2em;
+  font-weight: bold;
   text-transform: uppercase;
 }
-.page h2{
-  margin-top:0.5em;
+.page h2 {
+  margin-top: 0.5em;
 }
 .page strong {
-  margin-right:6px;
+  margin-right: 6px;
   text-decoration: none;
   font-weight: normal;
 }
 .page {
-  color:#000;
+  color: #000;
   background-color: #fff;
   align-content: left;
-  text-align:left;
-  padding:20px;
+  text-align: left;
+  padding: 20px;
   margin-bottom: 300px;
 }
 .page-list {
@@ -339,15 +369,13 @@ h1{
   padding-left: 1em;
 }
 
-.page-list li{
+.page-list li {
   margin-bottom: 1em;
 }
 
-.page li:before{
-      content: "-";
-      text-indent: -1em;
-      display: inline-block;
-    }
-
-
+.page li:before {
+  content: "-";
+  text-indent: -1em;
+  display: inline-block;
+}
 </style>
