@@ -1,4 +1,17 @@
 {
     "backbutton": "BACK",
-    "searchfield": "Search ..."
+    "searchfield": "Search...",
+    "personcard": {
+        "button_less": "Less...",
+        "button_more": "More...",
+        "born": "Born",
+        "bornin": "in",
+        "death": "Died",
+        "branch": "Branch:",
+        "nationality": "Nationality:",
+        "profession": "Profession:",
+        "spouse": "Spouse:",
+        "children": "Children:",
+        "inmovie": "In the movie:"
+    }
 }
