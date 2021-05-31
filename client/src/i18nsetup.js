@@ -6,7 +6,8 @@ import axios from 'axios'
 
 Vue.use(VueI18n)
 
-// for some weird reason, Vuei18n fails when non default languages contain their language acronym, like in ger.json
+// for some weird reason, Vuei18n fails when non default language files contain their language acronym as key, like in en.json
+// (ger.json has key "ger":{...}, en.json has no "en":{} and would fail to load if it had)
 
 
 export const i18n = new VueI18n({

@@ -1,7 +1,19 @@
 {
     "ger": {
         "backbutton": "ZURÜCK",
-        "searchfield": "Suche ..."
-
+        "searchfield": "Suche...",
+        "personcard": {
+            "button_less": "Weniger...",
+            "button_more": "Mehr...",
+            "born": "geb.",
+            "bornin": "in",
+            "death": "gest.",
+            "branch": "Wirken:",
+            "nationality": "Nationalität:",
+            "profession": "Beruf:",
+            "spouse": "Ehepartner:",
+            "children": "Kind/er:",
+            "inmovie": "Im Film"
+        }
     }
 }
