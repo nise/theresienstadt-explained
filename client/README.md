@@ -1,11 +1,11 @@
 ## TODO
 # i18n Text conversion for german and english (no dates yet)
-- [] PersonCard
-- [] VideoAnnotations
-- [] VideoInfoMarker
-- [] VideoMapMarker
-- [] VideoToC
-- [] VideoTranskript
+- [x] PersonCard
+- [x] VideoAnnotations
+- [x] VideoInfoMarker
+- [x] VideoMapMarker
+- [x] VideoToC
+- [x] VideoTranskript
 
 - [] About
 - [] Comments

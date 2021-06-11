@@ -214,18 +214,18 @@ export default {
 <template>
   <div>
     <div class="row video-bar topics ml-1 mt-2">
-      <h4>Themenauswahl</h4>
+      <h4>{{$t("videotoc.themeselect")}}</h4>
       <div class="row">
         <button class="btn btn-sm btn-outline-primary" 
-          :id="sceneSelectButtonGroup[0].id" @click="setFilter(0, sceneSelectButtonGroup)">Alltag</button>
+          :id="sceneSelectButtonGroup[0].id" @click="setFilter(0, sceneSelectButtonGroup)">{{$t("videotoc.everydaylife")}}</button>
         <button class="btn btn-sm btn-outline-warning" 
-          :id="sceneSelectButtonGroup[1].id" @click="setFilter(1, sceneSelectButtonGroup)">Kultur</button>
+          :id="sceneSelectButtonGroup[1].id" @click="setFilter(1, sceneSelectButtonGroup)">{{$t("videotoc.culture")}}</button>
         <button class="btn btn-sm btn-outline-success" 
-          :id="sceneSelectButtonGroup[2].id" @click="setFilter(2, sceneSelectButtonGroup)">Arbeit</button>
+          :id="sceneSelectButtonGroup[2].id" @click="setFilter(2, sceneSelectButtonGroup)">{{$t("videotoc.work")}}</button>
       </div>
     </div>
     <div class="row video-bar scenes ml-1 mt-2">
-      <h4>Szenen</h4>
+      <h4>{{$t("videotoc.scenes")}}</h4>
       <ul class="scene-list">
         <li v-for="scene in search()" :key="scene.number">
           <a

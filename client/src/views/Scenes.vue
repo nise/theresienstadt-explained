@@ -3,7 +3,7 @@
 /* eslint-disable */
 <template>
   <div class="container text-left">
-    <h1 class="mt-5 mb-4 ml-4 text-left">Die 38 Szenen des Films</h1>
+    <h1 class="mt-5 mb-4 ml-4 text-left">{{$t("scenes.h1")}}</h1>
     <div class="col-3 mb-3 ml-3">
       <input v-model="searchterm" placeholder="Suche">
     </div>  

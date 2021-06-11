@@ -1,6 +1,7 @@
 {
-    "backbutton": "BACK",
-    "searchfield": "Search...",
+    "app": {
+        "backbutton": "BACK"
+    },
     "personcard": {
         "button_less": "Less...",
         "button_more": "More...",
@@ -13,5 +14,89 @@
         "spouse": "Spouse:",
         "children": "Children:",
         "inmovie": "In the movie:"
+    },
+    "videoannotations": {
+        "propagandatechnique": "Propagandatechnik",
+        "choosetechnique": "Bitte wählen Sie eine Technik aus",
+        "opt1": "Ästhetisierung",
+        "opt2": "Dekontextualisierung",
+        "opt3": "Kognitive Dissonanz",
+        "opt4": "Normaler Mensch",
+        "opt5": "Berufung auf berühmte Menschen",
+        "opt6": "Übertreibung",
+        "opt7": "Euphorie",
+        "opt8": "Wiederholung",
+        "opt9": "Berufung auf Autoritäten",
+        "opt10": "Halbwahrheit",
+        "opt11": "Rosinenpicken",
+        "markings": "Markierungen",
+        "newmark": "Neue Markierung anlegen",
+        "timepoint": "Zeitpunkt",
+        "safe": "speichern",
+        "discard": "verwerfen"
+    },
+    "videotoc": {
+        "themeselect": "Themenauswahl",
+        "everydaylife": "Alltag",
+        "culture": "Kultur",
+        "work": "Arbeit",
+        "scenes": "Szenen"
+    },
+    "about": {
+        "h1": "Über Theresienstadt Explained"
+    },
+    "fakevideo": {
+        "h1": "Fake Video"
+    },
+    "guidedvideo": {
+        "h1": "Geführte Filmvorführung"
+    },
+    "history": {
+        "h1": "Entstehungsgeschichte"
+    },
+    "home": {
+        "moviehead": "THE MOVIE",
+        "everydaylifehead": "EVERYDAY LIFE",
+        "everydaylifebody": "The movie suggests an unburdened life, which is accompanied by leisure time, exercise and games",
+        "workhead": "WORK",
+        "workbody": "Manufactories, workshops and agriculture display an economic independence",
+        "culturehead": "CULTURE",
+        "culturebody": "Public concerts and operas as well as speeches suggest artistic freedom on a high level",
+        "linktomovie": "To the movie"
+    },
+    "imprint": {
+        "h1": "Impressum"
+    },
+    "intro": {
+        "placeholder": "Lorem et üüüpsüm"
+    },
+    "map": {
+
+    },
+    "news": {
+        "h1": "Aktuelles"
+    },
+    "persons": {
+        "h1": "Protagonists",
+        "searchfield": "Search..."
+    },
+    "privacy": {
+        "h1": "Datenschutzerklärung"
+    },
+    "propaganda": {
+        "h1": "Propaganda im Film"
+    },
+    "references": {
+        "h1": "Literatur und Film über den Film"
+    },
+    "scenes": {
+        "h1": "Die 38 Szenen des Films"
+    },
+    "video": {
+        "audiotrack": "Tonspur",
+        "places": "Orte"
+    },
+    "videoanalysis": {
+        "h1": "Filmanalyse in Gruppenarbeit"
     }
 }

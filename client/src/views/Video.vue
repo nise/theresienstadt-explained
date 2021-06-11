@@ -524,10 +524,10 @@ var annoLength = this.annotations.length;
         </Video-Annotations>
 
         <div hidden class="row video-bar audio ml-1 mt-2">
-          <h4>Tonspur</h4>
+          <h4>{{$t("video.audiotrack")}}</h4>
         </div>
         <div class="row places ml-1 mt-2">
-          <h4>Orte</h4>
+          <h4>{{$t("video.places")}}</h4>
           <Leaflet-Map ref="leafletref" @gotoTimerequest="gotoTime">
           </Leaflet-Map>
         </div>

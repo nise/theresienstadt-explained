@@ -20,34 +20,34 @@
     <div class="rubrik-background">
       <div>
         <div class="rubrik-header">
-          DER FILM
+          {{$t("home.moviehead")}}
         </div>
       <div class="rubrik-container">
         
         <div class="rubrik-element">
           <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
           <hr style="background-color:blue">
-          <p style="color:blue"> <b>ALLTAG</b> </p>
+          <p style="color:blue"> <b>{{$t("home.everydaylifehead")}}</b> </p>
           <p style="color:white">
-            Der Film suggeriert einen unbeschwerten Alltag, der durch Freizeit, Sport und Spiel gerägt ist.
+            {{$t("home.everydaylifebody")}}
           </p>
         </div>
 
         <div class="rubrik-element">
           <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
           <hr style="background-color:green">
-          <p style="color:green"> <b>ARBEIT</b> </p>
+          <p style="color:green"> <b>{{$t("home.workhead")}}</b> </p>
           <p style="color:white;">
-            Manufakturen, Werkstätten und Landbewirtschftung unterstreichen wirtschaftliche Unabhängigkeit.
+            {{$t("home.workbody")}}
           </p>
         </div>
 
         <div class="rubrik-element">
           <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
           <hr style="background-color:yellow">
-          <p style="color:yellow"> <b>KULTUR</b> </p> 
+          <p style="color:yellow"> <b>{{$t("home.culturehead")}}</b> </p> 
           <p style="color:white">
-            Öffentliche aufgeführte Konzerte und Opern sowie Vorträge suggieren Kunstfreiheit auf einem hohen Niveau. 
+            {{$t("home.culturebody")}}
           </p>
         </div>
       </div>
@@ -55,7 +55,7 @@
     </div>
 
 
-    <router-link to="/film/player">Zum Film</router-link>
+    <router-link to="/film/player">{{$t("home.linktomovie")}}</router-link>
 
 
     <div class="container-fluid page-apps">

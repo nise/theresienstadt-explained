@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Filmanalyse in Gruppenarbeit</h1>
+    <h1>{{$t("videoanalyses.h1")}}</h1>
 
     <div class="page">
       <h2>Bim</h2>

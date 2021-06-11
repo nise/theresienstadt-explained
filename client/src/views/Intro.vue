@@ -9,7 +9,7 @@
       <div class="intro-box">
         Auf dieser Seite wird in Kürze der NS-Propagandafilm »Theresienstadt« wird in einer WebApp durch geografische, biografische und die Propaganda entlarvende Annotationen kommentiert und mit Ansichten heutiger Plätze und aktuellen Beispielen von Fake Videos kontrastiert.
       </div>
-      <div class="intro-box2">Lorem et üüüpsüm</div>
+      <div class="intro-box2">{{$t("intro.placeholder")}}</div>
     </div>
   </div>
 </template>
