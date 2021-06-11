@@ -10,7 +10,7 @@
         class="routing"
         v-if="this.$route.path !== '/home' && this.$route.path !== '/'"
       >
-        <router-link to="/">{{ $t("backbutton")}}</router-link>
+        <router-link to="/">{{ $t("app.backbutton")}}</router-link>
       </span>
       <div style="float: right">
         <button style="width: 40px; height: 20px" @click="switchLanguage(0)">
@@ -37,7 +37,7 @@
           <div class="col-md-4 mb-md-0 mb-4">
             <ul class="list-unstyled">
               <li>
-                <a href="/about">Über Theresienstadt explained</a>
+                <a href="/about">{{}}Über Theresienstadt explained</a>
               </li>
               <li>
                 <a href="/imprint">Impressum</a>

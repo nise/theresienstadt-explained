@@ -1,37 +1,33 @@
 <template>
-   <div class="container" style="text-align: left">
+  <div class="container" style="text-align: left">
     <h1 class="mt-4 mb-1" style="text-align: left">
-    Fake Video
+      {{ $t("fakevideo.h1") }}
     </h1>
     <div style="background-color: white" class="page mt-3 mb-5 pt-4 pb-3 px-3">
-    <!--
+      <!--
 - Digital video tampering detection: An overview of passive techniques, https://www.sciencedirect.com/science/article/pii/S1742287616300718
 - DLF Framing
 - Deep Fake
 
     -->
 
-
-      Für den Theresienstadt-Film hatte die SS eine aufwendige Stadtverschönerung veranlasst 
-      und eine große Zahl von Protagonisten zu Filmaufnahmen gezwungen. 
-
-      Mit den heutigen technischen Mitteln lassen sich Filmszenen wie diese 
-      mit Hilfe maschineller Lernverfahren am Computer erzeugen. 
-
-      Video-Aufnahmen gelten bislang als wichtige Beweise, um Sachverhalte zu
-      klären. Das könnte bald vorbei sein, denn die Manipulation von
-      Bewegtbildern ist technisch quasi für jeden möglich. Öffentlichkeit und
-      vor allem Medienmacher müssen künftig also noch viel genauer hinschauen,
-      welche Videos echt sind und welche manipuliert. Unterschied zwischen den
-      Visual Effects in Kinofilmen und den hier presentierten Techniken ist der
-      betriebene Aufwand und die dazu notwendige Expertise. Techniken aus der
-      Fotomanipulation lassen sich auf Video übertragen. Will deepfakes do deep
-      damage?
+      Für den Theresienstadt-Film hatte die SS eine aufwendige
+      Stadtverschönerung veranlasst und eine große Zahl von Protagonisten zu
+      Filmaufnahmen gezwungen. Mit den heutigen technischen Mitteln lassen sich
+      Filmszenen wie diese mit Hilfe maschineller Lernverfahren am Computer
+      erzeugen. Video-Aufnahmen gelten bislang als wichtige Beweise, um
+      Sachverhalte zu klären. Das könnte bald vorbei sein, denn die Manipulation
+      von Bewegtbildern ist technisch quasi für jeden möglich. Öffentlichkeit
+      und vor allem Medienmacher müssen künftig also noch viel genauer
+      hinschauen, welche Videos echt sind und welche manipuliert. Unterschied
+      zwischen den Visual Effects in Kinofilmen und den hier presentierten
+      Techniken ist der betriebene Aufwand und die dazu notwendige Expertise.
+      Techniken aus der Fotomanipulation lassen sich auf Video übertragen. Will
+      deepfakes do deep damage?
       https://cacm.acm.org/magazines/2020/1/241708-will-deepfakes-do-deep-damage/fulltext
-      
 
       <h2>Beispiele</h2>
-      
+
       <!--
         - Person aus Theresienstadt-Film entfernen
       -->
@@ -60,7 +56,6 @@
         </div>
       </section>
 
-
       <!--
         - TODO
       -->
@@ -76,17 +71,21 @@
       bekannte Übertragung von Körperbewegungen auf andere Personen in
       Videomaterial FakeVideo aus einem einzigen Bild erstellen:
       https://www.cnet.com/news/samsung-ai-deepfake-can-fabricate-a-video-of-you-from-a-single-photo-mona-lisa-cheapfake-dumbfake/
-      
       Anleitung:
       https://1e9.community/t/wie-ich-in-nur-zwei-wochen-gelernt-habe-eigene-deepfakes-zu-produzieren/3494
-      
       Beispiele:
       <ul>
-        <li><a href="https://www.youtube.com/embed/9WfZuNceFDM" target="new">Sassy Justice</a> ist eine Web-Fernsehserie von Trey Parker, Matt Stone und Peter Serafinowicz, die mithilfe von Deepfake-Technologie nicht verwandte Prominente und Politiker in die fiktive Welt eines Fernsehreporters.</li>
+        <li>
+          <a href="https://www.youtube.com/embed/9WfZuNceFDM" target="new"
+            >Sassy Justice</a
+          >
+          ist eine Web-Fernsehserie von Trey Parker, Matt Stone und Peter
+          Serafinowicz, die mithilfe von Deepfake-Technologie nicht verwandte
+          Prominente und Politiker in die fiktive Welt eines Fernsehreporters.
+        </li>
         <li>...</li>
       </ul>
-      
-      
+
       <!--
         - 
       -->
@@ -96,7 +95,6 @@
       https://gvv.mpi-inf.mpg.de/projects/DeepVideoPortraits/ Averbuch-Elore et
       al. (2017) Convert Audio to speech video: Suwajanakorn et al. (2017)
 
-      
       <!--
         - Test Azure: https://speech.microsoft.com/customvoice
         - https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-voice-prepare-data
