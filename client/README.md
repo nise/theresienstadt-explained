@@ -6,25 +6,29 @@
 - [x] VideoMapMarker
 - [x] VideoToC
 - [x] VideoTranskript
+- [] Video
+
 
 - [] About
-- [] Comments
+- [] Home
+- [] Imprint
+- [] Persons
+- [] Scenes
+
+
+
+- [] References
 - [] FakeVideo
 - [] GuidedVideo
 - [] History
-- [] Home
-- [] Imprint
 - [] Intro
 - [] Map
 - [] News
-- [] Persons
 - [] Privacy
 - [] Propaganda
-- [] Regerences
-- [] Scenes
-- [] Video
 - [] VideoAnalyses
 - [] App
+- [] Comments
 
 
 - [] Finish language selector buttons
