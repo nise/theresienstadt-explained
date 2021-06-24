@@ -230,6 +230,7 @@ export default {
         :style="styleSceneMarker(scene, videoElementduration)"
         @mouseover="highlightSceneLi(scene.number + 'li', $event)"
         @mouseout="highlightSceneLi(scene.number + 'li', $event)"
+        @click="gotoTime(scene.start)"
       >
         <div class="scenemarkertext" :id="scene.number + 'marker'">
           {{ scene.title }}
