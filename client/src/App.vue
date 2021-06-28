@@ -10,11 +10,11 @@
         class="routing"
         v-if="this.$route.path !== '/home' && this.$route.path !== '/'"
       >
-        <router-link to="/">{{ $t("app.backbutton")}}</router-link>
+        <router-link to="/"></router-link>
       </span>
       <div style="float: right">
         <button style="width: 40px; height: 20px" @click="switchLanguage(0)">
-          Ger
+          DE
         </button>
         <button style="width: 40px; height: 20px" @click="switchLanguage(1)">
           EN
@@ -37,13 +37,13 @@
           <div class="col-md-4 mb-md-0 mb-4">
             <ul class="list-unstyled">
               <li>
-                <a href="/about">{{}}Über Theresienstadt explained</a>
+                <a href="/about">{{ $t("app.about")}}</a>
               </li>
               <li>
-                <a href="/imprint">Impressum</a>
+                <a href="/imprint">{{ $t("app.impress")}}</a>
               </li>
               <li>
-                <a href="/privacy">Datenschutzerklärung</a>
+                <a href="/privacy">{{ $t("app.privacy")}} </a>
               </li>
             </ul>
           </div>
@@ -52,7 +52,7 @@
       <div class="footer-copyright text-center">
         © 2020 Copyright:
         <a href="https://jugendbegegnung.de/dresden/"
-          >Förderverein Jugendbegegnung in Theresienstadt/Terezin</a
+          >{{ $t("app.copyright")}}</a
         >
       </div>
     </footer>
