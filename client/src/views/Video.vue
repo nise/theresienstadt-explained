@@ -307,7 +307,8 @@ export default {
           event.long,
           "black",
           event.id,
-          event.time
+          event.time,
+          event.descr
         )
       );
     },
