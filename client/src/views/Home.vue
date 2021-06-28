@@ -25,7 +25,7 @@
       <div class="rubrik-container">
         
         <div class="rubrik-element">
-          <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
+          <img class="rubrik-img" src="../assets/cat-1.png" @click="test"/>
           <hr style="background-color:blue">
           <p style="color:blue"> <b>ALLTAG</b> </p>
           <p style="color:white">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="rubrik-element">
-          <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
+          <img class="rubrik-img" src="../assets/cat-2.png" @click="test"/>
           <hr style="background-color:green">
           <p style="color:green"> <b>ARBEIT</b> </p>
           <p style="color:white;">
@@ -43,7 +43,7 @@
         </div>
 
         <div class="rubrik-element">
-          <img class="rubrik-img" src="../assets/dummy.png" @click="test"/>
+          <img class="rubrik-img" src="../assets/cat-3.png" @click="test"/>
           <hr style="background-color:yellow">
           <p style="color:yellow"> <b>KULTUR</b> </p> 
           <p style="color:white">
