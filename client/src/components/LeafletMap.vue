@@ -24,10 +24,33 @@ export default {
     setView(latitude, longitude, zoomLevel = 15) {
       this.leafletmap.setView([latitude, longitude], zoomLevel);
     },
-    createMarker(latitude, longitude, colour, Identifier, time) {
+    createMarker(latitude, longitude, colour, Identifier, time, ttipText) {
       // Reference: https://stackoverflow.com/questions/23567203/leaflet-changing-marker-color
       // ${...} not part of jQuery but ES6, see https://exploringjs.com/es6/ch_template-literals.html
       let _this = this;
+
+  let custommarker2 = `
+        background-color: ${colour};  
+        width: 1.5rem;
+        height: 1.5rem;
+        display: block;
+        left: -1.5rem;
+        top: -1.5rem;
+        position: relative;
+        border-radius: 3rem 3rem 0;
+        transform: rotate(45deg);
+        border: 1px solid #FFFFFF`;
+
+      let cIcon2 = leaflet.divIcon({
+        className: "customMarker",
+        iconAnchor: [0, 24],
+        labelAnchor: [-6, 0],
+        popupAnchor: [0, -36],
+        html: `<span style="${custommarker}" />`,
+      });
+
+
+
       let custommarker = `
         background-color: ${colour};  
         width: 1.5rem;
@@ -47,24 +70,32 @@ export default {
         popupAnchor: [0, -36],
         html: `<span style="${custommarker}" />`,
       });
-      // cIcon.addEventListener("click", function(){
-      //   console.log("ah");
-      // });
+
       let marker = leaflet
         .marker([latitude, longitude], { icon: cIcon })
         .addTo(this.leafletmap);
 
       marker._icon.id = Identifier;
-      marker.addEventListener("click", function(){
+      marker.addEventListener("click", function () {
         _this.gotoTime(time);
-      })
-
-      
+      });
+      let ttip = this.createToolTip(ttipText);
+      //marker.append(ttip);
 
       return marker;
     },
     changeMarkerColour(markerObj, colour) {
       markerObj._icon.firstChild.style.backgroundColor = colour;
+    },
+
+    createToolTip(text) {
+      let ttip = document.createElement("div");
+      ttip.visibility = "hidden";
+      ttip.innerText = text;
+      ttip.onmouseover = function () {
+        this.style.visibility = "visible";
+      };
+      return ttip;
     },
   },
 
@@ -90,7 +121,6 @@ export default {
     this.leafletmap.keyboard.disable();
     this.leafletmap.scrollWheelZoom.disable();
     this.leafletmap.touchZoom.disable();
-
   },
 };
 </script>
@@ -102,10 +132,10 @@ export default {
   bottom: 0px;
   color: gray;
 }
-.leaflet-control-attribution{
+.leaflet-control-attribution {
   color: gray;
 }
-.leaflet-control-attribution a{
+.leaflet-control-attribution a {
   color: gray;
 }
 </style>

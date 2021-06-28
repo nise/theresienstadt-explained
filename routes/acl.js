@@ -46,7 +46,7 @@ module.exports = function (db, app) {
         })
     });
 
-    app.post('/scenes/all', (req, res) => {
+    app.get('/scenes/all', (req, res) => {
         fs.readFile('./ressources/Scenes2020new.json', function (err, data) {
             res.send(data);
         });
