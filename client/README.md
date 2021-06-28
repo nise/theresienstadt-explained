@@ -9,11 +9,11 @@
 - [] Video
 
 
-- [] About
-- [] Home
-- [] Imprint
-- [] Persons
-- [] Scenes
+- [x] About
+- [x] Home
+- [x] Imprint
+- [x] Persons
+- [x] Scenes
 
 
 
@@ -27,7 +27,7 @@
 - [] Privacy
 - [] Propaganda
 - [] VideoAnalyses
-- [] App
+- [x] App
 - [] Comments
 
 

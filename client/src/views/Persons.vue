@@ -26,8 +26,8 @@
             type="text"
             style="float: left; width: 400px;"
             class="mx-1 form-control"
-            placeholder="Filter"
-            id="filerfield"
+            :placeholder="$t('persons.filterfield')"
+            id="filterfield"
           />
         </b-col>
       </b-row>
