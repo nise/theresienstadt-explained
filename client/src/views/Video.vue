@@ -510,11 +510,13 @@ var annoLength = this.annotations.length;
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
         <Video-TOC
+          class = "vid-toc"
           v-if="isModusFeatures('toc') && videoElement"
           :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
         <Video-Annotations
+          class = "vid-anno"
           v-if="isModusFeatures('annotations') && videoElement"
           ref="annotationscomp"
           :selectedPropagandaTechnique="selectedPropagandaTechnique"
@@ -527,8 +529,8 @@ var annoLength = this.annotations.length;
         <div hidden class="row video-bar audio ml-1 mt-2">
           <h4>{{$t("video.audiotrack")}}</h4>
         </div>
-        <div class="row places ml-1 mt-2">
-          <h4>{{$t("video.places")}}</h4>
+        <div class="places">
+          <h4 class="mt-2">{{$t("video.places")}}</h4>
           <Leaflet-Map ref="leafletref" @gotoTimerequest="gotoTime">
           </Leaflet-Map>
         </div>
@@ -561,6 +563,17 @@ var annoLength = this.annotations.length;
   padding: 0px;
 }
 
+.vida-toc {
+  flex: 1 1 auto;
+}
+.vid-anno {
+  height: 40vh;
+}
+
+.vid-map { 
+  flex: 0 1 300px;
+}
+
 h4 {
   display: block;
   font-family: Jost;
@@ -582,15 +595,20 @@ h4 {
 }
 
 .places {
-  display: inline-block;
+  position:absolute;
+  bottom: 0px;
+  margin-left: 20px;
+  
   background-color: #3b3b3bec;
   width: 96%;
 }
 
 .left-bar {
+  display: flex;
+  flex-flow: column;
   position: relative;
-  max-height: 100vh;
-  overflow-y: auto;
+  height: 90vh;
+  overflow-y: visible;
   overflow-x: hidden;
 }
 
