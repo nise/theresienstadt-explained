@@ -493,8 +493,7 @@ var annoLength = this.annotations.length;
             <button
               v-if="isModusFeatures('transcript')"
               class="video-toggle-transkript"
-              type = "button"
-              :class="{ active: showTranskript }"
+              type="button"
               @mousedown="toggleTranskript"
               title="Untertitel an/aus"
             >
@@ -502,6 +501,7 @@ var annoLength = this.annotations.length;
                 class="subtitleIcon"
                 src="../assets/icons/subtitleIcon.svg"
               />
+              <div class="redbar" :class="{ active: showTranskript }"></div>
             </button>
             <div class="vi2-volume-controls right"></div>
           </div>
@@ -510,13 +510,13 @@ var annoLength = this.annotations.length;
       <!-- left bar-->
       <div class="col-4 pt-1 left-bar">
         <Video-TOC
-          class = "vid-toc"
+          class="vid-toc"
           v-if="isModusFeatures('toc') && videoElement"
           :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
         <Video-Annotations
-          class = "vid-anno"
+          class="vid-anno"
           v-if="isModusFeatures('annotations') && videoElement"
           ref="annotationscomp"
           :selectedPropagandaTechnique="selectedPropagandaTechnique"
@@ -527,10 +527,10 @@ var annoLength = this.annotations.length;
         </Video-Annotations>
 
         <div hidden class="row video-bar audio ml-1 mt-2">
-          <h4>{{$t("video.audiotrack")}}</h4>
+          <h4>{{ $t("video.audiotrack") }}</h4>
         </div>
         <div class="places">
-          <h4 class="mt-2">{{$t("video.places")}}</h4>
+          <h4 class="mt-2">{{ $t("video.places") }}</h4>
           <Leaflet-Map ref="leafletref" @gotoTimerequest="gotoTime">
           </Leaflet-Map>
         </div>
@@ -570,7 +570,7 @@ var annoLength = this.annotations.length;
   height: 40vh;
 }
 
-.vid-map { 
+.vid-map {
   flex: 0 1 300px;
 }
 
@@ -595,10 +595,12 @@ h4 {
 }
 
 .places {
-  position:absolute;
-  bottom: 0px;
-  margin-left: 20px;
-  
+  position: absolute;
+  bottom: 0;
+  top: 59vh;
+  margin-left: 13px;
+  height: auto;
+
   background-color: #3b3b3bec;
   width: 96%;
 }
@@ -701,25 +703,36 @@ video {
   left: 10px;
   font-size: 0.9em;
 }
+.video-toggle-transkript .redbar {
+  opacity: 0;
+  height: 2px;
+  width: 25px;
+  border-radius: 2px;
+  background-color: red;
+  position: relative;
+  top: 2px;
+  transition: opacity 1s ease;
+}
+.video-toggle-transkript .redbar.active {
+  opacity: 1;
+  height: 2px;
+  width: 25px;
+  border-radius: 2px;
+  background-color: red;
+  position: relative;
+  top: 2px;
+  transition: opacity 1s ease;
+}
+
 .video-toggle-transkript {
   position: absolute;
-  top: 28px;
+  top: 30px;
   right: 5px;
-  background-color: gray;
-  opacity: 0.8;
-  border-radius: 20%;
-  border: none;
-
-}
-
-.video-toggle-transkript.active {
-  background-color: white;
-  opacity: 0.8;
-}
-
-.video-toggle-transkript.active:hover {
-  background-color: white;
+  /*background-color: gray;
+  opacity: 0.8;*/
+  background-color: inherit;
   opacity: 1;
+  border: none;
 }
 
 .video-toggle-transkript:focus {
@@ -728,9 +741,7 @@ video {
 }
 
 .video-toggle-transkript:hover {
-    background-color: gray;
-    opacity: 1;
-
+  opacity: 0.7;
 }
 
 .subtitleIcon {
