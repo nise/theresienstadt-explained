@@ -170,19 +170,34 @@ export default {
 
 <template>
   <div>
-    <div class="row video-bar topics ml-1 mt-2">
-      <h4>{{$t("videotoc.themeselect")}}</h4>
+    <div class="topics">
+      <h4>{{ $t("videotoc.themeselect") }}</h4>
       <div class="row">
-        <button class="btn btn-sm btn-outline-primary" 
-          :id="sceneSelectButtonGroup[0].id" @click="setFilter(0, sceneSelectButtonGroup)">{{$t("videotoc.everydaylife")}}</button>
-        <button class="btn btn-sm btn-outline-warning" 
-          :id="sceneSelectButtonGroup[1].id" @click="setFilter(1, sceneSelectButtonGroup)">{{$t("videotoc.culture")}}</button>
-        <button class="btn btn-sm btn-outline-success" 
-          :id="sceneSelectButtonGroup[2].id" @click="setFilter(2, sceneSelectButtonGroup)">{{$t("videotoc.work")}}</button>
+        <button
+          class="btn btn-sm btn-outline-primary"
+          :id="sceneSelectButtonGroup[0].id"
+          @click="setFilter(0, sceneSelectButtonGroup)"
+        >
+          {{ $t("videotoc.everydaylife") }}
+        </button>
+        <button
+          class="btn btn-sm btn-outline-warning"
+          :id="sceneSelectButtonGroup[1].id"
+          @click="setFilter(1, sceneSelectButtonGroup)"
+        >
+          {{ $t("videotoc.culture") }}
+        </button>
+        <button
+          class="btn btn-sm btn-outline-success"
+          :id="sceneSelectButtonGroup[2].id"
+          @click="setFilter(2, sceneSelectButtonGroup)"
+        >
+          {{ $t("videotoc.work") }}
+        </button>
       </div>
     </div>
-    <div class="row video-bar scenes ml-1 mt-2">
-      <h4>{{$t("videotoc.scenes")}}</h4>
+    <div class="scenes mt-2">
+      <h4>{{ $t("videotoc.scenes") }}</h4>
       <ul class="scene-list">
         <li v-for="scene in search()" :key="scene.number">
           <a
@@ -226,27 +241,32 @@ export default {
 </template>
 
 <style>
-.video-bar {
-  display: inline-block;
+.topics {
+  justify-self: flex-start;
   background-color: #3b3b3bec;
-  width: 96%;
+  margin-top: 2px;  /** Very small margin to bring visual top edge of class "right-bar" on same level as the video content area */
   padding-bottom: 10px;
   padding-top: 6px;
+  flex: 0 0 78px;
 }
-.video-bar.topics .row {
-  content-align: center;
+
+.scenes {
+  background-color: #3b3b3bec;
+  padding-bottom: 10px;
+  padding-top: 6px;
+  overflow-y: scroll;
+  flex: 1 1 300px
 }
-.video-bar.topics button {
+
+.topics button {
   padding: 1px 10px;
   margin: 4px 10px;
   border-radius: 10px;
 }
 
 .scene-list {
-  max-height: 40vh;
   padding-left: 10px;
   text-align: left;
-  overflow-y: auto;
 }
 .scene-list li {
   list-style: none;
@@ -266,7 +286,7 @@ export default {
   top: 10px;
   width: 2px;
   background-color: white;
-  
+
   z-index: 1010;
   cursor: pointer;
   transform: translate(0%, -25%);
@@ -281,7 +301,6 @@ export default {
   height: 30px;
   z-index: 1010;
   transform: translate(-40%, -20%);
-
 }
 
 .scenemarker:hover .scenemarkertext {
