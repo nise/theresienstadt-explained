@@ -507,14 +507,15 @@ var annoLength = this.annotations.length;
           </div>
         </div>
       </div>
-      <!-- left bar-->
-      <div class="col-4 pt-1 left-bar">
+      <!-- right bar-->
+      <div class="col-4 right-bar">
         <Video-TOC
           class="vid-toc"
           v-if="isModusFeatures('toc') && videoElement"
           :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
+
         <Video-Annotations
           class="vid-anno"
           v-if="isModusFeatures('annotations') && videoElement"
@@ -526,12 +527,16 @@ var annoLength = this.annotations.length;
         >
         </Video-Annotations>
 
-        <div hidden class="row video-bar audio ml-1 mt-2">
+        <div hidden class="row video-bar audio mt-2">
           <h4>{{ $t("video.audiotrack") }}</h4>
         </div>
-        <div class="places">
+        <div class="places mt-2">
           <h4 class="mt-2">{{ $t("video.places") }}</h4>
-          <Leaflet-Map ref="leafletref" @gotoTimerequest="gotoTime">
+          <Leaflet-Map
+            class="vid-map"
+            ref="leafletref"
+            @gotoTimerequest="gotoTime"
+          >
           </Leaflet-Map>
         </div>
       </div>
@@ -563,15 +568,19 @@ var annoLength = this.annotations.length;
   padding: 0px;
 }
 
-.vida-toc {
-  flex: 1 1 auto;
+.vid-toc {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 500px;
+  width: 98%;
+  margin-left: 4px;
 }
 .vid-anno {
   height: 40vh;
 }
 
-.vid-map {
-  flex: 0 1 300px;
+.vida-map {
+  flex-basis: 300px;
 }
 
 h4 {
@@ -595,23 +604,19 @@ h4 {
 }
 
 .places {
-  position: absolute;
-  bottom: 0;
-  top: 59vh;
-  margin-left: 13px;
-  height: auto;
-
+  justify-self: flex-end;
+  flex: 0 0 300px;
   background-color: #3b3b3bec;
-  width: 96%;
+  width: 98%;
+  margin-bottom: 12px;
+  margin-left: 4px;
 }
 
-.left-bar {
+.right-bar {
   display: flex;
-  flex-flow: column;
-  position: relative;
-  height: 90vh;
-  overflow-y: visible;
-  overflow-x: hidden;
+  flex-flow: column nowrap;
+  max-height: 100%;
+  width: 96%;
 }
 
 /* Video */

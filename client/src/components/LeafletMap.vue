@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-1" id="leaflet-map"></div>
+  <div id="leaflet-map"></div>
 </template>
 
 <script>
@@ -127,10 +127,12 @@ export default {
 
 <style>
 #leaflet-map {
-  width: 98%;
+  width: 96%;
   height: 256px;
   bottom: 0px;
   color: gray;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 .leaflet-control-attribution {
   color: gray;
