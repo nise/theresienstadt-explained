@@ -36,6 +36,29 @@ export default {
         }
       }
     },
+    /**Removes scenes with unuseable data entries */
+    removeInvalid(scenelist) {
+      for (let i = 0; i < scenelist.length; i++) {
+        if (
+          scenelist[i].start == -1 ||
+          scenelist[i].start > this.videoElementduration
+        ) {
+          scenelist.splice(i, 1);
+          i--;
+        }
+      }
+    },
+    removeUnknownCategory(scenelist) {
+      for (let i = 0; i < scenelist.length; i++) {
+        if (
+          typeof scenelist[i].category == "undefined" ||
+          scenelist[i].category == "unbekannt"
+        ) {
+          scenelist.splice(i, 1);
+          i--;
+        }
+      }
+    },
     styleSceneMarker(scene, videoElementduration) {
       return {
         left: (scene.start / videoElementduration) * 100 + "%",
@@ -134,7 +157,9 @@ export default {
   mounted: function () {
     this.getSceneData().then(() => {
       this.sortScenes(this.rawscenes);
-      this.addCategory(this.rawscenes);
+      this.removeUnknownCategory(this.rawscenes);
+      //this.addCategory(this.rawscenes);         // uncomment this and comment call "removeUnknownCat" to add scenes with unknown category
+      this.removeInvalid(this.rawscenes);
       this.scenes = this.rawscenes;
     });
   },
@@ -244,7 +269,7 @@ export default {
 .topics {
   justify-self: flex-start;
   background-color: #3b3b3bec;
-  margin-top: 2px;  /** Very small margin to bring visual top edge of class "right-bar" on same level as the video content area */
+  margin-top: 2px; /** Very small margin to bring visual top edge of class "right-bar" on same level as the video content area */
   padding-bottom: 10px;
   padding-top: 6px;
   flex: 0 0 78px;
@@ -255,7 +280,7 @@ export default {
   padding-bottom: 10px;
   padding-top: 6px;
   overflow-y: scroll;
-  flex: 1 1 300px
+  flex: 1 1 300px;
 }
 
 .topics button {
