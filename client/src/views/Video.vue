@@ -316,20 +316,22 @@ export default {
      *  Caller: <Video-MapMarker>
      *  Target: <Leaflet-Map>
      */
-    changeMMColour(event) {
+    changeMMState(event) {
       if (event.enter.length > 0) {
         for (let i = 0; i < event.enter.length; i++) {
-          this.$refs["leafletref"].changeMarkerColour(
+          this.$refs["leafletref"].changeMarkerState(
             this.mapMarkerStore[JSON.parse(event.enter[i].text).id],
-            "white"
+            "white",
+            true
           );
         }
       }
       if (event.exit.length > 0) {
         for (let i = 0; i < event.exit.length; i++) {
-          this.$refs["leafletref"].changeMarkerColour(
+          this.$refs["leafletref"].changeMarkerState(
             this.mapMarkerStore[JSON.parse(event.exit[i].text).id],
-            "black"
+            "black",
+            false
           );
         }
       }
@@ -424,7 +426,7 @@ var annoLength = this.annotations.length;
         >
           <Video-MapMarker
             @requestMM="acquireMM"
-            @requestMMColourChange="changeMMColour"
+            @requestMMColourChange="changeMMState"
           >
           </Video-MapMarker>
 

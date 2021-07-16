@@ -29,72 +29,84 @@ export default {
       // ${...} not part of jQuery but ES6, see https://exploringjs.com/es6/ch_template-literals.html
       let _this = this;
 
-  let custommarker2 = `
-        background-color: ${colour};  
-        width: 1.5rem;
-        height: 1.5rem;
-        display: block;
-        left: -1.5rem;
-        top: -1.5rem;
-        position: relative;
-        border-radius: 3rem 3rem 0;
-        transform: rotate(45deg);
-        border: 1px solid #FFFFFF`;
-
-      let cIcon2 = leaflet.divIcon({
-        className: "customMarker",
-        iconAnchor: [0, 24],
-        labelAnchor: [-6, 0],
-        popupAnchor: [0, -36],
-        html: `<span style="${custommarker}" />`,
-      });
-
-
-
       let custommarker = `
         background-color: ${colour};  
         width: 1.5rem;
         height: 1.5rem;
         display: block;
-        left: -1.5rem;
-        top: -1.5rem;
+        left: -0.8rem;
+        top: -0.4rem;
         position: relative;
         border-radius: 3rem 3rem 0;
         transform: rotate(45deg);
-        border: 1px solid #FFFFFF`;
+        border: 1px solid #FFFFFF;
+        z-index: 100;`;
 
       let cIcon = leaflet.divIcon({
         className: "customMarker",
         iconAnchor: [0, 24],
         labelAnchor: [-6, 0],
         popupAnchor: [0, -36],
-        html: `<span style="${custommarker}" />`,
+        html: `<span id="${"MMIcon" + Identifier}" style="${custommarker}" />`,
       });
 
       let marker = leaflet
         .marker([latitude, longitude], { icon: cIcon })
         .addTo(this.leafletmap);
 
-      marker._icon.id = Identifier;
+      marker._icon.id = "MM" + Identifier; // Identifier is the cuetext id of a .vtt (= 1, 2, 3, ...) => adding more info
+      marker._icon.baseid = Identifier;
+
       marker.addEventListener("click", function () {
         _this.gotoTime(time);
       });
-      let ttip = this.createToolTip(ttipText);
-      //marker.append(ttip);
+      marker.addEventListener("mouseover", () => {
+        _this.showToolTip(Identifier);
+      });
+      marker.addEventListener("mouseout", () => {
+        _this.hideToolTip(Identifier);
+      });
+
+      let ttip = this.createToolTip(ttipText, Identifier);
+      let mmicon = document.getElementById("MMIcon" + Identifier);
+
+      mmicon.appendChild(ttip);
 
       return marker;
     },
-    changeMarkerColour(markerObj, colour) {
+    changeMarkerState(markerObj, colour = "black", active) {
       markerObj._icon.firstChild.style.backgroundColor = colour;
+      if (active) (this.showToolTip(markerObj._icon.baseid));
+      if (!active) (this.hideToolTip(markerObj._icon.baseid));
     },
 
-    createToolTip(text) {
+    showToolTip(idnum) {
+      document.getElementById("MMTT" + idnum).style.visibility = "visible";
+      let mmicon = document.getElementById("MMIcon" + idnum);
+      mmicon.parentNode.style.zIndex = "999";
+    },
+    hideToolTip(idnum) {
+      document.getElementById("MMTT" + idnum).style.visibility = "hidden";
+      let mmicon = document.getElementById("MMIcon" + idnum);
+      mmicon.parentNode.style.zIndex = "99";
+    },
+
+    createToolTip(text, id) {
       let ttip = document.createElement("div");
-      ttip.visibility = "hidden";
+      ttip.id = "MMTT" + id; //MapMarkerToolTip
+      ttip.style.visibility = "hidden";
+      ttip.style.transformOrigin = "left";
+      ttip.style.transform = "rotate(-45deg) translate(-50%,-50%)";
+      ttip.style.backgroundColor = "black";
+      ttip.style.colour = "white";
+      ttip.style.width = "fit-content";
+      ttip.style.position = "relative";
+      ttip.style.top = "-10px";
+      ttip.style.paddingLeft = "5px";
+      ttip.style.paddingRight = "5px";
+      ttip.style.borderRadius = "10px";
+      ttip.style.zIndex = "-1";
       ttip.innerText = text;
-      ttip.onmouseover = function () {
-        this.style.visibility = "visible";
-      };
       return ttip;
     },
   },
