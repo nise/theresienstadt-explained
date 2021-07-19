@@ -7,7 +7,7 @@
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
   
-    <b-row>
+    <b-row :id ="'personcardrow' + person.id">
       <img v-if="person.image==='JA'"
         style="height: 210px; width: 180px; overflow:hidden;"
         :id="'personcard' + person.id"
@@ -20,7 +20,7 @@
         :src="'/img/person_icon.png'"
       />
 
-      <b-col>
+      <b-col :id ="'personcardcol' + person.id">
         <h3 class="ml-0 mt-2">{{ person.title }} {{ person.name }} {{ person.surename }}</h3>
         <p class="ml-1">
           <div v-if="person.birth_date != 'unbekannt' || person.birth_place != 'unbekannt'"> 
@@ -117,13 +117,41 @@ export default {
       this.isopenbio = this.isopenbio == "block" ? "none" : "block";
     },
     getImagePath(p) {
-      return "/img/persons/" + this.getShortName(p) + ".jpg";
+      let returnstr;
+      returnstr = "/img/persons/" + this.getShortName(p) + ".jpg";
+      return returnstr;
     },
     getShortName(p) {
       //let t = p.shortname.split(" ");
       //return t[0] + "_" + t[1];
-      return p.shortname.replace(/\ /g, '_');
+      return p.shortname.replace(/\ /g, "_");
     },
+    loadImage(url) {
+      return new Promise((resolve, reject) => {
+        let img = new Image(180, 210);
+        img.addEventListener("load", (img) => resolve(img));
+        img.addEventListener("error", (img) => reject(img));
+        img.src = url;
+      });
+    },
+  },
+  mounted: function () {
+    // let pimg;
+    // this.loadImage(this.getImagePath(this.person))
+    //   .then((img) => {
+    //     pimg = img.target;
+    //   })
+    //   .catch((img) => {
+    //     pimg = img.target;
+    //     pimg.src = "/img/person_icon.png";
+    //   }).finally(() => {
+    //     pimg.id = "personcard" + this.person.id;
+    //     pimg.style.overflow = "hidden";
+    //     let col = document.getElementById("personcardcol" + this.person.id);
+    //     document
+    //   .getElementById("personcardrow" + this.person.id)
+    //   .insertBefore(pimg, col);
+    //   });
   },
 };
 </script>
