@@ -10,13 +10,13 @@
         class="routing"
         v-if="this.$route.path !== '/home' && this.$route.path !== '/'"
       >
-        <router-link to="/"></router-link>
+        <router-link to="/">{{ $t("app.backbutton")}}</router-link>
       </span>
       <div style="float: right">
-        <button style="width: 40px; height: 20px" @click="switchLanguage(0)">
+        <button style="width: 30px; height: 25px; padding: 1px;" @click="switchLanguage(0)">
           DE
         </button>
-        <button style="width: 40px; height: 20px" @click="switchLanguage(1)">
+        <button style="width: 30px; height: 25px; padding: 1px;" @click="switchLanguage(1)">
           EN
         </button>
       </div>
