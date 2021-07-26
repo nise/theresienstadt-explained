@@ -115,7 +115,7 @@ export default {
       }
     },
     setFilter(buttonNumber, buttonGroup) {
-      if (this.selectedFilter === buttonGroup[buttonNumber].category)
+      if (this.selectedFilter === buttonGroup[buttonNumber].category)   // user clicks on already active category -> deselect category
         this.selectedFilter = "none";
       else this.selectedFilter = buttonGroup[buttonNumber].category;
       this.toggleButtonLook(buttonNumber, buttonGroup);
@@ -143,6 +143,12 @@ export default {
           .classList.add(buttonGroup[buttonNumber].class);
       }
     },
+    /**Function for conveniently setting a filter from outside this module, expectantly Video.vue
+     * @argument category index on an array ("sceneSelectButtonGroup", mirrors array "topics" in Video.vue)
+    */
+    setFilterExt(category) {
+      this.setFilter(category, this.sceneSelectButtonGroup);
+    },
     getSceneData: function () {
       let _this = this;
       return new Promise((res, rej) => {
@@ -159,7 +165,7 @@ export default {
       this.sortScenes(this.rawscenes);
       this.removeUnknownCategory(this.rawscenes);
       //this.addCategory(this.rawscenes);         // uncomment this and comment call "removeUnknownCat" to add scenes with unknown category
-      this.removeInvalid(this.rawscenes);
+      this.removeInvalid(this.rawscenes);         // removes scenes which start time is negative or is greater than film length
       this.scenes = this.rawscenes;
     });
   },
@@ -176,15 +182,15 @@ export default {
           pressed: false,
         },
         {
-          category: "Kultur",
-          id: "kulturbutton",
-          class: "kulturhover",
-          pressed: false,
-        },
-        {
           category: "Arbeit",
           id: "arbeitbutton",
           class: "arbeithover",
+          pressed: false,
+        },
+        {
+          category: "Kultur",
+          id: "kulturbutton",
+          class: "kulturhover",
           pressed: false,
         },
       ],
@@ -206,19 +212,20 @@ export default {
           {{ $t("videotoc.everydaylife") }}
         </button>
         <button
-          class="btn btn-sm btn-outline-warning"
+          class="btn btn-sm btn-outline-success"
           :id="sceneSelectButtonGroup[1].id"
           @click="setFilter(1, sceneSelectButtonGroup)"
         >
-          {{ $t("videotoc.culture") }}
+          {{ $t("videotoc.work") }}
         </button>
         <button
-          class="btn btn-sm btn-outline-success"
+          class="btn btn-sm btn-outline-warning"
           :id="sceneSelectButtonGroup[2].id"
           @click="setFilter(2, sceneSelectButtonGroup)"
         >
-          {{ $t("videotoc.work") }}
+          {{ $t("videotoc.culture") }}
         </button>
+        
       </div>
     </div>
     <div class="scenes mt-2">
