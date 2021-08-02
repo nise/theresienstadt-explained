@@ -1,4 +1,5 @@
 //helper function to convert JS objects back to JSON
+//see end of document for the function
 
 const fs = require('fs');
 
