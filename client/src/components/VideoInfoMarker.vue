@@ -274,10 +274,8 @@ export default {
     let cuelist = this.track.cues;
         if (cuelist) {
           for (let i = 0; i < cuelist.length; i++){
-            let tb = document.getElementById(cuelist[i].id+"textbox");
-            let el = document.getElementById(cuelist[i].id);
-            if (tb) tb.style.display = "none";
-            if (el) el.style.display = "none";
+            document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+            document.getElementById(cuelist[i].id).style.display = "none";
 
           }
         }

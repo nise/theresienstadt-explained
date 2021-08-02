@@ -24,9 +24,7 @@
         </div>
         <div class="rubrik-container">
           <div class="rubrik-element">
-            <router-link to="/film/player/everydaylife">
-            <img class="rubrik-img" src="../assets/cat-1.png" />
-            </router-link>
+            <img class="rubrik-img" src="../assets/cat-1.png" @click="test" />
             <hr style="background-color: blue" />
             <p style="color: blue">
               <b>{{ $t("home.everydaylifehead") }}</b>
@@ -37,9 +35,7 @@
           </div>
 
           <div class="rubrik-element">
-            <router-link to="/film/player/work">
-            <img class="rubrik-img" src="../assets/cat-2.png" />
-            </router-link>
+            <img class="rubrik-img" src="../assets/cat-2.png" @click="test" />
             <hr style="background-color: green" />
             <p style="color: green">
               <b>{{ $t("home.workhead") }}</b>
@@ -50,10 +46,7 @@
           </div>
 
           <div class="rubrik-element">
-            <router-link to="/film/player/culture">
-            <img class="rubrik-img" src="../assets/cat-3.png" />
-            </router-link>
-            
+            <img class="rubrik-img" src="../assets/cat-3.png" @click="test" />
             <hr style="background-color: yellow" />
             <p style="color: yellow">
               <b>{{ $t("home.culturehead") }}</b>
@@ -227,6 +220,9 @@ export default {
       }) */
   },
   methods: {
+    test() {
+      console.log("test");
+    },
   },
   watch: {
     selectedLanguageFromHeader: function () {
