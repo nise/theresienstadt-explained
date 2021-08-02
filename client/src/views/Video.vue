@@ -45,7 +45,7 @@ import leafletmap from "../components/LeafletMap";
 //moment.locale('de');
 
 export default {
-  props: ["modus", "timejumpOrTopic"],
+  props: ["modus", "timejump"],
   components: {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
@@ -62,7 +62,6 @@ export default {
         player: ["toc", "transcript"],
         analysis: ["annotations"],
       },
-      topics: ["everydaylife", "work", "culture"],
       videoElement: null,
       videoPlayerID: "videoplayer",
       paused: true,
@@ -105,16 +104,10 @@ export default {
       this.processURLProps();
     },
 
-    // only processes URL prop 'timejumpOrTopic'
+    // only processes URL prop 'timejump'
     processURLProps() {
-      let index;
-      if (this.timejumpOrTopic) {
-        index = this.topics.indexOf(this.timejumpOrTopic)
-        if (index !== -1) {
-          this.setTopic(index);
-        } else {
-          this.decodeTimejump(this.timejumpOrTopic);
-        }
+      if (this.timejump) {
+        this.decodeTimejump(this.timejump);
       }
     },
     /** decodes URL prop to find out which videotime to jump to */
@@ -146,10 +139,6 @@ export default {
         desiredTime = parseInt(mins) * 60 + parseInt(secs);
         this.gotoTime(desiredTime);
       }
-    },
-    /**@argument desiredTopic is simply an index of an array, dictated by array "topics" */
-    setTopic(desiredTopic) {
-      this.$refs["vid-toc-ref"].setFilterExt(desiredTopic);
     },
     isModusFeatures(feature) {
       return this.featureSets[this.modus].indexOf(feature) !== -1;
@@ -525,7 +514,6 @@ var annoLength = this.annotations.length;
         <Video-TOC
           class="vid-toc"
           v-if="isModusFeatures('toc') && videoElement"
-          ref="vid-toc-ref"
           :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>

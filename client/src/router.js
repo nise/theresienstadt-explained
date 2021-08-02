@@ -21,7 +21,7 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/film/:modus/:timejumpOrTopic?',
+      path: '/film/:modus/:timejump?',
       name: 'film',
       component: () => import(/* webpackChunkName: "about" */ './views/Video.vue'),
       props: true 
