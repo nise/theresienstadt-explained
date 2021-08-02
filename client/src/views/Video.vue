@@ -410,7 +410,7 @@ var annoLength = this.annotations.length;
             }
 */
       //return moment.duration(num, 'minutes');
-      //num = num/60; 
+      //num = num/60;
       //this.formatedTime = ('0' + Math.floor(num) % 24).slice(-2) + ':' + ((num % 1)*60 + '0').slice(0, 2);//moment(currentTime).format('mm:ss');
     },
   },
