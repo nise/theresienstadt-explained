@@ -197,7 +197,7 @@ export default {
         ((e.clientX - rect.left) / (rect.right - rect.left)) *
         this.videoElement.duration;
       this.currentTime = this.videoElement.currentTime;
-      //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right);
+      //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right); 
     },
     gotoTime(time) {
       if (!this.videoElement) {
