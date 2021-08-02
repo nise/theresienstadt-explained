@@ -45,7 +45,7 @@ import leafletmap from "../components/LeafletMap";
 //moment.locale('de');
 
 export default {
-  props: ["modus", "timejump"],
+  props: ["modus", "timejumpOrTopic"],
   components: {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
@@ -62,6 +62,7 @@ export default {
         player: ["toc", "transcript"],
         analysis: ["annotations"],
       },
+      topics: ["everydaylife", "work", "culture"],
       videoElement: null,
       videoPlayerID: "videoplayer",
       paused: true,
@@ -104,10 +105,16 @@ export default {
       this.processURLProps();
     },
 
-    // only processes URL prop 'timejump'
+    // only processes URL prop 'timejumpOrTopic'
     processURLProps() {
-      if (this.timejump) {
-        this.decodeTimejump(this.timejump);
+      let index;
+      if (this.timejumpOrTopic) {
+        index = this.topics.indexOf(this.timejumpOrTopic);
+        if (index !== -1) {
+          this.setTopic(index);
+        } else {
+          this.decodeTimejump(this.timejumpOrTopic);
+        }
       }
     },
     /** decodes URL prop to find out which videotime to jump to */
@@ -140,6 +147,10 @@ export default {
         this.gotoTime(desiredTime);
       }
     },
+    /**@argument desiredTopic is simply an index of an array, dictated by array "topics" */
+    setTopic(desiredTopic) {
+      this.$refs["vid-toc-ref"].setFilterExt(desiredTopic);
+    },
     isModusFeatures(feature) {
       return this.featureSets[this.modus].indexOf(feature) !== -1;
     },
@@ -151,7 +162,7 @@ export default {
       this.paused = event.target.paused;
     },
     play() {
-      this.timer = setInterval(this.updateAnnotaions, 500);
+      this.timer = setInterval(this.updateAnnotations, 500);
       this.paused = false;
       this.updateCountdown();
       this.videoElement.play();
@@ -169,7 +180,7 @@ export default {
     },
     forward() {},
     backward() {},
-    updateAnnotaions() {
+    updateAnnotations() {
       this.currentTime = this.videoElement.currentTime;
     },
     momenwwwt: function () {
@@ -214,12 +225,12 @@ export default {
     },
     videoControlAddCommand() {
       let _this = this;
-      window.addEventListener("keypress", function () {
-        _this.togglePlayPause(event);
-      });
-      window.addEventListener("keydown", function () {
-        _this.skip5s(event);
-      });
+      window.addEventListener("keypress", 
+        _this.togglePlayPause
+      );
+      window.addEventListener("keydown",
+        _this.skip5s
+      );
     },
     togglePlayPause(event) {
       switch (event.code) {
@@ -312,9 +323,10 @@ export default {
         )
       );
     },
-    /** Changes colour of a marker on the leafletmap
+    /** Changes colour and tooltip visibility of a marker on the leafletmap
      *  Caller: <Video-MapMarker>
      *  Target: <Leaflet-Map>
+     *  changeMarkerState(markerID, colour, tooltipVisibility)
      */
     changeMMState(event) {
       if (event.enter.length > 0) {
@@ -401,6 +413,10 @@ var annoLength = this.annotations.length;
       //num = num/60;
       //this.formatedTime = ('0' + Math.floor(num) % 24).slice(-2) + ':' + ((num % 1)*60 + '0').slice(0, 2);//moment(currentTime).format('mm:ss');
     },
+  },
+  beforeDestroy: function () {
+    window.removeEventListener("keypress",this.togglePlayPause);
+    window.removeEventListener("keydown", this.skip5s);
   },
 };
 </script>
@@ -514,6 +530,7 @@ var annoLength = this.annotations.length;
         <Video-TOC
           class="vid-toc"
           v-if="isModusFeatures('toc') && videoElement"
+          ref="vid-toc-ref"
           :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
@@ -578,7 +595,9 @@ var annoLength = this.annotations.length;
   margin-left: 4px;
 }
 .vid-anno {
-  height: 40vh;
+  flex: 1 1 500px;
+  width: 98%;
+  margin-left: 4px;
 }
 
 .vida-map {
