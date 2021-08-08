@@ -212,6 +212,8 @@ export default {
           :id="sceneSelectButtonGroup[0].id"
           @click="setFilter(0, sceneSelectButtonGroup)"
           @keyup="keyupEmpty"
+          @keypress="keyupEmpty"
+          @keydown="keyupEmpty"
         >
           {{ $t("videotoc.everydaylife") }}
         </button>
