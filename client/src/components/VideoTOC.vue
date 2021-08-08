@@ -149,6 +149,9 @@ export default {
     setFilterExt(category) {
       this.setFilter(category, this.sceneSelectButtonGroup);
     },
+    keyupEmpty(){
+
+    },
     getSceneData: function () {
       let _this = this;
       return new Promise((res, rej) => {
@@ -208,6 +211,7 @@ export default {
           class="btn btn-sm btn-outline-primary"
           :id="sceneSelectButtonGroup[0].id"
           @click="setFilter(0, sceneSelectButtonGroup)"
+          @keyup="keyupEmpty"
         >
           {{ $t("videotoc.everydaylife") }}
         </button>

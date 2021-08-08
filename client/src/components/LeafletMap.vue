@@ -100,6 +100,7 @@ export default {
       ttip.style.backgroundColor = "black";
       ttip.style.colour = "white";
       ttip.style.width = "fit-content";
+      ttip.style.width = "-moz-fit-content";
       ttip.style.position = "relative";
       ttip.style.top = "-10px";
       ttip.style.paddingLeft = "5px";
