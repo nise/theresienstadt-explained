@@ -9,7 +9,7 @@ const fetchData = function (path) {
     });
 };
 
-const parsetoVTT = new Promise((res, rej) => {
+const parsetoVTT_advene = new Promise((res, rej) => {
     fetchData('./ressources/identificationfocus.json').then(function (data) {
         let prodata = findData(data);
         let sample = createVTT(prodata);
@@ -101,5 +101,5 @@ function time(ms) {
     return new Date(ms).toISOString().slice(11, -1);
 }
 
-module.exports = parsetoVTT;
+module.exports = parsetoVTT_advene;
 
