@@ -1,11 +1,18 @@
+# Roadmap
+- run and check program
+- identify open issues
+- use strapi as LMS https://strapi.io/
+- 
+
 # Anwendung starten
-Vorbereitung:
+Setup
 * `npm install` 
 * `npm audit -fix`
 
-So bekommst du die Anwendung zum Laufen
+Run the application
 * `cd client`
 * `npm run serve`  (siehe package.json in Zeile 5)
+* eventually run `export NODE_OPTIONS=--openssl-legacy-provider`
 * Open http://localhost:8080  in your browser
 
 Unter http://localhost:8080/film ist der Player derzeit sichtbar. 
