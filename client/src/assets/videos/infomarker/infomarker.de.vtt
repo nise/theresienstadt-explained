@@ -2,7 +2,7 @@ WEBVTT
 
 0
 00:00:00.414 --> 00:00:02.331
-[{"name":"Adler Maximilian","id":0,"x":46,"y":33}
+[{"name":"Rect","id":0,"x":46,"y":33}
 ,{"name":"John","id":1,"x":67,"y":34}
 ,{"name":"Mike","id":2,"x":88,"y":35}
 ]
