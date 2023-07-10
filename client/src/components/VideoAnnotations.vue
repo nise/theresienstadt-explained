@@ -71,21 +71,21 @@ export default {
 
 <div>
   <div class="row video-bar topics ml-1 mt-2">
-          <h4>Propagandatechnik</h4>
+          <h4>{{$t("videoannotations.propagandatechnique")}}</h4>
           <div class="row">
             <select v-model="selectedPropagandaTechnique" class="ml-2">
-              <option disabled value="">Bitte wählen Sie eine Technik aus</option>
-              <option>Ästhetisierung</option>
-              <option>Dekontextualisierung</option>
-              <option>Kognitive Dissonanz</option>
-              <option>Normaler Mensch</option>
-              <option>Berufung auf berühmte Menschen</option>
-              <option>Übertreibung</option>
-              <option>Euphorie</option>
-              <option>Wiederholung</option>
-              <option>Berufung auf Autoritäten</option>
-              <option>Halbwahrheit</option>
-              <option>Rosinenpicken</option>
+              <option disabled value="">{{$t("videoannotations.choosetechnique")}}</option>
+              <option>{{$t("videoannotations.opt1")}}</option>
+              <option>{{$t("videoannotations.opt2")}}</option>
+              <option>{{$t("videoannotations.opt3")}}</option>
+              <option>{{$t("videoannotations.opt4")}}</option>
+              <option>{{$t("videoannotations.opt5")}}</option>
+              <option>{{$t("videoannotations.opt6")}}</option>
+              <option>{{$t("videoannotations.opt7")}}</option>
+              <option>{{$t("videoannotations.opt8")}}</option>
+              <option>{{$t("videoannotations.opt9")}}</option>
+              <option>{{$t("videoannotations.opt10")}}</option>
+              <option>{{$t("videoannotations.opt11")}}</option>
             </select>
           </div>
         </div>
@@ -93,14 +93,14 @@ export default {
         <span :title="annotation.content.title" v-for="annotation in annotations" v-bind:key="annotation" @click="gotoTime(annotation.start)" class="timeline-marker" :style="'left:'+getXPosition(annotation.start)+'%;'"></span>
     </portal>
     <div class="row video-bar annotations ml-1 mt-2">
-        <h4>Markierungen</h4>
-        <button v-if="!showAnnotationForm" @click="toggleForm" class="btn btn-primary btn-sm left ml-2">Neue Markierung anlegen</button>
+        <h4>{{$t("videoannotations.markings")}}</h4>
+        <button v-if="!showAnnotationForm" @click="toggleForm" class="btn btn-primary btn-sm left ml-2">{{$t("videoannotations.newmark")}}</button>
         <div v-if="showAnnotationForm" class="annotation-form col-12">
-            <div class="time left">Zeitpunkt: {{ currentTime | moment('mm:ss') }}</div>
+            <div class="time left">{{$t("videoannotations.timepoint")}}: {{ currentTime | moment('mm:ss') }}</div>
             <input v-model="newannotationtitle" placeholder="Geben Sie der Markierung einen Titel"></input><br>
             <textarea v-model="newannotationreason" placeholder="Begründen Sie, warum die markierte Stelle eine Manipulation darstellt"></textarea><br>
-            <button @click="saveannotation" class="btn btn-primary left">speichern</button>
-            <button @click="clearannotation" class="btn btn-link right">verwerfen</button>
+            <button @click="saveannotation" class="btn btn-primary left">{{$t("videoannotations.safe")}}</button>
+            <button @click="clearannotation" class="btn btn-link right">{{$t("videoannotations.discard")}}</button>
         </div>
         <br/>
         <br/>

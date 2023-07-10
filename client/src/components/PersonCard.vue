@@ -7,7 +7,7 @@
     :style="{ display: this.hideself ? 'none' : 'block' }"
   >
   
-    <b-row>
+    <b-row :id ="'personcardrow' + person.id">
       <img v-if="person.image==='JA'"
         style="height: 210px; width: 180px; overflow:hidden;"
         :id="'personcard' + person.id"
@@ -20,18 +20,18 @@
         :src="'/img/person_icon.png'"
       />
 
-      <b-col>
+      <b-col :id ="'personcardcol' + person.id">
         <h3 class="ml-0 mt-2">{{ person.title }} {{ person.name }} {{ person.surename }}</h3>
         <p class="ml-1">
           <div v-if="person.birth_date != 'unbekannt' || person.birth_place != 'unbekannt'"> 
-            geb. {{ person.birth_date }} in {{ person.birth_place }}
+            {{$t("personcard.born")}} {{ person.birth_date }} {{$t("personcard.bornin")}} {{ person.birth_place }}
           </div>
           <div v-if="person.death != 'unbekannt' || person.death_place != 'unbekannt'">
-            gest. {{ person.death }}, {{ person.death_place }}
+            {{$t("personcard.death")}} {{ person.death }}, {{ person.death_place }}
           </div>
         </p>
         <b-row class="ml-0">
-          <p v-if="person.branch && person.branch !== 'k.A.'" class="text-left mt-1">Wirken: {{ person.branch }}</p>
+          <p v-if="person.branch && person.branch !== 'k.A.'" class="text-left mt-1">{{$t("personcard.branch")}} {{ person.branch }}</p>
           <b-button
             v-b-toggle="'collapse-' + person.id"
             class="mr-3 mb-3"
@@ -46,7 +46,7 @@
               bottom: 0px;
             "
             :style="{ display: this.isopenbio }"
-            >Mehr ...
+            >{{$t("personcard.button_more")}}
           </b-button>
         </b-row>
       </b-col>
@@ -65,13 +65,13 @@
           <p v-if="person.bio" class="px-3 text-break">{{ person.bio }}</p>
           <hr />
           <ul class="ml-1 pl-1 mb-5" style="list-style-type: '- ';">
-          <li v-if="person.nationality" class="mb-1">Nationalität: {{ person.nationality }}</li>
-          <li v-if="person.profession" class="mb-1">Beruf: {{ person.profession }}</li>
-          <li v-if="person.spouse" class="mb-1">Ehepartner: {{person.spouse}}</li> 
-          <li v-if="person.children" class="mb-1">Kind/er: {{person.children}}</li>
+          <li v-if="person.nationality" class="mb-1">{{$t("personcard.nationality")}} {{ person.nationality }}</li>
+          <li v-if="person.profession" class="mb-1">{{$t("personcard.profession")}} {{ person.profession }}</li>
+          <li v-if="person.spouse" class="mb-1">{{$t("personcard.spouse")}} {{person.spouse}}</li> 
+          <li v-if="person.children" class="mb-1">{{$t("personcard.children")}} {{person.children}}</li>
           </ul>
           
-          <h5 v-if="person.moviescenes" class="pr-3">Im Film</h5>
+          <h5 v-if="person.moviescenes" class="pr-3">{{$t("personcard.inmovie")}}</h5>
           <b-row class="mb-1">
             <b-col v-for="entries in person.moviescenes" v-bind:key="entries"> 
               <img class="movieshotodd movieshotxld movieshotld"/>
@@ -91,7 +91,7 @@
               bottom: 0px;
               right: 0px;
             "
-            >Weniger...
+            >{{$t("personcard.button_less")}}
           </b-button>
         </b-collapse>
       </b-col>
@@ -117,13 +117,41 @@ export default {
       this.isopenbio = this.isopenbio == "block" ? "none" : "block";
     },
     getImagePath(p) {
-      return "/img/persons/" + this.getShortName(p) + ".jpg";
+      let returnstr;
+      returnstr = "/img/persons/" + this.getShortName(p) + ".jpg";
+      return returnstr;
     },
     getShortName(p) {
       //let t = p.shortname.split(" ");
       //return t[0] + "_" + t[1];
-      return p.shortname.replace(/\ /g, '_');
+      return p.shortname.replace(/\ /g, "_");
     },
+    loadImage(url) {
+      return new Promise((resolve, reject) => {
+        let img = new Image(180, 210);
+        img.addEventListener("load", (img) => resolve(img));
+        img.addEventListener("error", (img) => reject(img));
+        img.src = url;
+      });
+    },
+  },
+  mounted: function () {
+    // let pimg;
+    // this.loadImage(this.getImagePath(this.person))
+    //   .then((img) => {
+    //     pimg = img.target;
+    //   })
+    //   .catch((img) => {
+    //     pimg = img.target;
+    //     pimg.src = "/img/person_icon.png";
+    //   }).finally(() => {
+    //     pimg.id = "personcard" + this.person.id;
+    //     pimg.style.overflow = "hidden";
+    //     let col = document.getElementById("personcardcol" + this.person.id);
+    //     document
+    //   .getElementById("personcardrow" + this.person.id)
+    //   .insertBefore(pimg, col);
+    //   });
   },
 };
 </script>

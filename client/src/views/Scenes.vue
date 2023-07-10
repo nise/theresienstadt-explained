@@ -3,9 +3,9 @@
 /* eslint-disable */
 <template>
   <div class="container text-left">
-    <h1 class="mt-5 mb-4 ml-4 text-left">Die 38 Szenen des Films</h1>
+    <h1 class="mt-5 mb-4 ml-4 text-left">{{$t("scenes.h1")}}</h1>
     <div class="col-3 mb-3 ml-3">
-      <input v-model="searchterm" placeholder="Suche">
+      <input v-model="searchterm" :placeholder="$t('scenes.search')">
     </div>  
     <div class="row">
       <div v-for="scene in search()" v-bind:key="scene" class="col-5 ml-5 mb-5 scene-box">
@@ -19,12 +19,12 @@
               <div v-if="!scene.expanded" class="desc mb-2">{{ shorten(scene.description, 250) }}</div>
               <div v-if="scene.expanded" class="desc  mb-2">{{ scene.description }}</div>
               <div v-if="scene.expanded" class="details">
-                <div v-if="scene.duration !== ''" class="item mb-1">Länge: {{scene.duration }} Sekunden</div>
-                <div v-if="scene.status !== ''" class="item mb-1">Erhaltungszustand: {{scene.status}}</div>
-                <div v-if="scene.locations !== ''" class="item mb-1">Orte:  {{scene.locations}}</div>
-                <div v-if="scene.protagonists.length > 0"class="item mb-1">Personen: <ul><li v-for="p in scene.protagonists"><a href="">{{p}}</a></li></ul></div>
-                <div v-if="scene.music !== ''" class="item mb-1">Hintergrundmusik: {{scene.music}}</div>
-                <div v-if="scene.images.length > 0" class="item mb-1">Orte:  <ul><li v-for="o in scene.images">{{o}}, </li></ul></div>
+                <div v-if="scene.duration !== ''" class="item mb-1">{{$t("scenes.duration")}}: {{scene.duration }} {{$t("scenes.seconds")}}</div>
+                <div v-if="scene.status !== ''" class="item mb-1">{{$t("scenes.status")}}: {{scene.status}}</div>
+                <div v-if="scene.locations !== ''" class="item mb-1">{{$t("scenes.locations")}}:  {{scene.locations}}</div>
+                <div v-if="scene.protagonists.length > 0"class="item mb-1">{{$t("scenes.protagonists")}}: <ul><li v-for="p in scene.protagonists"><a href="">{{p}}</a></li></ul></div>
+                <div v-if="scene.music !== ''" class="item mb-1">{{$t("scenes.music")}}: {{scene.music}}</div>
+                <div v-if="scene.images.length > 0" class="item mb-1">{{$t("scenes.locationsimg")}}:  <ul><li v-for="o in scene.images">{{o}}, </li></ul></div>
               </div>
             </div>
             <div class="foot mt-2">
@@ -33,18 +33,18 @@
                 v-if="!scene.expanded"
                 @click="expand(scene.number)"
                 class="btn btn-sm"
-              >Mehr ...</button>
+              >{{$t("scenes.showmore")}}</button>
               <button
                 v-if="scene.expanded"
                 @click="expand(scene.number)"
                 class="btn btn-sm"
-              >Einklappen</button>
+              >{{$t("scenes.showless")}}</button>
             </div>
           </div>
         </div>
       </div><!-- end for-->
       <div v-if="search().length === 0" class="col-10 p-3 mb-5 ml-5 box">
-        Zu dem Begriff "{{searchterm}}" konnte nichts in den Szenen gefunden werden.
+        {{$t("scenes.searchfail1")}} "{{searchterm}}" {{$t("scenes.searchfail2")}}
       </div>
     </div>
   </div>

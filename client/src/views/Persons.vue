@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1 class="my-5 text-left" style="text-align:left;">Protagonisten</h1>
+    <h1 class="my-5 text-left" style="text-align:left;">{{$t("persons.h1")}}</h1>
     <b-container fluid class="mx-auto col-10">
       <b-row class="mb-4">
         <b-col sm="6">
@@ -16,7 +16,7 @@
             v-model="searchquery"
             @keyup="getsearchquery"
             class="mx-1 form-control"
-            placeholder="Suche ..."
+            :placeholder="$t('persons.searchfield')"
             id="searchfield"
           />
         </b-col>
@@ -26,8 +26,8 @@
             type="text"
             style="float: left; width: 400px;"
             class="mx-1 form-control"
-            placeholder="Filter"
-            id="filerfield"
+            :placeholder="$t('persons.filterfield')"
+            id="filterfield"
           />
         </b-col>
       </b-row>

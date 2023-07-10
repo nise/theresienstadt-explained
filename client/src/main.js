@@ -7,10 +7,14 @@ import router from './router';
 import store from './store';
 import './registerServiceWorker';
 
-Vue.config.productionTip = false
+import {i18n} from './i18nsetup';
+
+Vue.config.productionTip = false;
+
 
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App),
 }).$mount('#app');
