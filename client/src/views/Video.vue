@@ -45,7 +45,7 @@ import leafletmap from "../components/LeafletMap";
 //moment.locale('de');
 
 export default {
-  props: ["modus", "timejump"],
+  props: ["modus", "timejumpOrTopic"],
   components: {
     "Video-Transcript": videoTranskript,
     "Video-TOC": videoTOC,
@@ -62,6 +62,7 @@ export default {
         player: ["toc", "transcript"],
         analysis: ["annotations"],
       },
+      topics: ["everydaylife", "work", "culture"],
       videoElement: null,
       videoPlayerID: "videoplayer",
       paused: true,
@@ -104,10 +105,16 @@ export default {
       this.processURLProps();
     },
 
-    // only processes URL prop 'timejump'
+    // only processes URL prop 'timejumpOrTopic'
     processURLProps() {
-      if (this.timejump) {
-        this.decodeTimejump(this.timejump);
+      let index;
+      if (this.timejumpOrTopic) {
+        index = this.topics.indexOf(this.timejumpOrTopic);
+        if (index !== -1) {
+          this.setTopic(index);
+        } else {
+          this.decodeTimejump(this.timejumpOrTopic);
+        }
       }
     },
     /** decodes URL prop to find out which videotime to jump to */
@@ -140,6 +147,10 @@ export default {
         this.gotoTime(desiredTime);
       }
     },
+    /**@argument desiredTopic is simply an index of an array, dictated by array "topics" */
+    setTopic(desiredTopic) {
+      this.$refs["vid-toc-ref"].setFilterExt(desiredTopic);
+    },
     isModusFeatures(feature) {
       return this.featureSets[this.modus].indexOf(feature) !== -1;
     },
@@ -151,7 +162,7 @@ export default {
       this.paused = event.target.paused;
     },
     play() {
-      this.timer = setInterval(this.updateAnnotaions, 500);
+      this.timer = setInterval(this.updateAnnotations, 500);
       this.paused = false;
       this.updateCountdown();
       this.videoElement.play();
@@ -169,7 +180,7 @@ export default {
     },
     forward() {},
     backward() {},
-    updateAnnotaions() {
+    updateAnnotations() {
       this.currentTime = this.videoElement.currentTime;
     },
     momenwwwt: function () {
@@ -197,7 +208,7 @@ export default {
         ((e.clientX - rect.left) / (rect.right - rect.left)) *
         this.videoElement.duration;
       this.currentTime = this.videoElement.currentTime;
-      //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right);
+      //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right); 
     },
     gotoTime(time) {
       if (!this.videoElement) {
@@ -214,12 +225,12 @@ export default {
     },
     videoControlAddCommand() {
       let _this = this;
-      window.addEventListener("keypress", function () {
-        _this.togglePlayPause(event);
-      });
-      window.addEventListener("keydown", function () {
-        _this.skip5s(event);
-      });
+      window.addEventListener("keypress", 
+        _this.togglePlayPause
+      );
+      window.addEventListener("keydown",
+        _this.skip5s
+      );
     },
     togglePlayPause(event) {
       switch (event.code) {
@@ -307,28 +318,32 @@ export default {
           event.long,
           "black",
           event.id,
-          event.time
+          event.time,
+          event.descr
         )
       );
     },
-    /** Changes colour of a marker on the leafletmap
+    /** Changes colour and tooltip visibility of a marker on the leafletmap
      *  Caller: <Video-MapMarker>
      *  Target: <Leaflet-Map>
+     *  changeMarkerState(markerID, colour, tooltipVisibility)
      */
-    changeMMColour(event) {
+    changeMMState(event) {
       if (event.enter.length > 0) {
         for (let i = 0; i < event.enter.length; i++) {
-          this.$refs["leafletref"].changeMarkerColour(
+          this.$refs["leafletref"].changeMarkerState(
             this.mapMarkerStore[JSON.parse(event.enter[i].text).id],
-            "white"
+            "white",
+            true
           );
         }
       }
       if (event.exit.length > 0) {
         for (let i = 0; i < event.exit.length; i++) {
-          this.$refs["leafletref"].changeMarkerColour(
+          this.$refs["leafletref"].changeMarkerState(
             this.mapMarkerStore[JSON.parse(event.exit[i].text).id],
-            "black"
+            "black",
+            false
           );
         }
       }
@@ -399,6 +414,10 @@ var annoLength = this.annotations.length;
       //this.formatedTime = ('0' + Math.floor(num) % 24).slice(-2) + ':' + ((num % 1)*60 + '0').slice(0, 2);//moment(currentTime).format('mm:ss');
     },
   },
+  beforeDestroy: function () {
+    window.removeEventListener("keypress",this.togglePlayPause);
+    window.removeEventListener("keydown", this.skip5s);
+  },
 };
 </script>
 
@@ -423,7 +442,7 @@ var annoLength = this.annotations.length;
         >
           <Video-MapMarker
             @requestMM="acquireMM"
-            @requestMMColourChange="changeMMColour"
+            @requestMMColourChange="changeMMState"
           >
           </Video-MapMarker>
 
@@ -440,7 +459,7 @@ var annoLength = this.annotations.length;
           </Video-InfoMarker>
           <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
           <Video-Transcript
-            v-if="isModusFeatures('transcript')"
+            v-if="isModusFeatures('transcript') && showTranskript"
             :videoCtrlActive="showVideoControls"
           >
           </Video-Transcript>
@@ -492,27 +511,32 @@ var annoLength = this.annotations.length;
             <button
               v-if="isModusFeatures('transcript')"
               class="video-toggle-transkript"
-              :class="{ active: showTranskript }"
-              @click="toggleTranskript"
+              type="button"
+              @mousedown="toggleTranskript"
               title="Untertitel an/aus"
             >
               <img
                 class="subtitleIcon"
                 src="../assets/icons/subtitleIcon.svg"
               />
+              <div class="redbar" :class="{ active: showTranskript }"></div>
             </button>
             <div class="vi2-volume-controls right"></div>
           </div>
         </div>
       </div>
-      <!-- left bar-->
-      <div class="col-4 pt-1 left-bar">
+      <!-- right bar-->
+      <div class="col-4 right-bar">
         <Video-TOC
+          class="vid-toc"
           v-if="isModusFeatures('toc') && videoElement"
+          ref="vid-toc-ref"
           :videoElementduration="videoElement.duration"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
+
         <Video-Annotations
+          class="vid-anno"
           v-if="isModusFeatures('annotations') && videoElement"
           ref="annotationscomp"
           :selectedPropagandaTechnique="selectedPropagandaTechnique"
@@ -522,12 +546,16 @@ var annoLength = this.annotations.length;
         >
         </Video-Annotations>
 
-        <div hidden class="row video-bar audio ml-1 mt-2">
-          <h4>Tonspur</h4>
+        <div hidden class="row video-bar audio mt-2">
+          <h4>{{ $t("video.audiotrack") }}</h4>
         </div>
-        <div class="row places ml-1 mt-2">
-          <h4>Orte</h4>
-          <Leaflet-Map ref="leafletref" @gotoTimerequest="gotoTime">
+        <div class="places mt-2">
+          <h4 class="mt-2">{{ $t("video.places") }}</h4>
+          <Leaflet-Map
+            class="vid-map"
+            ref="leafletref"
+            @gotoTimerequest="gotoTime"
+          >
           </Leaflet-Map>
         </div>
       </div>
@@ -559,6 +587,23 @@ var annoLength = this.annotations.length;
   padding: 0px;
 }
 
+.vid-toc {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 500px;
+  width: 98%;
+  margin-left: 4px;
+}
+.vid-anno {
+  flex: 1 1 500px;
+  width: 98%;
+  margin-left: 4px;
+}
+
+.vida-map {
+  flex-basis: 300px;
+}
+
 h4 {
   display: block;
   font-family: Jost;
@@ -580,16 +625,19 @@ h4 {
 }
 
 .places {
-  display: inline-block;
+  justify-self: flex-end;
+  flex: 0 0 300px;
   background-color: #3b3b3bec;
-  width: 96%;
+  width: 98%;
+  margin-bottom: 12px;
+  margin-left: 4px;
 }
 
-.left-bar {
-  position: relative;
-  max-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+.right-bar {
+  display: flex;
+  flex-flow: column nowrap;
+  max-height: 100%;
+  width: 96%;
 }
 
 /* Video */
@@ -681,16 +729,45 @@ video {
   left: 10px;
   font-size: 0.9em;
 }
-.video-toggle-transkript {
-  position: absolute;
-  top: 25px;
-  right: 5px;
-  background-color: gray;
-  border-radius: 20%;
+.video-toggle-transkript .redbar {
+  opacity: 0;
+  height: 2px;
+  width: 25px;
+  border-radius: 2px;
+  background-color: red;
+  position: relative;
+  top: 2px;
+  transition: opacity 1s ease;
+}
+.video-toggle-transkript .redbar.active {
+  opacity: 1;
+  height: 2px;
+  width: 25px;
+  border-radius: 2px;
+  background-color: red;
+  position: relative;
+  top: 2px;
+  transition: opacity 1s ease;
 }
 
-.video-toggle-transkript.active {
-  background-color: white;
+.video-toggle-transkript {
+  position: absolute;
+  top: 30px;
+  right: 5px;
+  /*background-color: gray;
+  opacity: 0.8;*/
+  background-color: inherit;
+  opacity: 1;
+  border: none;
+}
+
+.video-toggle-transkript:focus {
+  border: none;
+  outline: none;
+}
+
+.video-toggle-transkript:hover {
+  opacity: 0.7;
 }
 
 .subtitleIcon {

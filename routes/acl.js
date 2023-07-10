@@ -9,7 +9,7 @@ module.exports = function (db, app) {
     const fs = require('fs');
 
     app.use(express.static('client/dist'));
-    
+
     // GET is not working
     app.get('/message', (req, res) => {
         res.json({
@@ -18,20 +18,20 @@ module.exports = function (db, app) {
     });
 
     app.get('/persondata', (req, res) => {
-      let persond;
-      fs.readFile('./ressources/Persons2020.json', function(err, data){
-        res.send(data);
-        /* res.json({
-          dat: data,
-          error: err
-        }); */
-      });
+        let persond;
+        fs.readFile('./ressources/Persons2020.json', function (err, data) {
+            res.send(data);
+            /* res.json({
+              dat: data,
+              error: err
+            }); */
+        });
     });
 
     app.get('/references/bibliography', (req, res) => {
-      fs.readFile('./ressources/Theresienstadt.bib', function (err, data){
-        res.send(data);
-      });
+        fs.readFile('./ressources/Theresienstadt.bib', function (err, data) {
+            res.send(data);
+        });
     });
 
     app.get('/references/filmography', (req, res) => {
@@ -46,14 +46,20 @@ module.exports = function (db, app) {
         })
     });
 
+    app.get('/scenes/all', (req, res) => {
+        fs.readFile('./ressources/Scenes2020new.json', function (err, data) {
+            res.send(data);
+        });
+    });
+
 
     var bodyParser = require('body-parser')
     app.use(bodyParser.json());       // to support JSON-encoded bodies
     app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
         extended: true
-    })); 
+    }));
     app.post('/log', (req, res) => {
-        let str = req.body.data.start + ',' + req.body.data.end + ',' + req.body.data.type + ',' + req.body.data.content.title + ',' + req.body.data.content.reason + ',' + req.body.data.x + ',' + req.body.data.y + ',' + req.body.data.session+'\n';
+        let str = req.body.data.start + ',' + req.body.data.end + ',' + req.body.data.type + ',' + req.body.data.content.title + ',' + req.body.data.content.reason + ',' + req.body.data.x + ',' + req.body.data.y + ',' + req.body.data.session + '\n';
         fs.appendFile('terezin.log', str, function (err) {
             if (err) throw err;
             console.log('Saved!', req.body.data);
@@ -76,15 +82,18 @@ module.exports = function (db, app) {
         });
     });
 
-    app.post('/scenes/all', (req, res) => {
-        fs.readFile('./ressources/scenes2020.json', function (err, data) {
-            res.send(data);
-        });
-    });
+
+    // i (Konstantin) commented this out in favor of the similar "app.get('scenes/all')" above
+    // -> check back on view "Scenes.vue"
+    // app.post('/scenes/all', (req, res) => {
+    //     fs.readFile('./ressources/scenes2020.json', function (err, data) {
+    //         res.send(data);
+    //     });
+    // });
 
     /*app.use(function (req, res, next) {
         res.status(404).send('Sorry cant find that!');
     });*/
 
-    
+
 };

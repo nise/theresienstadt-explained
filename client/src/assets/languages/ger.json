@@ -1,0 +1,174 @@
+{
+    "ger": {  
+        "app": {
+            "backbutton": "ZURÜCK",
+            "about": "Über Theresienstadt explained",
+            "impress": "Impressum",
+            "privacy": "Datenschutzerklärung",
+            "copyright": "Förderverein Jugendbegegnung in Theresienstadt/Terezin"
+        },
+        "personcard": {
+            "button_less": "Weniger...",
+            "button_more": "Mehr...",
+            "born": "geb.",
+            "bornin": "in",
+            "death": "gest.",
+            "branch": "Wirken:",
+            "nationality": "Nationalität:",
+            "profession": "Beruf:",
+            "spouse": "Ehepartner:",
+            "children": "Kind/er:",
+            "inmovie": "Im Film"
+        },
+        "videoannotations": {
+            "propagandatechnique": "Propagandatechnik",
+            "choosetechnique": "Bitte wählen Sie eine Technik aus",
+            "opt1": "Ästhetisierung",
+            "opt2": "Dekontextualisierung",
+            "opt3": "Kognitive Dissonanz",
+            "opt4": "Normaler Mensch",
+            "opt5": "Berufung auf berühmte Menschen",
+            "opt6": "Übertreibung",
+            "opt7": "Euphorie",
+            "opt8": "Wiederholung",
+            "opt9": "Berufung auf Autoritäten",
+            "opt10": "Halbwahrheit",
+            "opt11": "Rosinenpicken",
+            "markings": "Markierungen",
+            "newmark": "Neue Markierung anlegen",
+            "timepoint": "Zeitpunkt",
+            "safe": "speichern",
+            "discard": "verwerfen"
+        },
+        "videotoc": {
+            "themeselect": "Themenauswahl",
+            "everydaylife": "Alltag",
+            "culture": "Kultur",
+            "work": "Arbeit",
+            "scenes": "Szenen"
+        },
+        "about": {
+            "h1": "Über Theresienstadt Explained",
+            "h2-0": "Idee und Konzept",
+            "linktext1": "Förderverein Jugendbegegnung in Theresienstadt/Terezin",
+            "h2-1": "Realisierung",
+            "li-recherche": "Recherchen",
+            "li-movieedit": "Filmbearbeitung",
+            "li-movieprotocol": "Filmprotokoll und filmästhetische Analyse",
+            "li-photos": "Fotos",
+            "li-softdev": "Software Entwicklung",
+            "li-architecture": "Architektur",
+            "li-guidedvid": "Guided Video Tour: Michael Dittwald, Bachelorand am Lehrgebiet Kooperative Systeme, 2018",
+            "li-vidanaly": "ArgueGraph Video Analyse: Michael Desch, Bachelorand am Lehrgebiet Kooperative Systeme, 2020",
+            "li-design": "Design",
+            "li-contentsuper": "Inhaltliche Begutachtung",
+            "li-pr": "PR",
+            "h2-2": "Unterstützer, Förderer und Kooperationspartner",
+            "li-startnextsupp": "StartNext-Unterstützer",
+            "li-archber": "Bundesarchiv Berlin",
+            "li-reprmovie": "Reproduktion des Films",
+            "li-winnerimpactchallenge": "Gewinner der Google Impact Challenge 2018",
+            "li-fernuni": "FernUniversität in Hagen",
+            "li-department": "Lehrgebiet für Kooperative Systeme",
+            "h2-3": "Ressourcen",
+            "li-sourcecode": "Quellcode des Software Projekts"
+        },
+        "fakevideo": {
+            "h1": "Fake Video"
+        },
+        "guidedvideo": {
+            "h1": "Geführte Filmvorführung"
+        },
+        "history": {
+            "h1": "Entstehungsgeschichte"
+        },
+        "home": {
+            "introbox": "Fake News aus dem Jahre 1945. Der NS-Propagandafilm »Theresienstadt« täuscht durch seine Bilder und Musik über die wahren Zustände im Konzentrationslager hinweg. Wir entlarven die Propaganda und Manipulation, berichten über die unfreiwilligen Protagonisten und zeigen die Drehorte.",
+            "moviehead": "DER FILM",
+            "everydaylifehead": "ALLTAG",
+            "everydaylifebody": "Der Film suggeriert einen unbeschwerten Alltag, der durch Freizeit, Sport und Spiel geprägt ist.",
+            "workhead": "ARBEIT",
+            "workbody": "Manufakturen, Werkstätten und Landbewirtschaftung unterstreichen wirtschaftliche Unabhängigkeit.",
+            "culturehead": "KULTUR",
+            "culturebody": "Öffentliche aufgeführte Konzerte und Opern sowie Vorträge suggerieren Kunstfreiheit auf einem hohen Niveau.",
+            "linktomovie": "Zum Film",
+            "newsheadline": "Aktuelles",
+            "news": "Aktuelles",
+            "storyoriginheader": "Entstehungsgeschichte des Films",
+            "storyorigin": "Dreharbeiten im Ghetto Theresienstadt 1942–1945, \nvon Eva Strusková, Jana Šplíchalová, Tomáš Fedorovič, Václav Kofroň",
+            "persons": "Personen der Zeitgeschichte im Film",
+            "scenes": "Die 38 Szenen des Films",
+            "places": "Drehorte und Schauplätze",
+            "fakevid": "FakeVideo",
+            "propaganda": "Manipulation und Propaganda im Film",
+            "propagandatext": "Der Film Theresienstadt dokumentierte nicht die Wirklichkeit im KZ, sondern",
+            "guidedvid": "Geführte Filmvorführung",
+            "analysis": "Filmanalyse in Gruppenarbeit",
+            "references": "Literatur und Filme über den Propagandafilm"
+        },
+        "imprint": {
+            "h1": "Impressum",
+            "h2-0": "Anbieterkennzeichnung",
+            "h2-0body": "Informationen nach § 5 Telemediengesetz (TMG) und § 55 Abs. 2 Rundfunkstaatsvertrag (RStV)",
+            "li1": "Name des Diensteanbieters",
+            "li1text": "Förderverein Jugendbegegnung in Theresienstadt/Terezin",
+            "li2": "Rechtsform",
+            "li2text": "eingetragener, gemeinnütziger Verein",
+            "li3": "Vertretungsberechtigte",
+            "li3text": "Armin Pietsch, Jürgen Scheinert",
+            "li4": "Anschrift",
+            "li4text": "Katharinenstr. 15 A, 01099 Dresden",
+            "li5": "Webmaster",
+            "li5text": "Niels Seidel, niels.seidel {at} fernuni-hagen.de",
+            "h2-1": "Haftung",
+            "h2-1body": "Als Diensteanbieter ist der Förderverein Jugendbegegnung in Theresienstadt/Terezin gemäß § 7 Abs. 1 TMG für eigene Informationen, die sie zur Nutzung bereithält, nach den allgemeinen Gesetzen verantwortlich. Dementsprechend besteht keine Verantwortung für die von anderen Anbietern bereit gestellten Inhalte, auf die mittels Hyperlinks verwiesen wird.\n\nSollten mit unserem Angebot verlinkte Seiten aus fachlichen oder rechtlichen Gründen Anlass zur Beanstandung geben, bitten wir um eine entsprechende Mitteilung an die Redaktion der betreffenden Seite.",
+            "h2-2": "Urheberrecht",
+            "h2-2body": "Die in auf diesen Internetseiten bereit gestellten Werke sind urheberrechtlich geschützt. Daher bedarf es für jede Nutzung, die über die im UrhG geregelten Fälle der erlaubnisfreien Nutzung hinausgeht, einer vorherigen Genehmigung."
+        },
+        "intro": {
+            "placeholder": "Lorem et üüüpsüm"
+        },
+        "map": {
+
+        },
+        "news": {
+            "h1": "Aktuelles"
+        },
+        "persons": {
+            "h1": "Protagonisten",
+            "searchfield": "Suche...",
+            "filterfield": "Filter"
+        },
+        "privacy": {
+            "h1": "Datenschutzerklärung"
+        },
+        "propaganda": {
+            "h1": "Propaganda im Film"
+        },
+        "references": {
+            "h1": "Literatur und Film über den Film"
+        },
+        "scenes": {
+            "h1": "Die 38 Szenen des Films",
+            "search": "Suche",
+            "duration": "Länge",
+            "seconds": "Sekunden",
+            "status": "Erhaltungszustand",
+            "locations": "Orte",
+            "protagonists": "Personen",
+            "music": "Hintergrundmusik",
+            "locationsimg": "Orte",
+            "showmore": "Mehr ...",
+            "showless": "Einklappen",
+            "searchfail1": "Zu dem Begriff",
+            "searchfail2": "konnte nichts in den Szenen gefunden werden."
+        },
+        "video": {
+            "audiotrack": "Tonspur",
+            "places": "Orte"
+        },
+        "videoanalysis": {
+            "h1": "Filmanalyse in Gruppenarbeit"
+        }
+    }
+}

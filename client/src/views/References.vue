@@ -89,7 +89,7 @@ export default {
 <template>
   <div class="container" style="text-align: left">
     <h1 class="my-5" style="text-align: left">
-      Literatur und Film über den Film
+      {{$t("references.h1")}}
     </h1>
     <div style="background-color: white" class="pt-4 pb-3 px-3">
       <h2 class="mt-4 mb-5">Filme</h2>

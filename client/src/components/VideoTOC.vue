@@ -1,5 +1,6 @@
 <script>
 import PortalVue from "portal-vue";
+import axios from "axios";
 //Vue.use(PortalVue);
 
 export default {
@@ -14,8 +15,8 @@ export default {
     gotoTime(time) {
       this.$emit("gotoTimerequest", time);
     },
-    sortScenes() {
-      this.scenes = this.scenes.sort((a, b) => {
+    sortScenes(scenes) {
+      scenes = scenes.sort((a, b) => {
         a.number = parseInt(a.number, 10);
         b.number = parseInt(b.number, 10);
         if (a.number < b.number) {
@@ -28,22 +29,53 @@ export default {
         }
       });
     },
-    styleSceneMarker(scene, videoElementduration) {
-      return{
-        left: (scene.start/videoElementduration)*100 +'%',
-        width: ((scene.end-scene.start)/videoElementduration)*100 +'%',
+    addCategory(scenelist) {
+      for (let i = 0; i < scenelist.length; i++) {
+        if (typeof scenelist[i].category == "undefined") {
+          scenelist[i].category = "unbekannt";
+        }
       }
     },
+    /**Removes scenes with unuseable data entries */
+    removeInvalid(scenelist) {
+      for (let i = 0; i < scenelist.length; i++) {
+        if (
+          scenelist[i].start == -1 ||
+          scenelist[i].start > this.videoElementduration
+        ) {
+          scenelist.splice(i, 1);
+          i--;
+        }
+      }
+    },
+    removeUnknownCategory(scenelist) {
+      for (let i = 0; i < scenelist.length; i++) {
+        if (
+          typeof scenelist[i].category == "undefined" ||
+          scenelist[i].category == "unbekannt"
+        ) {
+          scenelist.splice(i, 1);
+          i--;
+        }
+      }
+    },
+    styleSceneMarker(scene, videoElementduration) {
+      return {
+        left: (scene.start / videoElementduration) * 100 + "%",
+        //width: ((scene.end - scene.start) / videoElementduration) * 100 + "%",
+        width: "2px",
+      };
+    },
     /**
-     * highlights markers '| |' on timeline when user hovers mouse over corresponding scene entry 
+     * highlights markers '| |' on timeline when user hovers mouse over corresponding scene entry
      */
     highlightSceneMarker(markerid, event) {
-      if (event.type === 'mouseover') {
-        document.getElementById(markerid).style.borderWidth = "5px";
+      if (event.type === "mouseover") {
+        document.getElementById(markerid).style.visibility = "visible";
         return;
       }
-      if (event.type === 'mouseout') {
-        document.getElementById(markerid).style.borderWidth = "2px";
+      if (event.type === "mouseout") {
+        document.getElementById(markerid).style.visibility = "hidden";
         return;
       }
     },
@@ -53,7 +85,7 @@ export default {
      */
     highlightSceneLi(sceneLiID, event) {
       var sceneLiElement = document.getElementById(sceneLiID);
-      if (event.type === 'mouseover') {
+      if (event.type === "mouseover") {
         if (sceneLiElement.classList.contains("alltag")) {
           sceneLiElement.classList.add("alltaghover");
           return;
@@ -66,9 +98,8 @@ export default {
           sceneLiElement.classList.add("arbeithover");
           return;
         }
-        
       }
-      if (event.type === 'mouseout') {
+      if (event.type === "mouseout") {
         if (sceneLiElement.classList.contains("alltag")) {
           sceneLiElement.classList.remove("alltaghover");
           return;
@@ -84,125 +115,85 @@ export default {
       }
     },
     setFilter(buttonNumber, buttonGroup) {
-      if (this.selectedFilter === buttonGroup[buttonNumber].category) this.selectedFilter = 'none';
+      if (this.selectedFilter === buttonGroup[buttonNumber].category)
+        // user clicks on already active category -> deselect category
+        this.selectedFilter = "none";
       else this.selectedFilter = buttonGroup[buttonNumber].category;
       this.toggleButtonLook(buttonNumber, buttonGroup);
     },
     toggleButtonLook(buttonNumber, buttonGroup) {
-      if (buttonGroup[buttonNumber].pressed) {    // user presses an already active button? toggle it off
+      if (buttonGroup[buttonNumber].pressed) {
+        // user presses an already active button? toggle it off
         buttonGroup[buttonNumber].pressed = false;
-        document.getElementById(buttonGroup[buttonNumber].id).classList.remove(buttonGroup[buttonNumber].class);
-      } else {    // user wants to switch to another filter
-        for (let i = 0; i < buttonGroup.length; i++){
+        document
+          .getElementById(buttonGroup[buttonNumber].id)
+          .classList.remove(buttonGroup[buttonNumber].class);
+      } else {
+        // user wants to switch to another filter
+        for (let i = 0; i < buttonGroup.length; i++) {
           if (buttonGroup[i].pressed) {
             buttonGroup[i].pressed = false;
-            document.getElementById(buttonGroup[i].id).classList.remove(buttonGroup[i].class);
+            document
+              .getElementById(buttonGroup[i].id)
+              .classList.remove(buttonGroup[i].class);
           }
         }
         buttonGroup[buttonNumber].pressed = true;
-        document.getElementById(buttonGroup[buttonNumber].id).classList.add(buttonGroup[buttonNumber].class);
+        document
+          .getElementById(buttonGroup[buttonNumber].id)
+          .classList.add(buttonGroup[buttonNumber].class);
       }
     },
-
+    /**Function for conveniently setting a filter from outside this module, expectantly Video.vue
+     * @argument category index on an array ("sceneSelectButtonGroup", mirrors array "topics" in Video.vue)
+     */
+    setFilterExt(category) {
+      this.setFilter(category, this.sceneSelectButtonGroup);
+    },
+    keyupEmpty() {},
+    getSceneData: function () {
+      let _this = this;
+      return new Promise((res, rej) => {
+        axios.get("/scenes/all").then(function (response) {
+          _this.rawscenes = response.data;
+          res(response.data);
+          rej(-1);
+        });
+      });
+    },
   },
   mounted: function () {
-    this.sortScenes();
+    this.getSceneData().then(() => {
+      this.sortScenes(this.rawscenes);
+      this.removeUnknownCategory(this.rawscenes);
+      //this.addCategory(this.rawscenes);         // uncomment this and comment call "removeUnknownCat" to add scenes with unknown category
+      this.removeInvalid(this.rawscenes); // removes scenes which start time is negative or is greater than film length
+      this.scenes = this.rawscenes;
+    });
   },
   data() {
     return {
-      selectedFilter: 'none',
+      rawscenes: [],
+      scenes: [],
+      selectedFilter: "none",
       sceneSelectButtonGroup: [
         {
-          category: 'Alltag',
-          id: 'alltagbutton',
-          class: 'alltaghover',
-          pressed: false
-        },
-        {
-          category: 'Kultur',
-          id: 'kulturbutton',
-          class: 'kulturhover',
-          pressed: false
-        },
-        {
-          category: 'Arbeit',
-          id: 'arbeitbutton',
-          class: 'arbeithover',
-          pressed: false
-        }
-      ],
-      scenes: [
-        {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf4",
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Schmiede",
           category: "Alltag",
-          number: 26,
-          source: "4",
-          duration: "22:15",
-          start: 596,
-          end: 1000,
-          status: "vollständig",
-          description:
-            "In der Werkstatt eines Huf- Wagenschmieds beschlägt ein Hufschmied einen Ochsen. Der Ochse wird aus der Schmiede herausgeführt.",
-          music: "",
-          locations: "Schmiede",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z",
-          },
-          __v: 0,
+          id: "alltagbutton",
+          class: "alltaghover",
+          pressed: false,
         },
         {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf5",
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          category: "Kultur",
-          title: "Zentralbad",
-          number: 31,
-          source: "4,5",
-          duration: "27:16",
-          start: 1086,
-          end: 1300,
-          status: "vollständig",
-          description:
-            "Männer laufen in die Gemeinschaftsdusche und waschen sich. Männer verlassen das Zentralbad und laufen auf die Straße.",
-          music: "",
-          locations: "Zentralbad",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.088Z",
-          },
-          __v: 0,
+          category: "Arbeit",
+          id: "arbeitbutton",
+          class: "arbeithover",
+          pressed: false,
         },
         {
-          _id: {
-            $oid: "5ba539c3e99589718c928bf6",
-          },
-          expanded: false,
-          protagonists: [],
-          images: [],
-          title: "Abendfreizeit",
-          number: 36,
           category: "Kultur",
-          source: "5",
-          duration: "1:54:24",
-          start: 1374,
-          end: 1450,
-          status: "vollständig",
-          description:
-            "Leute erholen sich außerhalb von Holzbaracken, Szenen aus den Gemeinschaftsunterkünften. Outdoor facilities of the barracks with inhabitants, mostly women and children, on benches, chatting, reading. Inside a barrack of the women's accommodation, pan on the central corridor to separate living spaces with wooden tables and benches, double bunk beds separating the living spaces, partly covered with cloths. Several women and young girls reading, needle working, chatting in small groups, playing cards.",
-          music: "",
-          locations: "",
-          updated_at: {
-            $date: "2018-09-21T18:34:43.089Z",
-          },
-          __v: 0,
+          id: "kulturbutton",
+          class: "kulturhover",
+          pressed: false,
         },
       ],
     };
@@ -212,27 +203,49 @@ export default {
 
 <template>
   <div>
-    <div class="row video-bar topics ml-1 mt-2">
-      <h4>Themenauswahl</h4>
+    <div class="topics">
+      <h4>{{ $t("videotoc.themeselect") }}</h4>
       <div class="row">
-        <button class="btn btn-sm btn-outline-primary" 
-          :id="sceneSelectButtonGroup[0].id" @click="setFilter(0, sceneSelectButtonGroup)">Alltag</button>
-        <button class="btn btn-sm btn-outline-warning" 
-          :id="sceneSelectButtonGroup[1].id" @click="setFilter(1, sceneSelectButtonGroup)">Kultur</button>
-        <button class="btn btn-sm btn-outline-success" 
-          :id="sceneSelectButtonGroup[2].id" @click="setFilter(2, sceneSelectButtonGroup)">Arbeit</button>
+        <button
+          class="btn btn-sm btn-outline-primary"
+          :id="sceneSelectButtonGroup[0].id"
+          @click="setFilter(0, sceneSelectButtonGroup)"
+          onkeyup="event.preventDefault()"
+        >
+          {{ $t("videotoc.everydaylife") }}
+        </button>
+        <button
+          class="btn btn-sm btn-outline-success"
+          :id="sceneSelectButtonGroup[1].id"
+          @click="setFilter(1, sceneSelectButtonGroup)"
+          onkeyup="event.preventDefault()"
+        >
+          {{ $t("videotoc.work") }}
+        </button>
+        <button
+          class="btn btn-sm btn-outline-warning"
+          :id="sceneSelectButtonGroup[2].id"
+          @click="setFilter(2, sceneSelectButtonGroup)"
+          onkeyup="event.preventDefault()"
+        >
+          {{ $t("videotoc.culture") }}
+        </button>
       </div>
     </div>
-    <div class="row video-bar scenes ml-1 mt-2">
-      <h4>Szenen</h4>
+    <div class="scenes mt-2">
+      <h4>{{ $t("videotoc.scenes") }}</h4>
       <ul class="scene-list">
         <li v-for="scene in search()" :key="scene.number">
           <a
-            v-show="(scene.category === selectedFilter || selectedFilter === 'none') ? true : false"
-            :id ="scene.number+'li'"
+            v-show="
+              scene.category === selectedFilter || selectedFilter === 'none'
+                ? true
+                : false
+            "
+            :id="scene.number + 'li'"
             :class="'scene ' + scene.category.toLowerCase()"
-            @mouseover="highlightSceneMarker(scene.number+'marker', $event)"
-            @mouseout="highlightSceneMarker(scene.number+'marker', $event)"
+            @mouseover="highlightSceneMarker(scene.number + 'marker', $event)"
+            @mouseout="highlightSceneMarker(scene.number + 'marker', $event)"
             @click="gotoTime(scene.start)"
             >{{ scene.title }}</a
           >
@@ -241,30 +254,47 @@ export default {
       </ul>
     </div>
     <portal to="timeline-scene-marker">
-      <div v-for ="scene in search()" :key ="scene.number+'marker'"
-        v-show="(scene.category === selectedFilter || selectedFilter === 'none') ? true : false"
-        :id ="scene.number+'marker'"
-        class ="scenemarker" 
-        :style ="styleSceneMarker(scene, videoElementduration)"
-        @mouseover="highlightSceneLi(scene.number+'li', $event)"
-        @mouseout="highlightSceneLi(scene.number+'li', $event)">
+      <div
+        v-for="scene in search()"
+        :key="scene.number + 'marker'"
+        v-show="
+          scene.category === selectedFilter || selectedFilter === 'none'
+            ? true
+            : false
+        "
+        class="scenemarker"
+        :style="styleSceneMarker(scene, videoElementduration)"
+        @mouseover="highlightSceneLi(scene.number + 'li', $event)"
+        @mouseout="highlightSceneLi(scene.number + 'li', $event)"
+        @click="gotoTime(scene.start)"
+      >
+        <div class="scenemarkertext" :id="scene.number + 'marker'">
+          {{ scene.title }}
+        </div>
       </div>
     </portal>
   </div>
 </template>
 
 <style>
-.video-bar {
-  display: inline-block;
+.topics {
+  justify-self: flex-start;
   background-color: #3b3b3bec;
-  width: 96%;
+  margin-top: 2px; /** Very small margin to bring visual top edge of class "right-bar" on same level as the video content area */
   padding-bottom: 10px;
   padding-top: 6px;
+  flex: 0 0 78px;
 }
-.video-bar.topics .row {
-  content-align: center;
+
+.scenes {
+  background-color: #3b3b3bec;
+  padding-bottom: 10px;
+  padding-top: 6px;
+  overflow-y: scroll;
+  flex: 1 1 300px;
 }
-.video-bar.topics button {
+
+.topics button {
   padding: 1px 10px;
   margin: 4px 10px;
   border-radius: 10px;
@@ -290,17 +320,46 @@ export default {
   position: absolute;
   height: 20px;
   top: 10px;
-  border-color: white;
-  border-left-style: solid;
-  border-right-style: solid;
-  border-width: 2px;
-  z-index: 995;
+  width: 2px;
+  background-color: white;
+
+  z-index: 1010;
   cursor: pointer;
-  transform: translate(0%,-25%);
+  transform: translate(0%, -25%);
+}
+
+.scenemarker:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 16px;
+  height: 30px;
+  z-index: 1010;
+  transform: translate(-40%, -20%);
+}
+
+.scenemarker:hover .scenemarkertext {
+  visibility: visible !important;
+}
+
+.scenemarker .scenemarkertext {
+  font-size: 1.2rem;
+  position: relative;
+  bottom: 35px;
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: black;
+  color: white;
+  transform: translate(-50%, 0%);
+  border-radius: 10px;
+
+  visibility: hidden;
 }
 /**special classes to emulate ':hover' but triggered by mouseover from a distant html element*/
-.kulturhover {         
-  background-color: #ffd800;   
+.kulturhover {
+  background-color: #ffd800;
   border-radius: 10px;
   color: #111 !important;
 }
