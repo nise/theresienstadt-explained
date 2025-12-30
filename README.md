@@ -1,5 +1,7 @@
 # Roadmap
 - run and check program
+- upgrade to vue3
+- try to run as browser app without back end. Build seperate system to edit content
 - identify open issues
 - use strapi as LMS https://strapi.io/
 - 
@@ -16,7 +18,7 @@ Run the application
 * Open http://localhost:8080  in your browser
 
 Unter http://localhost:8080/film ist der Player derzeit sichtbar. 
-Irgendwo schwirrt auch noch Code aus einem ganz anderen Projekt hier rum - da geht es um eine Zeitkonzept...
+Irgendwo schwirrt auch noch Code aus einem ganz anderen Projekt hier rum - da geht es um ein Zeitkonzept...
 
 
 ---
