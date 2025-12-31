@@ -1,46 +1,65 @@
-# Roadmap
+# Features
 
+- Interactive video player
+  - table of contents
+  - annotated timeline
+- Collaborative video annotation
+
+**Education Use Cases**
+
+- tba.
+
+# Setup and development
+
+**Run the application**
+
+- `cd client`
+- Install dependencies: `npm install` and `npm audit -fix`
+- `cd dist`
+- Run application: `npx http-server -p 8080` and open http://localhost:8080 in your browser
+
+**Get into devlopment**
+Inside the 'client' folder:
+
+- Hot reloading during development: `npm run serve`
+- Build code to run as stand-alone app: `npm run build`
+
+**Roadmap**
+
+- complete content
 - upgrade to vue3
-- identify open issues
 - use strapi as LMS https://strapi.io/
 
-# Anwendung starten
+# License and Citation
 
-Setup
+Software: MIT license
 
-- `npm install`
-- `npm audit -fix`
+Content except the Theresienstadt film: Creative Commons CC-BY
 
-Run the application
+Theresienstadt film: all rights reserved
 
-- `cd client/dist`
-- npx http-server -p 8080
-- `npm run serve` (siehe package.json in Zeile 5)
-- eventually run `export NODE_OPTIONS=--openssl-legacy-provider`
-- Open http://localhost:8081 in your browser
+```bibtex
+tba.
+```
 
-Unter http://localhost:8080/film ist der Player derzeit sichtbar.
-Irgendwo schwirrt auch noch Code aus einem ganz anderen Projekt hier rum - da geht es um ein Zeitkonzept...
+# Contributors
 
----
+**Devalopment**
 
-# Instructions
+- Niels Seidel (CATALPA, FernUniversität in Hagen)
+- Konstantin Friedrich (CATALPA, FernUniversität in Hagen)
 
-cd client && npm run build && cd .. && npm run start
+**Design**
 
-**Run in production mode using node.js backend**
-I made this much easier, just run the one line for building the client and starting the node server:
+- Marcel Hüsni (dioptrin)
 
-- `npm run start` (requires an installation of mongodb)
-- open `http://localhost:3000/home` in your browser
+**Video restauration**
 
-**Deploy locally**
+- Niels Seidel (CATALPA, FernUniversität in Hagen)
 
-- `cd client`
-- `serve -s dist`
-- Open http://localhost:5000 in your browser
+**Content production**
 
-**Deploy on github.io**
-
-- `cd client`
-- `npm run build`
+- Benedikt Schaumlöffel (University Bonn)
+- Dennis Schäfer (Princton)
+- Armin Pietsch (Freundeskreis Theresienstadt e.V.)
+- Janick Baumann (Freundeskreis Theresienstadt e.V.)
