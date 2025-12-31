@@ -1,28 +1,26 @@
-//// vtt (and other file types) handling: https://forum.vuejs.org/t/vtt-handling/65657/2
-
 module.exports = {
-  lintOnSave: false, // Disable ESLint during serve
-  publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
+  lintOnSave: false,
+  publicPath: "./",
   outputDir: "dist",
   css: { extract: false },
+
+  // Add this to disable caching
   chainWebpack: (config) => {
-    // your config
+    config.cache(false); // Disable webpack cache
+
+    // your existing config
     config.module
       .rule("vue")
       .use("vue-loader")
       .loader("vue-loader")
       .tap((options) => {
         options["transformAssetUrls"] = {
-          // [...]
           "b-embed": ["src", "poster"],
           source: "src",
           track: "src",
         };
-
         return options;
       });
-
-    // adjusting the media rule to include vtt files
     config.module
       .rule("media")
       .test(/\.(vtt|mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/);

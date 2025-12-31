@@ -78,10 +78,10 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/pages/news">{{
-                  $t("home.newsheadline")
+                  $t("home.news-headline")
                 }}</router-link>
               </div>
-              <div class="cell-text">{{ $t("home.news") }}</div>
+              <div class="cell-text">{{ $t("home.news-description") }}</div>
             </div>
           </div>
           <div class="col-md-6 app-cell">
@@ -91,11 +91,11 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/pages/history">{{
-                  $t("home.storyoriginheader")
+                  $t("home.origin-headline")
                 }}</router-link>
               </div>
               <div class="cell-text">
-                {{ $t("home.storyorigin") }}
+                {{ $t("home.origin-description") }}
               </div>
             </div>
           </div>
@@ -109,10 +109,12 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/pages/persons">{{
-                  $t("home.persons")
+                  $t("home.persons-headline")
                 }}</router-link>
               </div>
-              <div class="cell-text"></div>
+              <div class="cell-text">
+                {{ $t("home.scenes-description") }}
+              </div>
             </div>
           </div>
         </div>
@@ -125,10 +127,10 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/pages/scenes">{{
-                  $t("home.scenes")
+                  $t("home.scenes-headline")
                 }}</router-link>
               </div>
-              <div class="cell-text"></div>
+              <div class="cell-text">{{ $t("home.scenes-description") }}</div>
             </div>
           </div>
           <div class="col-md-4 p-0 app-cell">
@@ -138,10 +140,12 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/pages/map">{{
-                  $t("home.places")
+                  $t("home.places-headline")
                 }}</router-link>
               </div>
-              <div class="cell-text"></div>
+              <div class="cell-text">
+                {{ $t("home.places-description") }}
+              </div>
             </div>
           </div>
         </div>
@@ -156,10 +160,12 @@
                 <div class="cell-box bottom">
                   <div class="cell-headline">
                     <router-link to="/pages/fake-video">{{
-                      $t("home.fakevid")
+                      $t("home.fake-video-headline")
                     }}</router-link>
                   </div>
-                  <div class="cell-text"></div>
+                  <div class="cell-text">
+                    {{ $t("home.fake-video-description") }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -174,11 +180,11 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/pages/propaganda">{{
-                  $t("home.propaganda")
+                  $t("home.propaganda-headline")
                 }}</router-link>
               </div>
               <div class="cell-text">
-                {{ $t("home.propagandatext") }}
+                {{ $t("home.propaganda-description") }}
               </div>
             </div>
           </div>
@@ -192,10 +198,12 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/pages/guided-video">{{
-                  $t("home.guidedvid")
+                  $t("home.guided-video-headline")
                 }}</router-link>
               </div>
-              <div class="cell-text"></div>
+              <div class="cell-text">
+                {{ $t("home.guided-video-description") }}
+              </div>
             </div>
           </div>
           <div class="col-md-5 mr-4 app-cell">
@@ -205,10 +213,12 @@
             <div class="cell-box bottom">
               <div class="cell-headline">
                 <router-link to="/film/analysis">{{
-                  $t("home.analysis")
+                  $t("home.film-analysis-headline")
                 }}</router-link>
               </div>
-              <div class="cell-text"></div>
+              <div class="cell-text">
+                {{ $t("home.film-analysis-description") }}
+              </div>
             </div>
           </div>
           <div class="col-md-3 app-cell">
@@ -217,11 +227,13 @@
             /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/references">{{
-                  $t("home.references")
-                }}</router-link>
+                <router-link to="/pages/references">
+                  {{ $t("home.references-headline") }}
+                </router-link>
               </div>
-              <div class="cell-text"></div>
+              <div class="cell-text">
+                {{ $t("home.references-description") }}
+              </div>
             </div>
           </div>
         </div>
@@ -260,6 +272,9 @@ export default {
 </script>
 
 <style>
+.cell-text {
+  color: #333;
+}
 .rubrik-background {
   display: flex;
   justify-content: center;

@@ -1,6 +1,8 @@
 <template>
   <div class="home">
-    <h1 class="my-5 text-left" style="text-align:left;">{{$t("persons.h1")}}</h1>
+    <h1 class="my-5 text-left" style="text-align: left">
+      {{ $t("persons.h1") }}
+    </h1>
     <b-container fluid class="mx-auto col-10">
       <b-row class="mb-4">
         <b-col sm="6">
@@ -11,8 +13,8 @@
               border: solid 2px #fff;
               border-radius: 18px;
               color: #fff;
-              background-color:#000;
-              "
+              background-color: #000;
+            "
             v-model="searchquery"
             @keyup="getsearchquery"
             class="mx-1 form-control"
@@ -24,7 +26,7 @@
           <input
             hidden
             type="text"
-            style="float: left; width: 400px;"
+            style="float: left; width: 400px"
             class="mx-1 form-control"
             :placeholder="$t('persons.filterfield')"
             id="filterfield"
@@ -60,10 +62,9 @@
 <script>
 import Vue from "vue";
 import BootstrapVue from "bootstrap-vue";
+import personsData from "@/assets/data/Persons2020.json";
 
 Vue.use(BootstrapVue);
-
-import axios from "axios";
 
 import personcard from "@/components/PersonCard.vue";
 
@@ -72,7 +73,7 @@ export default {
   components: {
     personcard,
   },
-  
+
   data: () => ({
     error: "",
     persons: [],
@@ -86,9 +87,8 @@ export default {
       close: false,
       hideself: false,
     },
-   
-    persons: [],
 
+    persons: [],
   }),
 
   mounted: function () {
@@ -96,13 +96,9 @@ export default {
   },
 
   methods: {
-
-    getdata: function () {
-      let _this = this;
-      axios.get("/persondata").then(function (response) {
-        _this.persons = _this.giveArrID(response.data);
-        _this.splitArrInTwo(_this.persons);
-      });
+    getdata: async function () {
+      this.persons = this.giveArrID(personsData);
+      this.splitArrInTwo(this.persons);
     },
 
     getsearchquery: function () {
@@ -115,17 +111,22 @@ export default {
     },
 
     search: function (arr, needle) {
-      /* 
+      /*
       let result = arr.filter(
         (el) => JSON.stringify(el).toLowerCase().indexOf(needle.toLowerCase()) != -1
       );
       */
       let result = arr.filter(
-        (el) => (el.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-          + " " + el.surename.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
-          .toLowerCase().indexOf(needle.toLowerCase()) != -1
+        (el) =>
+          (
+            el.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "") +
+            " " +
+            el.surename.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          )
+            .toLowerCase()
+            .indexOf(needle.toLowerCase()) != -1
       );
-      
+
       this.displaySearchResult(result);
     },
 
@@ -173,10 +174,12 @@ export default {
       let size = personarr.length;
       for (let i = 0; i < size; i++) {
         personarr[i].id = i;
-        personarr[i].shortname = personarr[i].shortname ? personarr[i].shortname : personarr[i].surename+' '+Math.ceil(100*Math.random()); 
+        personarr[i].shortname = personarr[i].shortname
+          ? personarr[i].shortname
+          : personarr[i].surename + " " + Math.ceil(100 * Math.random());
       }
       return personarr;
     },
-  }
+  },
 };
 </script>

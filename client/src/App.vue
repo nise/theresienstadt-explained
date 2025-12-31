@@ -10,19 +10,27 @@
         class="routing"
         v-if="this.$route.path !== '/home' && this.$route.path !== '/'"
       >
-        <router-link to="/">{{ $t("app.backbutton")}}</router-link>
+        <router-link to="/">{{ $t("app.backbutton") }}</router-link>
       </span>
       <div style="float: right">
-        <button style="width: 30px; height: 25px; padding: 1px;" @click="switchLanguage(0)">
+        <button
+          class="btn btn-link"
+          style="width: 30px; height: 25px; padding: 1px"
+          @click="switchLanguage(0)"
+        >
           DE
         </button>
-        <button style="width: 30px; height: 25px; padding: 1px;" @click="switchLanguage(1)">
+        <button
+          class="btn btn-link"
+          style="width: 30px; height: 25px; padding: 1px"
+          @click="switchLanguage(1)"
+        >
           EN
         </button>
       </div>
     </div>
 
-    <router-view :selectedLanguageFromHeader="selectedLanguage"/>
+    <router-view :selectedLanguageFromHeader="selectedLanguage" />
 
     <footer v-if="footershow" class="page-footer">
       <div class="container text-center text-md-left">
@@ -37,13 +45,13 @@
           <div class="col-md-4 mb-md-0 mb-4">
             <ul class="list-unstyled">
               <li>
-                <a href="/about">{{ $t("app.about")}}</a>
+                <a href="/about">{{ $t("app.about") }}</a>
               </li>
               <li>
-                <a href="/imprint">{{ $t("app.impress")}}</a>
+                <a href="/imprint">{{ $t("app.impress") }}</a>
               </li>
               <li>
-                <a href="/privacy">{{ $t("app.privacy")}} </a>
+                <a href="/privacy">{{ $t("app.privacy") }} </a>
               </li>
             </ul>
           </div>
@@ -51,17 +59,16 @@
       </div>
       <div class="footer-copyright text-center">
         © 2020 Copyright:
-        <a href="https://jugendbegegnung.de/dresden/"
-          >{{ $t("app.copyright")}}</a
-        >
+        <a href="https://jugendbegegnung.de/dresden/">{{
+          $t("app.copyright")
+        }}</a>
       </div>
     </footer>
   </div>
 </template>
 
-
 <script>
-import {i18n, loadLanguageAsync} from './i18nsetup';
+import { i18n, loadLanguageAsync } from "./i18nsetup";
 
 /////////////////////////
 export default {
@@ -69,12 +76,10 @@ export default {
     return {
       footershow: true,
       availableLanguages: ["ger", "en"],
-      selectedLanguage: "ger"       //default
+      selectedLanguage: "ger", //default
     };
   },
-  mounted: function(){    
-
-  },
+  mounted: function () {},
   watch: {
     $route: function () {
       // Check if given route is true, if it is then hide Nav.
@@ -96,12 +101,11 @@ export default {
 };
 </script>
 
-
 <style>
-@import url("https://fonts.googleapis.com/css?family=Germania+One");
+/* @import url("https://fonts.googleapis.com/css?family=Germania+One");
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 @import url("./assets/styles/jost.css");
-
+*/
 body {
   font-family: Jost;
 }
@@ -278,10 +282,6 @@ body {
 
 .page-apps .cell-box .cell-headline {
   font-weight: bold;
-}
-
-.page-apps .cell-box .cell-text {
-  font-weight: 1;
 }
 
 footer {

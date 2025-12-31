@@ -33,11 +33,11 @@ export default {
       document.getElementById(id).style.display = "block";
       this.$emit("pauserequest");
     },
-    presetup(event){
+    presetup(event) {
       let dat = event.target.track;
       this.getPersonData().then((data) => {
         this.setup(dat);
-      })
+      });
     },
 
     setup(track) {
@@ -123,7 +123,8 @@ export default {
     createTextBox(data) {
       let textboxContent;
       let personData = this.searchPerson(this.persons, data.name);
-      if (personData == -1) textboxContent = "Kein Eintrag";            //TODO fill personData if -1
+      if (personData == -1)
+        textboxContent = "Kein Eintrag"; //TODO fill personData if -1
       else textboxContent = personData[0].profession;
       var newtextbox = document.createElement("div");
       newtextbox.id = data.id + "textbox";
@@ -170,7 +171,7 @@ export default {
       returnval.exit = new Array();
       returnval.enter = new Array();
 
-      for (let i = activeCueArr.length -1; i >= 0; i--) {
+      for (let i = activeCueArr.length - 1; i >= 0; i--) {
         if (Object.values(activeCueTextTrack).indexOf(activeCueArr[i]) == -1) {
           // has an active cue become inactive ?
           returnval.exit.push(activeCueArr[i]);
@@ -195,9 +196,9 @@ export default {
       */
       let results = arr.filter(
         (el) =>
-          (
-            el.shortname.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-          )
+          el.shortname
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
             .indexOf(needle.toLowerCase()) != -1
         // (el) =>
@@ -215,12 +216,15 @@ export default {
     getPersonData: function () {
       let _this = this;
       return new Promise((res, rej) => {
-        axios.get("/persondata").then(function (response) {
-          _this.persons = response.data;
-          //console.log(response.data);
-          res(response.data);
-          rej(-1);
-        });
+        axios
+          .get("./assets/data/Persons2020.json")
+          .then(function (response) {
+            _this.persons = response.data;
+            res(response.data);
+          })
+          .catch(function (error) {
+            rej(error);
+          });
       });
     },
   },
@@ -230,8 +234,8 @@ export default {
         this.$emit("ackclickTimeline");
         let cuelist;
         if (
-          (cuelist = document.getElementById("infomarkertrack").track
-            .activeCues)
+          (cuelist =
+            document.getElementById("infomarkertrack").track.activeCues)
         ) {
           for (let i = 0; i < cuelist.length; i++) {
             let data = JSON.parse(cuelist[i].text);
@@ -245,8 +249,8 @@ export default {
       if (this.paused == false) {
         let cuelist;
         if (
-          (cuelist = document.getElementById("infomarkertrack").track
-            .activeCues)
+          (cuelist =
+            document.getElementById("infomarkertrack").track.activeCues)
         ) {
           for (let i = 0; i < cuelist.length; i++) {
             let data = JSON.parse(cuelist[i].text);
@@ -264,24 +268,22 @@ export default {
       }
     },
   },
-  mounted: function(){
+  mounted: function () {
     this.activeCueArr = new Array();
     this.persons = new Array();
-    this.track = document.getElementById("infomarkertrack").track;    // important for beforeDestroy: el "track" no longer available in DOM when beforeDestroy is called
+    this.track = document.getElementById("infomarkertrack").track; // important for beforeDestroy: el "track" no longer available in DOM when beforeDestroy is called
   },
 
-  beforeDestroy: function(){
+  beforeDestroy: function () {
     let cuelist = this.track.cues;
-        if (cuelist) {
-          for (let i = 0; i < cuelist.length; i++){
-            let tb = document.getElementById(cuelist[i].id+"textbox");
-            let el = document.getElementById(cuelist[i].id);
-            if (tb) tb.style.display = "none";
-            if (el) el.style.display = "none";
-
-          }
-        }
-
+    if (cuelist) {
+      for (let i = 0; i < cuelist.length; i++) {
+        let tb = document.getElementById(cuelist[i].id + "textbox");
+        let el = document.getElementById(cuelist[i].id);
+        if (tb) tb.style.display = "none";
+        if (el) el.style.display = "none";
+      }
+    }
   },
   data() {
     return {
@@ -292,7 +294,7 @@ export default {
   },
 };
 </script>
-  
+
 <template>
   <track
     src="../assets/videos/infomarker/infomarker.de.vtt"
