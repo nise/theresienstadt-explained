@@ -1,30 +1,56 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable vue/require-v-for-key */
-/* eslint-disable */
 <template>
   <div class="container text-left">
-    <h1 class="mt-5 mb-4 ml-4 text-left">{{$t("scenes.h1")}}</h1>
+    <h1 class="mt-5 mb-4 ml-4 text-left">{{ $t("scenes.h1") }}</h1>
     <div class="col-3 mb-3 ml-3">
-      <input v-model="searchterm" :placeholder="$t('scenes.search')">
-    </div>  
+      <input v-model="searchterm" :placeholder="$t('scenes.search')" />
+    </div>
     <div class="row">
-      <div v-for="scene in search()" v-bind:key="scene" class="col-5 ml-5 mb-5 scene-box">
+      <div
+        v-for="scene in search()"
+        v-bind:key="scene"
+        class="col-5 ml-5 mb-5 scene-box"
+      >
         <div class="row">
           <div class="col-3">
             <img src="../assets/dummy.png" />
           </div>
           <div class="col-9 pl-2 pt-2 pr-2 scene-content">
             <div class="body mb-2">
-              <h3 class="title">{{ scene.number}}. {{ scene.title }}</h3>
-              <div v-if="!scene.expanded" class="desc mb-2">{{ shorten(scene.description, 250) }}</div>
-              <div v-if="scene.expanded" class="desc  mb-2">{{ scene.description }}</div>
+              <h3 class="title">{{ scene.number }}. {{ scene.title }}</h3>
+              <div v-if="!scene.expanded" class="desc mb-2">
+                {{ shorten(scene.description, 250) }}
+              </div>
+              <div v-if="scene.expanded" class="desc mb-2">
+                {{ scene.description }}
+              </div>
               <div v-if="scene.expanded" class="details">
-                <div v-if="scene.duration !== ''" class="item mb-1">{{$t("scenes.duration")}}: {{scene.duration }} {{$t("scenes.seconds")}}</div>
-                <div v-if="scene.status !== ''" class="item mb-1">{{$t("scenes.status")}}: {{scene.status}}</div>
-                <div v-if="scene.locations !== ''" class="item mb-1">{{$t("scenes.locations")}}:  {{scene.locations}}</div>
-                <div v-if="scene.protagonists.length > 0"class="item mb-1">{{$t("scenes.protagonists")}}: <ul><li v-for="p in scene.protagonists"><a href="">{{p}}</a></li></ul></div>
-                <div v-if="scene.music !== ''" class="item mb-1">{{$t("scenes.music")}}: {{scene.music}}</div>
-                <div v-if="scene.images.length > 0" class="item mb-1">{{$t("scenes.locationsimg")}}:  <ul><li v-for="o in scene.images">{{o}}, </li></ul></div>
+                <div v-if="scene.duration !== ''" class="item mb-1">
+                  {{ $t("scenes.duration") }}: {{ scene.duration }}
+                  {{ $t("scenes.seconds") }}
+                </div>
+                <div v-if="scene.status !== ''" class="item mb-1">
+                  {{ $t("scenes.status") }}: {{ scene.status }}
+                </div>
+                <div v-if="scene.locations !== ''" class="item mb-1">
+                  {{ $t("scenes.locations") }}: {{ scene.locations }}
+                </div>
+                <div v-if="scene.protagonists.length > 0" class="item mb-1">
+                  {{ $t("scenes.protagonists") }}:
+                  <ul>
+                    <li v-for="p in scene.protagonists">
+                      <a href="">{{ p }}</a>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="scene.music !== ''" class="item mb-1">
+                  {{ $t("scenes.music") }}: {{ scene.music }}
+                </div>
+                <div v-if="scene.images.length > 0" class="item mb-1">
+                  {{ $t("scenes.locationsimg") }}:
+                  <ul>
+                    <li v-for="o in scene.images">{{ o }},</li>
+                  </ul>
+                </div>
               </div>
             </div>
             <div class="foot mt-2">
@@ -33,18 +59,24 @@
                 v-if="!scene.expanded"
                 @click="expand(scene.number)"
                 class="btn btn-sm"
-              >{{$t("scenes.showmore")}}</button>
+              >
+                {{ $t("scenes.showmore") }}
+              </button>
               <button
                 v-if="scene.expanded"
                 @click="expand(scene.number)"
                 class="btn btn-sm"
-              >{{$t("scenes.showless")}}</button>
+              >
+                {{ $t("scenes.showless") }}
+              </button>
             </div>
           </div>
         </div>
-      </div><!-- end for-->
+      </div>
+      <!-- end for-->
       <div v-if="search().length === 0" class="col-10 p-3 mb-5 ml-5 box">
-        {{$t("scenes.searchfail1")}} "{{searchterm}}" {{$t("scenes.searchfail2")}}
+        {{ $t("scenes.searchfail1") }} "{{ searchterm }}"
+        {{ $t("scenes.searchfail2") }}
       </div>
     </div>
   </div>
@@ -65,31 +97,30 @@ Vue.use(VueAxios, axios);
 export default {
   name: "scenes",
   data: () => ({
-    error: '',
-    searchterm: '',
-    message:'',
-    scenes: []
+    error: "",
+    searchterm: "",
+    message: "",
+    scenes: [],
   }),
 
   mounted() {
     let _this = this;
-    console.log('mount scene');
+    console.log("mount scene");
     axios
       .post("/scenes/all")
-      .then(function (response) { 
-        console.log(response)
+      .then(function (response) {
+        console.log("xxx", response);
         _this.scenes = response.data.data;
       })
       .catch(function (error) {
         console.log(error);
       });
-
   },
 
   created() {
-    this.search().forEach(function(val){
-      console.log(val.title+' \n '+val.description+' \\');
-    })
+    this.search().forEach(function (val) {
+      console.log(val.title + " \n " + val.description + " \\");
+    });
   },
   methods: {
     shorten(text, length) {
@@ -103,53 +134,61 @@ export default {
         scene.expanded = !scene.expanded;
       }
     },
-   getScenebyId(id) {
-      for(let i = 0; i < this.scenes.length; i++){
-        if(this.scenes[i].number === id){
+    getScenebyId(id) {
+      for (let i = 0; i < this.scenes.length; i++) {
+        if (this.scenes[i].number === id) {
           return this.scenes[i];
         }
       }
     },
-    search() { 
+    search() {
       const _this = this;
-      if (this.searchterm === '') {
-        return this.scenes.sort(function(a, b){
-            a.number = parseInt(a.number, 10);
-            b.number = parseInt(b.number, 10);
-            if(a.number < b.number){
-              return -1;
-            } else if(a.number > b.number){
-              return 1;
-            } else{
-              return 0;
-            }
-          });
+      if (this.searchterm === "") {
+        return this.scenes.sort(function (a, b) {
+          a.number = parseInt(a.number, 10);
+          b.number = parseInt(b.number, 10);
+          if (a.number < b.number) {
+            return -1;
+          } else if (a.number > b.number) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
       } else {
-        return this.scenes.filter(function(d) {
-          return d.title.toLowerCase().includes(_this.searchterm.toLowerCase()) || d.description.toLowerCase().includes(_this.searchterm.toLowerCase());
-          }).sort(function(a, b){
+        return this.scenes
+          .filter(function (d) {
+            return (
+              d.title.toLowerCase().includes(_this.searchterm.toLowerCase()) ||
+              d.description
+                .toLowerCase()
+                .includes(_this.searchterm.toLowerCase())
+            );
+          })
+          .sort(function (a, b) {
             a.number = parseInt(a.number, 10);
             b.number = parseInt(b.number, 10);
-            if(a.number < b.number){
+            if (a.number < b.number) {
               return -1;
-            } else if(a.number > b.number){
+            } else if (a.number > b.number) {
               return 1;
-            } else{
+            } else {
               return 0;
             }
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .scene-box {
- display:inline-block !important; float:none !important;
+  display: inline-block !important;
+  float: none !important;
   position: relative;
   background: #fff;
- 
+
   padding-left: 0;
   text-align: left;
   height: auto;
@@ -160,7 +199,7 @@ export default {
   height: 100%;
 }
 
-.box{
+.box {
   position: relative;
   background: #fff;
   padding-left: 0;
@@ -192,27 +231,27 @@ export default {
 
 .scene-box .body {
   min-height: 200px;
-  padding-bottom:30px;
+  padding-bottom: 30px;
 }
 
 .scene-box .foot {
-  position:absolute;
-  bottom:4px;
-  display:block;
+  position: absolute;
+  bottom: 4px;
+  display: block;
   min-height: 20px;
   width: 95%;
   margin: 10px;
 }
 
 .scene-box .category {
-  display:inline-block;
+  display: inline-block;
 }
 
 .scene-box button {
   background: #111;
   color: #fff;
-  position:absolute;
-  right:10px;
+  position: absolute;
+  right: 10px;
 }
 
 .scene-box button:hover {
@@ -221,10 +260,12 @@ export default {
 }
 
 .scene-box button.btn:focus {
-    outline: 0;
-    box-shadow: 0 0 0 0.15rem  #c10000;
+  outline: 0;
+  box-shadow: 0 0 0 0.15rem #c10000;
 }
 
-.row.flexRow   { display: flex;  flex-wrap: wrap;}
-
+.row.flexRow {
+  display: flex;
+  flex-wrap: wrap;
+}
 </style>
