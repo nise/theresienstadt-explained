@@ -25,7 +25,7 @@
         <div class="rubrik-container">
           <div class="rubrik-element">
             <router-link to="/film/player/everydaylife">
-            <img class="rubrik-img" src="../assets/cat-1.png" />
+              <img class="rubrik-img" src="../assets/cat-1.png" />
             </router-link>
             <hr style="background-color: blue" />
             <p style="color: blue">
@@ -38,7 +38,7 @@
 
           <div class="rubrik-element">
             <router-link to="/film/player/work">
-            <img class="rubrik-img" src="../assets/cat-2.png" />
+              <img class="rubrik-img" src="../assets/cat-2.png" />
             </router-link>
             <hr style="background-color: green" />
             <p style="color: green">
@@ -51,9 +51,9 @@
 
           <div class="rubrik-element">
             <router-link to="/film/player/culture">
-            <img class="rubrik-img" src="../assets/cat-3.png" />
+              <img class="rubrik-img" src="../assets/cat-3.png" />
             </router-link>
-            
+
             <hr style="background-color: yellow" />
             <p style="color: yellow">
               <b>{{ $t("home.culturehead") }}</b>
@@ -72,21 +72,27 @@
       <div class="container">
         <div class="row mb-4">
           <div class="col-md-5 mr-4 app-cell">
-            <img src="../assets/dummy.png" />
+            <router-link to="/pages/news"
+              ><img src="../assets/dummy.png"
+            /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/news">{{ $t("home.newsheadline") }}</router-link>
+                <router-link to="/pages/news">{{
+                  $t("home.newsheadline")
+                }}</router-link>
               </div>
               <div class="cell-text">{{ $t("home.news") }}</div>
             </div>
           </div>
           <div class="col-md-6 app-cell">
-            <img src="../assets/home-dreharbeiten.png" />
+            <router-link to="/pages/history"
+              ><img src="../assets/home-dreharbeiten.png"
+            /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/history"
-                  >{{ $t("home.storyoriginheader") }}</router-link
-                >
+                <router-link to="/pages/history">{{
+                  $t("home.storyoriginheader")
+                }}</router-link>
               </div>
               <div class="cell-text">
                 {{ $t("home.storyorigin") }}
@@ -97,12 +103,14 @@
 
         <div class="row mb-4 mr-5 pr-2">
           <div class="col-md-12 p-0 mr-5 app-cell">
-            <img src="../assets/home-personen.png" />
+            <router-link to="/pages/persons"
+              ><img src="../assets/home-personen.png"
+            /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/persons"
-                  >{{ $t("home.persons") }}</router-link
-                >
+                <router-link to="/pages/persons">{{
+                  $t("home.persons")
+                }}</router-link>
               </div>
               <div class="cell-text"></div>
             </div>
@@ -111,23 +119,27 @@
 
         <div class="row mb-4">
           <div class="col-md-7 p-0 mr-4 app-cell">
-            <img src="../assets/home-szenen.png" />
+            <router-link to="/pages/scenes">
+              <img src="../assets/home-szenen.png" />
+            </router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/scenes"
-                  >{{ $t("home.scenes") }}</router-link
-                >
+                <router-link to="/pages/scenes">{{
+                  $t("home.scenes")
+                }}</router-link>
               </div>
               <div class="cell-text"></div>
             </div>
           </div>
           <div class="col-md-4 p-0 app-cell">
-            <img src="../assets/home-orte.png" />
+            <router-link to="/pages/map">
+              <img src="../assets/home-orte.png" />
+            </router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/map"
-                  >{{ $t("home.places") }}</router-link
-                >
+                <router-link to="/pages/map">{{
+                  $t("home.places")
+                }}</router-link>
               </div>
               <div class="cell-text"></div>
             </div>
@@ -138,10 +150,14 @@
           <div class="col-md-4 mr-4 app-cell">
             <div class="row">
               <div class="col-md-12 mb-4 app-cell">
-                <img src="../assets/home-fake.jpg" />
+                <router-link to="/pages/fake-video"
+                  ><img src="../assets/home-fake.jpg"
+                /></router-link>
                 <div class="cell-box bottom">
                   <div class="cell-headline">
-                    <router-link to="/pages/fake-video">{{ $t("home.fakevid") }}</router-link>
+                    <router-link to="/pages/fake-video">{{
+                      $t("home.fakevid")
+                    }}</router-link>
                   </div>
                   <div class="cell-text"></div>
                 </div>
@@ -152,12 +168,14 @@
             </div>
           </div>
           <div class="col-md-7 app-cell">
-            <img src="../assets/home-unwahrheit.png" />
+            <router-link to="/pages/propaganda"
+              ><img src="../assets/home-unwahrheit.png"
+            /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/propaganda"
-                  >{{ $t("home.propaganda") }}</router-link
-                >
+                <router-link to="/pages/propaganda">{{
+                  $t("home.propaganda")
+                }}</router-link>
               </div>
               <div class="cell-text">
                 {{ $t("home.propagandatext") }}
@@ -168,34 +186,40 @@
 
         <div class="row mb-4 pr-4">
           <div class="col-md-3 mr-4 app-cell">
-            <img src="../assets/dummy.png" />
+            <router-link to="/pages/guided-video"
+              ><img src="../assets/dummy.png"
+            /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/guided-video"
-                  >{{ $t("home.guidedvid") }}</router-link
-                >
+                <router-link to="/pages/guided-video">{{
+                  $t("home.guidedvid")
+                }}</router-link>
               </div>
               <div class="cell-text"></div>
             </div>
           </div>
           <div class="col-md-5 mr-4 app-cell">
-            <img src="../assets/home-analyse.png" />
+            <router-link to="/film/analysis"
+              ><img src="../assets/home-analyse.png"
+            /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/film/analysis"
-                  >{{ $t("home.analysis") }}</router-link
-                >
+                <router-link to="/film/analysis">{{
+                  $t("home.analysis")
+                }}</router-link>
               </div>
               <div class="cell-text"></div>
             </div>
           </div>
           <div class="col-md-3 app-cell">
-            <img src="../assets/home-literatur.png" />
+            <router-link to="/pages/references"
+              ><img src="../assets/home-literatur.png"
+            /></router-link>
             <div class="cell-box bottom">
               <div class="cell-headline">
-                <router-link to="/pages/references"
-                  >{{ $t("home.references") }}</router-link
-                >
+                <router-link to="/pages/references">{{
+                  $t("home.references")
+                }}</router-link>
               </div>
               <div class="cell-text"></div>
             </div>
@@ -226,8 +250,7 @@ export default {
         this.message = result
       }) */
   },
-  methods: {
-  },
+  methods: {},
   watch: {
     selectedLanguageFromHeader: function () {
       console.log(this.selectedLanguageFromHeader);
@@ -235,7 +258,6 @@ export default {
   },
 };
 </script>
-
 
 <style>
 .rubrik-background {
