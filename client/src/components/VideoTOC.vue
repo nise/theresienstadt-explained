@@ -154,7 +154,7 @@ export default {
     getSceneData: function () {
       let _this = this;
       return new Promise((res, rej) => {
-        axios.get("/scenes/all").then(function (response) {
+        axios.get("./data/Scenes2020new.json").then(function (response) {
           _this.rawscenes = response.data;
           res(response.data);
           rej(-1);

@@ -4,7 +4,7 @@ Dies ist eine statische HTML-Seite.
 <template>
   <div class="container" style="text-align: left">
     <h1 class="mt-4 mb-1" style="text-align: left">
-      {{$t("propaganda.h1")}}
+      {{ $t("propaganda.h1") }}
     </h1>
     <div style="background-color: white" class="mt-3 mb-5 pt-4 pb-3 px-3">
       <h3>Was ist Propaganda</h3>
@@ -137,7 +137,7 @@ Dies ist eine statische HTML-Seite.
       </div>
 
       <div class="row mt-3 mb-3">
-         <div class="col-6 cover-imgages">
+        <div class="col-6 cover-imgages">
           <img class="mr-2 mb-2" src="../assets/dummy.png" />
           <img class="mr-2 mb-2" src="../assets/dummy.png" />
           <img class="mr-2 mb-2" src="../assets/dummy.png" />
@@ -320,8 +320,8 @@ Dies ist eine statische HTML-Seite.
   </div>
 </template>
 
-<style>
-.page h4 {
+<style scoped>
+.h4 {
   color: #000;
 }
 

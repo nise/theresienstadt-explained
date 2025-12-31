@@ -119,7 +119,7 @@ export default {
 </div>
 </template>
 
-<style>
+<style scoped>
 h4 {
   display: block;
   font-family: Jost;

@@ -6,8 +6,8 @@ export default {
   name: "references",
   data: function () {
     return {
-      theresienbib: null,
-      bibparse: null,
+      theresienbib: [],
+      bibparse: [],
       filter: "",
       tags: [],
       filmography: [],
@@ -17,7 +17,7 @@ export default {
   mounted: function () {
     this.bibparse = new BibTexParser();
     let _this = this;
-    axios.get("/references/bibliography").then(function (response) {
+    axios.get("./data/references_literature.bib").then(function (response) {
       _this.bibparse.setInput(response.data);
       _this.bibparse.bibtex();
       _this.theresienbib = _this.bibparse.getEntries();
@@ -25,7 +25,7 @@ export default {
       _this.attachKeywords(_this.bibparse.getEntries());
     });
 
-    axios.get("/references/filmography").then(function (response) {
+    axios.get("./data/references_filmography.json").then(function (response) {
       console.log(response);
       _this.filmography = response.data.filmography.sort(function (a, b) {
         return b.year - a.year;
@@ -55,6 +55,7 @@ export default {
     },
 
     filteredBibliography: function (publication_types) {
+      if (this.theresienbib.length == 0) return;
       let _this = this;
       return Object.values(this.theresienbib)
         .filter(function (d) {
@@ -72,6 +73,7 @@ export default {
     },
 
     removeCurlBraces() {
+      if (this.theresienbib.length == 0) return;
       let regtest = RegExp(/\{|\}/gi);
       for (var val in this.theresienbib) {
         for (var objval in this.theresienbib[val]) {
@@ -89,7 +91,7 @@ export default {
 <template>
   <div class="container" style="text-align: left">
     <h1 class="my-5" style="text-align: left">
-      {{$t("references.h1")}}
+      {{ $t("references.h1") }}
     </h1>
     <div style="background-color: white" class="pt-4 pb-3 px-3">
       <h2 class="mt-4 mb-5">Filme</h2>
@@ -127,7 +129,7 @@ export default {
             >{{ tag }}
           </span>
         </div>
-        <div class="col-9">
+        <div class="col-9" v-if="theresienbib.length > 0">
           <div v-if="filter != ''">
             Gefiltert nach "{{ filter }}"
             <div class="btn btn-sm btn-primary ml-3" @click="filter = ''">
@@ -396,7 +398,7 @@ export default {
   </div>
 </template>
 
-<style>
+<style scoped>
 .dist::after {
   content: " ";
 }

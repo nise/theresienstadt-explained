@@ -1,8 +1,5 @@
-/* eslint-disable */
-/* eslint-disable no-else-return */
-/* eslint-disable import/no-amd */
-/* eslint-disable no-unused-vars */
-/* eslint-disable */
+/* eslint-disable */ /* eslint-disable no-else-return */ /* eslint-disable
+import/no-amd */ /* eslint-disable no-unused-vars */ /* eslint-disable */
 <script>
 // import Video from '../js/Video.js';
 // const videovue = new Video(store);
@@ -208,7 +205,7 @@ export default {
         ((e.clientX - rect.left) / (rect.right - rect.left)) *
         this.videoElement.duration;
       this.currentTime = this.videoElement.currentTime;
-      //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right); 
+      //console.log(e.clientX - rect.left, e.clientX, rect.left, rect.right);
     },
     gotoTime(time) {
       if (!this.videoElement) {
@@ -225,12 +222,8 @@ export default {
     },
     videoControlAddCommand() {
       let _this = this;
-      window.addEventListener("keypress", 
-        _this.togglePlayPause
-      );
-      window.addEventListener("keydown",
-        _this.skip5s
-      );
+      window.addEventListener("keypress", _this.togglePlayPause);
+      window.addEventListener("keydown", _this.skip5s);
     },
     togglePlayPause(event) {
       switch (event.code) {
@@ -415,7 +408,7 @@ var annoLength = this.annotations.length;
     },
   },
   beforeDestroy: function () {
-    window.removeEventListener("keypress",this.togglePlayPause);
+    window.removeEventListener("keypress", this.togglePlayPause);
     window.removeEventListener("keydown", this.skip5s);
   },
 };
@@ -563,7 +556,7 @@ var annoLength = this.annotations.length;
   </div>
 </template>
 
-<style>
+<style scoped>
 .bigger {
   font-size: 1.4em;
 }

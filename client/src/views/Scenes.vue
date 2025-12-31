@@ -4,10 +4,10 @@
     <div class="col-3 mb-3 ml-3">
       <input v-model="searchterm" :placeholder="$t('scenes.search')" />
     </div>
-    <div class="row">
+    <div class="row" v-if="scenes.length > 0">
       <div
         v-for="scene in search()"
-        v-bind:key="scene"
+        v-bind:key="scene.number"
         class="col-5 ml-5 mb-5 scene-box"
       >
         <div class="row">
@@ -54,7 +54,12 @@
               </div>
             </div>
             <div class="foot mt-2">
-              <div class="category">{{ scene.category }}</div>
+              <div
+                v-if="scene.category"
+                class="btn btn-sm btn-secondary category"
+              >
+                {{ scene.category }}
+              </div>
               <button
                 v-if="!scene.expanded"
                 @click="expand(scene.number)"
@@ -88,11 +93,9 @@ import BootstrapVue from "bootstrap-vue";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
-Vue.use(BootstrapVue);
-
 import axios from "axios";
-import VueAxios from "vue-axios";
-Vue.use(VueAxios, axios);
+
+Vue.use(BootstrapVue);
 
 export default {
   name: "scenes",
@@ -104,26 +107,29 @@ export default {
   }),
 
   mounted() {
-    let _this = this;
-    console.log("mount scene");
-    axios
-      .post("/scenes/all")
-      .then(function (response) {
-        console.log("xxx", response);
-        _this.scenes = response.data.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    console.log("mounted");
+    this.getData();
   },
-
   created() {
-    this.search().forEach(function (val) {
+    /*this.search().forEach(function (val) {
       console.log(val.title + " \n " + val.description + " \\");
-    });
+    });*/
   },
   methods: {
+    async getData() {
+      console.log("mount scene");
+      try {
+        const response = await axios.get("./data/Scenes2020new.json");
+        console.log("Response data:", response.data);
+        console.log("Is array?", Array.isArray(response.data));
+        console.log("Length:", response.data.length);
+        this.scenes = response.data;
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    },
     shorten(text, length) {
+      if (!text) return "";
       return text.length > length ? text.substr(0, length - 4) + " ..." : text;
     },
     expand(id) {
@@ -135,6 +141,9 @@ export default {
       }
     },
     getScenebyId(id) {
+      if (!this.scenes || this.scenes.length === 0) {
+        return [];
+      }
       for (let i = 0; i < this.scenes.length; i++) {
         if (this.scenes[i].number === id) {
           return this.scenes[i];
@@ -142,6 +151,9 @@ export default {
       }
     },
     search() {
+      if (!this.scenes || this.scenes.length === 0) {
+        return [];
+      }
       const _this = this;
       if (this.searchterm === "") {
         return this.scenes.sort(function (a, b) {
