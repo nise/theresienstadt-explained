@@ -4,3 +4,6 @@ ressources
 *.log
 .vscode
 *.mp4
+*.code-workspace
+server-setup.md
+package-lock.json
