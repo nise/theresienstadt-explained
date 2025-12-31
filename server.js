@@ -1,131 +1,100 @@
-#!/usr/bin / env node
+#!/usr/bin/env node
 
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const history = require("connect-history-api-fallback");
+const http = require("http");
 
-
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-
-const application = 'theresienstadt-explained';
-const mongoose = require('mongoose');
-const history = require('connect-history-api-fallback');
+const APPLICATION_NAME = "theresienstadt-explained";
+const PORT = normalizePort(process.env.PORT || "3000");
 
 const app = express();
 
-app.use(morgan('tiny'));
+// Middleware
+app.use(morgan("dev"));
 app.use(cors());
-app.use(history());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(history());
 
+// Routes
+require("./routes/acl")(app);
 
-/**
- * Module dependencies.
- */
+// Error handling
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  res.status(err.status || 500).json({
+    error: err.message || "Internal Server Error",
+  });
+});
 
-//var app = require('../app');
-var debug = require('debug')('backend:server');
-var http = require('http');
+// Create and configure server
+const server = http.createServer(app);
+server.setMaxListeners(0);
 
-/**
- * Get port from environment and store in Express.
- */
-var port = normalizePort(process.env.PORT || '3000');
+// Start server
+server.listen(PORT, () => {
+  console.log(
+    "---------------------------------------------------------------"
+  );
+  console.log('Server started for application "' + APPLICATION_NAME + '"');
+  console.log("Port: " + PORT);
+  console.log("Environment: " + (process.env.NODE_ENV || "development"));
+  console.log(
+    "---------------------------------------------------------------"
+  );
+});
 
+server.on("error", onError);
+server.on("listening", onListening);
 
-/**
- * Create HTTP server.
- */
-var server = http.createServer(app);
+// Graceful shutdown
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
 
-
-/**
- * Normalize a port into a number, string, or false.
- */
 function normalizePort(val) {
-    var port = parseInt(val, 10);
-
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-
-    return false;
+  const port = parseInt(val, 10);
+  return isNaN(port) ? val : port >= 0 ? port : false;
 }
-
-/**
- * Event listener for HTTP server "error" event.
- */
 
 function onError(error) {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
+  if (error.syscall !== "listen") {
+    throw error;
+  }
 
-    var bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
+  const bind = typeof PORT === "string" ? "Pipe " + PORT : "Port " + PORT;
 
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-        case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
-            process.exit(1);
-            break;
-        case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
-            process.exit(1);
-            break;
-        default:
-            throw error;
-    }
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
 }
-
-/**
- * Event listener for HTTP server "listening" event.
- */
 
 function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
-    debug('Listening on ' + bind);
+  const addr = server.address();
+  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  console.log("Listening on " + bind);
 }
 
+function shutdown() {
+  console.log("\nShutting down gracefully...");
+  server.close(() => {
+    console.log("Server closed");
+    process.exit(0);
+  });
 
-/* 
- * Init database, load data, and init ACL 
- **/
-mongoose.Promise = require('bluebird');
-var conn = mongoose.connect(
-    'mongodb://localhost:27017/' + application, {
-        // useMongoClient: true,
-        useNewUrlParser: true,
-        promiseLibrary: require('bluebird')
-    }) 
-    .then(() => {
-        // Initialize Access Control List 
-        require('./routes/acl')(conn, app);
-        
-        // start server
-        server.listen(port, () => {
-            console.log('\n\n***************************************************************');
-            console.log('Started server for application »' + application + '« on port ' + port);
-            console.log('***************************************************************\n\n');
-            //console.log(process.env.NODE_ENV);
-        });
-        server.on('error', onError);
-        server.on('listening', onListening);
-        app.setMaxListeners(0);
-        return;
-    })
-    .catch(err => { // mongoose connection error will be handled here
-        console.error('App starting error:', err.stack);
-        process.exit(1);
-    });
+  setTimeout(() => {
+    console.error("Forced shutdown");
+    process.exit(1);
+  }, 10000);
+}
