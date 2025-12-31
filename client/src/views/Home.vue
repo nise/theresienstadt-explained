@@ -17,7 +17,7 @@
       <b-alert v-model="show" class="mt-3" dismissible @dismissed="dismissed">Hello {{ name }}!</b-alert>
     </div>
     -->
-    <div class="rubrik-background">
+    <div class="rubrik-background container-fluid page-apps">
       <div>
         <div class="rubrik-header">
           {{ $t("home.moviehead") }}
@@ -301,9 +301,6 @@ export default {
 .rubrik-element {
   width: 21.87vw;
   height: 33.33vw;
-  padding-top: 7.7%;
-  padding-left: 1.37%;
-  padding-right: 1.37%;
   text-align: left;
   box-sizing: content-box;
   font-size: large;
@@ -312,8 +309,6 @@ export default {
   width: 21.87vw;
   height: 20.31vw;
   cursor: pointer;
-  /*width: 100%;
-  height: 61%;*/
 }
 .rubrik-img:hover {
   filter: brightness(120%);
