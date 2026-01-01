@@ -8,3 +8,5 @@ ressources
 server-setup.md
 package-lock.json
 .vscode
+dist/media
+..bfg-report
