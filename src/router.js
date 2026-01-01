@@ -80,7 +80,7 @@ export default new Router({
     },
     {
       path: "/pages/fake-video",
-      name: "imprint",
+      name: "fake-videos",
       component: () =>
         import(/* webpackChunkName: "fakevideo" */ "./views/FakeVideo.vue"),
     },
