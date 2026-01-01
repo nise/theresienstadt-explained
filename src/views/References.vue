@@ -11,26 +11,45 @@ export default {
       filter: "",
       tags: [],
       filmography: [],
+      loadError: false,
     };
   },
 
   mounted: function () {
     this.bibparse = new BibTexParser();
     let _this = this;
-    axios.get("./data/references_literature.bib").then(function (response) {
-      _this.bibparse.setInput(response.data);
-      _this.bibparse.bibtex();
-      _this.theresienbib = _this.bibparse.getEntries();
-      _this.removeCurlBraces();
-      _this.attachKeywords(_this.bibparse.getEntries());
-    });
-
-    axios.get("./data/references_filmography.json").then(function (response) {
-      console.log(response);
-      _this.filmography = response.data.filmography.sort(function (a, b) {
-        return b.year - a.year;
+    axios
+      .get("./data/references_literature.bib")
+      .then(function (response) {
+        _this.bibparse.setInput(response.data);
+        _this.bibparse.bibtex();
+        _this.theresienbib = _this.bibparse.getEntries();
+        _this.removeCurlBraces();
+        _this.attachKeywords(_this.bibparse.getEntries());
+      })
+      .catch(function (error) {
+        console.error("Error loading bibliography:", error);
+        // Optional: Show user-friendly message
+        _this.theresienbib = [];
+        // Or set an error flag
+        _this.loadError = true;
       });
-    });
+
+    axios
+      .get("./data/references_filmography.json")
+      .then(function (response) {
+        console.log(response);
+        _this.filmography = response.data.filmography.sort(function (a, b) {
+          return b.year - a.year;
+        });
+      })
+      .catch(function (error) {
+        console.error("Error loading filmography:", error);
+        // Optional: Show user-friendly message
+        _this.filmography = [];
+        // Or set an error flag
+        _this.loadError = true;
+      });
   },
   methods: {
     attachKeywords: function (bib) {
@@ -68,8 +87,33 @@ export default {
           return false;
         })
         .sort(function (a, b) {
-          return b.YEAR - a.YEAR;
+          const getLastName = (entry) => {
+            if (!entry.AUTHOR) return '';
+            const firstAuthor = entry.AUTHOR.split(' and ')[0].trim();
+            if (firstAuthor.includes(',')) {
+              return firstAuthor.split(',')[0].trim().toLowerCase();
+            }
+            const parts = firstAuthor.split(' ');
+            return parts[parts.length - 1].trim().toLowerCase();
+          };
+          
+          const lastNameA = getLastName(a);
+          const lastNameB = getLastName(b);
+          
+          // First sort by last name
+          const nameComparison = lastNameA.localeCompare(lastNameB);
+          
+          // If names are equal, sort by year (descending)
+          if (nameComparison === 0) {
+            return b.YEAR - a.YEAR;
+          }
+          
+          return nameComparison;
         });
+        /*.sort(function (a, b) {
+          return b.YEAR - a.YEAR;
+        });*/
+
     },
 
     removeCurlBraces() {
@@ -82,6 +126,15 @@ export default {
             this.theresienbib[val][objval] = noCurlBraces.replace(regtest, "");
           }
         }
+      }
+    },
+
+    scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        // Optional: update URL hash without router interference
+        // window.history.replaceState(null, null, `#${sectionId}`);
       }
     },
   },
@@ -119,27 +172,75 @@ export default {
     <div style="background-color: white" class="my-5 pt-4 pb-3 px-3">
       <h2 class="mt-5">Literatur</h2>
       <div class="row">
-        <div class="col-3">
-          <h4 class="mt-5">Schlüsselwörter</h4>
-          <span
-            v-for="tag in tags"
-            :key="tag"
-            @click="applyFilter(tag)"
-            class="mx-1 tag-link"
-            >{{ tag }}
-          </span>
-        </div>
-        <div class="col-9" v-if="theresienbib.length > 0">
+        <div class="col-9">
           <div v-if="filter != ''">
             Gefiltert nach "{{ filter }}"
             <div class="btn btn-sm btn-primary ml-3" @click="filter = ''">
               Filter aufheben
             </div>
           </div>
+          <div v-if="filter == ''">
+            <ul class="nav nav-pills">
+              <li v-if="filteredBibliography(['@BOOK']).length > 0">
+                <b-badge
+                  class="mr-2 badge-link"
+                  @click.prevent="scrollToSection('BOOK')"
+                  variant="secondary"
+                  >Monographien</b-badge
+                >
+              </li>
+              <li v-if="filteredBibliography(['@INCOLLECTION']).length > 0">
+                <b-badge
+                  class="mr-2 badge-link"
+                  @click.prevent="scrollToSection('INCOLLECTION')"
+                  variant="secondary"
+                  >Buchbeiträge</b-badge
+                >
+              </li>
+              <li v-if="filteredBibliography(['@ARTICLE']).length > 0">
+                <b-badge
+                  class="mr-2 badge-link"
+                  @click.prevent="scrollToSection('ARTICLE')"
+                  variant="secondary"
+                  >Zeitschriftenbeiträge</b-badge
+                >
+              </li>
+              <li v-if="filteredBibliography(['@INPROCEDINGS']).length > 0">
+                <b-badge
+                  class="mr-2 badge-link"
+                  @click.prevent="scrollToSection('INPROCEEDINGS')"
+                  variant="secondary"
+                  >Tagungsbeiträge</b-badge
+                >
+              </li>
+              <li
+                v-if="
+                  filteredBibliography(['@PHDTHESIS', '@MASTERTHESIS']).length >
+                  0
+                "
+              >
+                <b-badge
+                  class="mr-2 badge-link"
+                  @click.prevent="scrollToSection('PHDTHESIS')"
+                  variant="secondary"
+                  >Abschlussarbeiten</b-badge
+                >
+              </li>
+              <li v-if="filteredBibliography(['@MISC']).length > 0">
+                <b-badge
+                  class="mr-2 badge-link"
+                  @click.prevent="scrollToSection('MISC')"
+                  variant="secondary"
+                  >Sonstige</b-badge
+                >
+              </li>
+            </ul>
+          </div>
 
           <h3
             v-if="filteredBibliography(['@BOOK']).length > 0"
             class="mt-5 ml-0 mb-1"
+            id="book"
           >
             Monographien
           </h3>
@@ -178,6 +279,7 @@ export default {
           <h3
             v-if="filteredBibliography(['@INCOLLECTION']).length > 0"
             class="mt-5 ml-0 mb-1"
+            id="INCOLLECTION"
           >
             Buchbeiträge
           </h3>
@@ -224,6 +326,7 @@ export default {
           <h3
             v-if="filteredBibliography(['@ARTICLE']).length > 0"
             class="mt-5 ml-0 mb-1"
+            id="ARTICLE"
           >
             Zeitschriftenartikel
           </h3>
@@ -270,6 +373,7 @@ export default {
           <h3
             v-if="filteredBibliography(['@INPROCEDINGS']).length > 0"
             class="mt-5 ml-0 mb-1"
+            id="INPROCEEDINGS"
           >
             Tagungsbeiträge
           </h3>
@@ -307,8 +411,9 @@ export default {
               filteredBibliography(['@PHDTHESIS', '@MASTERTHESIS']).length > 0
             "
             class="mt-5 ml-0 mb-1"
+            id="PHDTHESIS"
           >
-            Dissertationen
+            Abschlussarbeiten
           </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
@@ -350,6 +455,7 @@ export default {
           <h3
             v-if="filteredBibliography(['@MISC']).length > 0"
             class="mt-5 ml-0 mb-1"
+            id="MISC"
           >
             Sonstige
           </h3>
@@ -393,6 +499,18 @@ export default {
             </li>
           </ul>
         </div>
+        <div class="col-3">
+          <h4 class="mt-5">Schlüsselwörter</h4>
+          <b-badge
+            v-for="tag in tags"
+            :key="tag"
+            href="#"
+            @click.prevent="applyFilter(tag)"
+            class="mr-3 tag-link"
+            variant="light"
+            >{{ tag }}
+          </b-badge>
+        </div>
       </div>
     </div>
   </div>
@@ -426,11 +544,17 @@ h3 {
 .tag-link {
   cursor: pointer;
   font-size: 0.8;
-  color: #555;
+  text-decoration: none;
+  color: #c10000;
   font-family: Arial, Helvetica, sans-serif;
 }
-.tag-link:hover {
-  color: #c10000;
+.badge-link {
+  cursor: pointer;
+  font-size: 1.2 !important;
+}
+.badge-link:hover {
+  background-color: #c10000;
+  color: #fff;
 }
 .normal-text {
   font-family: Arial, Helvetica, sans-serif;
