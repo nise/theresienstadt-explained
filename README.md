@@ -13,13 +13,11 @@
 
 **Run the application**
 
-- `cd client`
 - Install dependencies: `npm install` and `npm audit -fix`
 - `cd dist`
 - Run application: `npx http-server -p 8080` and open http://localhost:8080 in your browser
 
 **Get into devlopment**
-Inside the 'client' folder:
 
 - Hot reloading during development: `npm run serve`
 - Build code to run as stand-alone app: `npm run build`
@@ -29,6 +27,36 @@ Inside the 'client' folder:
 - complete content
 - upgrade to vue3
 - use strapi as LMS https://strapi.io/
+
+i18n Text conversion for german and english (no dates yet)
+
+- [ ] Finish language selector buttons
+- [x] PersonCard
+- [x] VideoAnnotations
+- [x] VideoInfoMarker
+- [x] VideoMapMarker
+- [x] VideoToC
+- [x] VideoTranskript
+- [] Video
+
+- [x] About
+- [x] Home
+- [x] Imprint
+- [x] Persons
+- [x] Scenes
+
+- [ ] References
+- [ ] FakeVideo
+- [ ] GuidedVideo
+- [ ] History
+- [ ] Intro
+- [ ] Map
+- [ ] News
+- [ ] Privacy
+- [ ] Propaganda
+- [ ] VideoAnalyses
+- [x] App
+- [ ] Comments
 
 # License and Citation
 
