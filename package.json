@@ -1,44 +1,50 @@
 {
-  "name": "theresienstadt-explained",
-  "version": "1.0.0",
-  "description": "NS Propaganda film about the concentration camp in Theresienstadt",
-  "main": "server.js",
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve --open",
-    "start": "node ./JSONtoVTT_advene && npm run build --prefix ./client  && node ./server",
-    "test": "npm run serve --prefix ./client"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
-  "keywords": [
-    "interactive",
-    "film",
-    "hypervideo"
-  ],
-  "author": "Niels Seidel, niels.seidel@fernuni-hagen.de",
-  "license": "MIT",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-brands-svg-icons": "^5.15.1",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/vue-fontawesome": "^3.1.2",
-    "@vue/cli": "^5.0.9",
-    "@vue/cli-service": "^4.5.9",
-    "body-parser": "^1.19.0",
-    "bootstrap": "^4.5.3",
-    "bootstrap-vue": "^1.5.1",
-    "connect-flash": "^0.1.1",
-    "connect-history-api-fallback": "^1.6.0",
-    "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-json": "^1.0.0",
-    "express-session": "^1.17.1",
-    "express-validator": "^6.8.0",
-    "method-override": "^3.0.0",
-    "moment": "^2.29.1",
-    "mongoose": "^9.1.0",
-    "morgan": "^1.10.0",
-    "vue": "^3.5.26",
-    "vue-i18n": "^8.24.4",
-    "vue-moment": "^4.1.0"
+    "@babel/polyfill": "^7.12.1",
+    "axios": "^1.6.0",
+    "bootstrap": "^4.6.2",
+    "bootstrap-vue": "^2.23.1",
+    "core-js": "^3.35.0",
+    "leaflet": "^1.9.4",
+    "mutationobserver-shim": "^0.3.7",
+    "register-service-worker": "^1.7.2",
+    "tiptap": "^1.32.2",
+    "vue": "^2.7.16",
+    "vue-axios": "^3.5.2",
+    "vue-router": "^3.6.5",
+    "vue2-leaflet": "^2.7.1",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.28.5",
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-plugin-eslint": "^5.0.8",
+    "@vue/cli-plugin-pwa": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
+    "@vue/eslint-config-airbnb": "^7.0.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.20.0",
+    "node-sass": "^9.0.0",
+    "portal-vue": "^2.1.7",
+    "sass-loader": "^13.3.3",
+    "vue-cli-plugin-bootstrap-vue": "^0.8.2",
+    "vue-template-compiler": "^2.7.16"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }
