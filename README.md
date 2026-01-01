@@ -1,4 +1,8 @@
-# Features
+# Theresienstadt Explained
+
+tba.
+
+## Features
 
 - Interactive video player
   - table of contents
@@ -9,7 +13,7 @@
 
 - tba.
 
-# Setup and development
+## Setup and development
 
 **Run the application**
 
@@ -58,7 +62,7 @@ i18n Text conversion for german and english (no dates yet)
 - [x] App
 - [ ] Comments
 
-# License and Citation
+## License and Citation
 
 Software: MIT license
 
@@ -70,7 +74,7 @@ Theresienstadt film: all rights reserved
 tba.
 ```
 
-# Contributors
+## Contributors
 
 **Devalopment**
 
@@ -81,11 +85,11 @@ tba.
 
 - Marcel Hüsni (dioptrin)
 
-**Video restauration**
+**Video Restauration**
 
 - Niels Seidel (CATALPA, FernUniversität in Hagen)
 
-**Content production**
+**Content Production**
 
 - Benedikt Schaumlöffel (University Bonn)
 - Dennis Schäfer (Princton)
