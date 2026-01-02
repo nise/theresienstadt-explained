@@ -151,7 +151,18 @@
       "h1": "Propaganda im Film"
     },
     "references": {
-      "h1": "Weiterführende Filme und Literatur"
+      "h1": "Weiterführende Filme und Literatur",
+      "films_headline": "Filme",
+      "literature_headline": "Literatur",
+      "filter_as": "Gefiltert nach",
+      "filter_remove": "Filter aufheben",
+      "type_monography": "Monographien",
+      "type_incollection": "Buchbeiträge",
+      "type_article": "Zeitschriftenbeiträge",
+      "type_inproceedings": "Tagungsbeiträge",
+      "type_theses": "Abschlussarbeiten",
+      "type_misc": "Sonstige",
+      "keywords": "Schlüsselwörter"
     },
     "scenes": {
       "h1": "Die 38 Szenen des Films",

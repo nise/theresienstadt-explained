@@ -88,32 +88,31 @@ export default {
         })
         .sort(function (a, b) {
           const getLastName = (entry) => {
-            if (!entry.AUTHOR) return '';
-            const firstAuthor = entry.AUTHOR.split(' and ')[0].trim();
-            if (firstAuthor.includes(',')) {
-              return firstAuthor.split(',')[0].trim().toLowerCase();
+            if (!entry.AUTHOR) return "";
+            const firstAuthor = entry.AUTHOR.split(" and ")[0].trim();
+            if (firstAuthor.includes(",")) {
+              return firstAuthor.split(",")[0].trim().toLowerCase();
             }
-            const parts = firstAuthor.split(' ');
+            const parts = firstAuthor.split(" ");
             return parts[parts.length - 1].trim().toLowerCase();
           };
-          
+
           const lastNameA = getLastName(a);
           const lastNameB = getLastName(b);
-          
+
           // First sort by last name
           const nameComparison = lastNameA.localeCompare(lastNameB);
-          
+
           // If names are equal, sort by year (descending)
           if (nameComparison === 0) {
             return b.YEAR - a.YEAR;
           }
-          
+
           return nameComparison;
         });
-        /*.sort(function (a, b) {
+      /*.sort(function (a, b) {
           return b.YEAR - a.YEAR;
         });*/
-
     },
 
     removeCurlBraces() {
@@ -147,7 +146,7 @@ export default {
       {{ $t("references.h1") }}
     </h1>
     <div style="background-color: white" class="pt-4 pb-3 px-3">
-      <h2 class="mt-4 mb-5">Filme</h2>
+      <h2 class="mt-4 mb-5">{{ $t("references.films_headline") }}</h2>
       <div v-for="film in filmography" :key="film" class="row mb-5">
         <div class="col-3">
           <img :src="'/img/film/' + film.cover" style="width: 100%" />
@@ -170,13 +169,13 @@ export default {
     </div>
 
     <div style="background-color: white" class="my-5 pt-4 pb-3 px-3">
-      <h2 class="mt-5">Literatur</h2>
+      <h2 class="mt-5">{{ $t("references.literature_headline") }}</h2>
       <div class="row">
         <div class="col-9">
           <div v-if="filter != ''">
-            Gefiltert nach "{{ filter }}"
+            {{ $t("references.filter_as") }} "{{ filter }}"
             <div class="btn btn-sm btn-primary ml-3" @click="filter = ''">
-              Filter aufheben
+              {{ $t("references.filter_remove") }}
             </div>
           </div>
           <div v-if="filter == ''">
@@ -186,7 +185,7 @@ export default {
                   class="mr-2 badge-link"
                   @click.prevent="scrollToSection('BOOK')"
                   variant="secondary"
-                  >Monographien</b-badge
+                  >{{ $t("references.type_monography") }}</b-badge
                 >
               </li>
               <li v-if="filteredBibliography(['@INCOLLECTION']).length > 0">
@@ -194,7 +193,7 @@ export default {
                   class="mr-2 badge-link"
                   @click.prevent="scrollToSection('INCOLLECTION')"
                   variant="secondary"
-                  >Buchbeiträge</b-badge
+                  >{{ $t("references.type_incollection") }}</b-badge
                 >
               </li>
               <li v-if="filteredBibliography(['@ARTICLE']).length > 0">
@@ -202,7 +201,7 @@ export default {
                   class="mr-2 badge-link"
                   @click.prevent="scrollToSection('ARTICLE')"
                   variant="secondary"
-                  >Zeitschriftenbeiträge</b-badge
+                  >{{ $t("references.type_article") }}</b-badge
                 >
               </li>
               <li v-if="filteredBibliography(['@INPROCEDINGS']).length > 0">
@@ -210,7 +209,7 @@ export default {
                   class="mr-2 badge-link"
                   @click.prevent="scrollToSection('INPROCEEDINGS')"
                   variant="secondary"
-                  >Tagungsbeiträge</b-badge
+                  >{{ $t("references.type_inproceedings") }}</b-badge
                 >
               </li>
               <li
@@ -223,7 +222,7 @@ export default {
                   class="mr-2 badge-link"
                   @click.prevent="scrollToSection('PHDTHESIS')"
                   variant="secondary"
-                  >Abschlussarbeiten</b-badge
+                  >{{ $t("references.type_theses") }}</b-badge
                 >
               </li>
               <li v-if="filteredBibliography(['@MISC']).length > 0">
@@ -231,7 +230,7 @@ export default {
                   class="mr-2 badge-link"
                   @click.prevent="scrollToSection('MISC')"
                   variant="secondary"
-                  >Sonstige</b-badge
+                  >{{ $t("references.type_misc") }}</b-badge
                 >
               </li>
             </ul>
@@ -242,7 +241,7 @@ export default {
             class="mt-5 ml-0 mb-1"
             id="book"
           >
-            Monographien
+            {{ $t("references.type_monography") }}
           </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
@@ -281,7 +280,7 @@ export default {
             class="mt-5 ml-0 mb-1"
             id="INCOLLECTION"
           >
-            Buchbeiträge
+            {{ $t("references.type_incollection") }}
           </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
@@ -328,7 +327,7 @@ export default {
             class="mt-5 ml-0 mb-1"
             id="ARTICLE"
           >
-            Zeitschriftenartikel
+            {{ $t("references.type_article") }}
           </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
@@ -375,7 +374,7 @@ export default {
             class="mt-5 ml-0 mb-1"
             id="INPROCEEDINGS"
           >
-            Tagungsbeiträge
+            {{ $t("references.type_inproceedings") }}
           </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
@@ -413,7 +412,7 @@ export default {
             class="mt-5 ml-0 mb-1"
             id="PHDTHESIS"
           >
-            Abschlussarbeiten
+            {{ $t("references.type_theses") }}
           </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
@@ -457,7 +456,7 @@ export default {
             class="mt-5 ml-0 mb-1"
             id="MISC"
           >
-            Sonstige
+            {{ $t("references.type_misc") }}
           </h3>
           <ul class="mr-4 ml-1 px-0">
             <li
@@ -500,7 +499,7 @@ export default {
           </ul>
         </div>
         <div class="col-3">
-          <h4 class="mt-5">Schlüsselwörter</h4>
+          <h4 class="mt-5">{{ $t("references.keywords") }}</h4>
           <b-badge
             v-for="tag in tags"
             :key="tag"
