@@ -58,6 +58,11 @@
         </div>
       </div>
       <div class="footer-copyright text-center">
+        <div>
+          <img class="logo-img mr-3" src="./assets/icons/logo-google.jpg" />
+          <img class="logo-img mr-3" src="./assets/icons/logo-catalpa.jpg" />
+          <img class="logo-img" src="./assets/icons/logo-fuh.jpg" />
+        </div>
         © 2020 Copyright:
         <a href="https://jugendbegegnung.de/dresden/">{{
           $t("app.copyright")
@@ -160,76 +165,6 @@ body {
   text-decoration: none;
 }
 
-.intro {
-  height: 150vh;
-}
-
-.intro.container-fluid {
-  padding: 0;
-  background-color: #000;
-  /*background-image: url(assets/bg-intro.png);*/
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-}
-
-.intro-video {
-  position: absolute;
-  right: 0;
-  top: 28;
-  min-width: 100%;
-  min-height: 100%;
-}
-
-.intro .blend {
-  z-index: 2;
-  position: absolute;
-  top: 28px;
-  width: 100%;
-  height: 120vh;
-  background-color: rgb(0, 0, 0);
-  background: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 1) 25%,
-    rgba(0, 212, 255, 0) 100%
-  );
-}
-
-.intro .logo {
-  z-index: 3;
-  position: absolute;
-  top: 0;
-  left: 25%;
-  width: 45%;
-  margin-top: 20%;
-}
-
-.intro .intro-box {
-  z-index: 3;
-  width: 60%;
-  font-family: "Jost";
-  position: absolute;
-  top: 80vh;
-  left: 17%;
-  margin: 0px auto 0px auto;
-  padding: 30px 28px 30px 28px;
-  color: #fff;
-  border: solid 2px #fff;
-}
-
-.intro .intro-box2 {
-  z-index: 4;
-  width: 250px;
-  font-family: "Germania One", sans-serif;
-  position: absolute;
-  top: 95vh;
-  left: 50%;
-  margin: 0px auto 0px auto;
-  padding: 6px 7px;
-  background-color: #c10000;
-  color: #000;
-  border: none;
-}
-
 .page-apps {
   background-color: #2a2a2a;
   padding-top: 100px;
@@ -323,6 +258,11 @@ footer .footer-logo {
 .footer-copyright a:hover {
   color: #4b4a4a;
   text-decoration: none;
+}
+
+footer .logo-img {
+  max-height: 80px;
+  max-width: 200px;
 }
 
 .page a {

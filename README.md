@@ -26,12 +26,15 @@ Siehe Web-Anwendung: https://nise.github.io/theresienstadt-explained/#/
 
 ## Features
 
+**Advanced Support for Technology-enhanced Learning**
+
+- Reading comprehension assessment using Computer-based Adaptive Testing (CAT)
 - Interactive video player
   - table of contents
   - annotated timeline
 - Collaborative video annotation
 
-**Education Use Cases**
+**Rich Educational Use Cases**
 
 - tba.
 
@@ -51,38 +54,9 @@ Siehe Web-Anwendung: https://nise.github.io/theresienstadt-explained/#/
 **Roadmap**
 
 - complete content
+- implement learning tasks
 - upgrade to vue3
 - use strapi as LMS https://strapi.io/
-
-i18n Text conversion for german and english (no dates yet)
-
-- [ ] Finish language selector buttons
-- [x] PersonCard
-- [x] VideoAnnotations
-- [x] VideoInfoMarker
-- [x] VideoMapMarker
-- [x] VideoToC
-- [x] VideoTranskript
-- [] Video
-
-- [x] About
-- [x] Home
-- [x] Imprint
-- [x] Persons
-- [x] Scenes
-
-- [ ] References
-- [ ] FakeVideo
-- [ ] GuidedVideo
-- [ ] History
-- [ ] Intro
-- [ ] Map
-- [ ] News
-- [ ] Privacy
-- [ ] Propaganda
-- [ ] VideoAnalyses
-- [x] App
-- [ ] Comments
 
 ## License and Citation
 

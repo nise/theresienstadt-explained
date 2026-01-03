@@ -1,22 +1,18 @@
 <template>
   <div class="home">
     <div class="container-fluid intro">
-      <img class="logo" src="../assets/logo-white-big.png" />
-      <div class="blend"></div>
       <video class="intro-video" autoplay muted loop>
         <source src="../assets/intro.mp4" type="video/mp4" />
       </video>
-      <div class="intro-box">
-        {{ $t("home.introbox") }}
+      <div class="logo-intro">
+        <img class="logo" src="../assets/logo-white-big.png" />
+        <div class="intro-box">
+          
+          {{ $t("home.introbox") }}
+        </div>
       </div>
-      <div class="intro-box2"></div>
     </div>
 
-    <!--<div>
-      <b-button size="sm" @click="toggle">{{ show ? 'Hide' : 'Show' }} Alert</b-button>
-      <b-alert v-model="show" class="mt-3" dismissible @dismissed="dismissed">Hello {{ name }}!</b-alert>
-    </div>
-    -->
     <div class="rubrik-background container-fluid page-apps">
       <div>
         <div class="rubrik-header">
@@ -66,7 +62,9 @@
       </div>
     </div>
 
-    <router-link to="/film/player">{{ $t("home.linktomovie") }}</router-link>
+    <router-link hidden to="/film/player">{{
+      $t("home.linktomovie")
+    }}</router-link>
 
     <div class="container-fluid page-apps">
       <div class="container">
@@ -101,8 +99,8 @@
           </div>
         </div>
 
-        <div class="row mb-4 mr-5 pr-2">
-          <div class="col-md-12 p-0 mr-5 app-cell">
+        <div class="row mb-4" style="margin-right: 60px">
+          <div class="col-md-12 app-cell">
             <router-link to="/pages/persons"
               ><img src="../assets/home-personen.png"
             /></router-link>
@@ -271,7 +269,52 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.intro {
+  height: 150vh;
+}
+
+.intro.container-fluid {
+  padding: 0;
+  background-color: #000;
+  /*background-image: url(assets/bg-intro.png);*/
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.intro-video {
+  position: absolute;
+  right: 0;
+  top: 28;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+
+.intro .logo-intro {
+  z-index: 3;
+  position: absolute;
+  top: 0;
+}
+
+.intro .logo-intro img {
+  width: 45%;
+  margin-top: 20%;
+}
+
+.intro .logo-intro .intro-box {
+  width: 60%;
+  font-family: "Jost";
+  font-size: 1.4em;
+  font-weight: 600;
+  margin: 0px auto 0px auto;
+  padding: 30px 28px 30px 28px;
+  color: #fff;
+  border: solid 2px #fff;
+  background: rgba(0, 0, 0, 0.3); /* semi-transparent */
+  backdrop-filter: blur(10px);
+}
+
 .cell-text {
   color: #333;
 }
@@ -304,6 +347,7 @@ export default {
   text-align: left;
   box-sizing: content-box;
   font-size: large;
+  margin-right: 20px;
 }
 .rubrik-img {
   width: 21.87vw;
@@ -332,10 +376,25 @@ export default {
   font-weight: bold;
   text-transform: uppercase;
 }
-.cell-headline a {
+
+.app-cell .cell-box {
+  position: relative;
+}
+.app-cell img {
+  width: 100%;
+  height: 225px;
+  object-fit: cover;
+}
+.app-cell .cell-headline {
+  font-size: 1.4em;
+}
+.app-cell .cell-text {
+  height: 100%;
+}
+.app-cell .cell-headline a {
   color: #2a2a2a;
 }
-.cell-headline a:hover {
+.app-cell .cell-headline a:hover {
   color: #2a2a2a;
 }
 </style>
