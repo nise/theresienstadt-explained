@@ -8,16 +8,9 @@
         <b-col sm="6">
           <input
             type="text"
-            style="
-              width: 400px;
-              border: solid 2px #fff;
-              border-radius: 18px;
-              color: #fff;
-              background-color: #000;
-            "
             v-model="searchquery"
             @keyup="getsearchquery"
-            class="mx-1 form-control"
+            class="mx-1 form-control search-form"
             :placeholder="$t('persons.searchfield')"
             id="searchfield"
           />
@@ -183,3 +176,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.search-form {
+  width: 400px;
+  border: solid 2px #fff;
+  border-radius: 18px;
+  color: #fff;
+  background-color: #000;
+  color: white !important;
+}
+.search-form::placeholder {
+  color: white !important;
+}
+</style>

@@ -1,6 +1,11 @@
 {
+  "manifest_version": 2,
   "name": "Theresienstadt explained",
   "short_name": "Theresienstadt",
+  "description": "Theresienstadt Explained is an initiative for the pedagogical preparation of the Nazi propaganda film »Theresienstadt. Ein Dokumentarfilm aus dem jüdischen Siedlungsgebiet« (Theresienstadt. A Documentary Film from the Jewish Settlement Area). The film was produced in 1944/45 in the Theresienstadt ghetto and is one of the few filmed testimonies from a Nazi concentration camp. However, it does not show the cruel reality of the camp, but rather a staged, embellished fictional world that never existed.",
+  "version": "1.0",
+  "default_locale": "de",
+  "homepage_url": "https://nise.github.io/theresienstadt-explained",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

@@ -8,8 +8,8 @@
       "copyright": "Förderverein Jugendbegegnung in Theresienstadt/Terezin"
     },
     "personcard": {
-      "button_less": "Weniger...",
-      "button_more": "Mehr...",
+      "button_less": "Details verbergen",
+      "button_more": "Mehr anzeigen",
       "born": "geb.",
       "bornin": "in",
       "death": "gest.",
@@ -174,8 +174,8 @@
       "protagonists": "Personen",
       "music": "Hintergrundmusik",
       "locationsimg": "Orte",
-      "showmore": "Mehr anzeigen...",
-      "showless": "Verbergen",
+      "showmore": "Mehr anzeigen",
+      "showless": "Details verbergen",
       "searchfail1": "Zu dem Begriff",
       "searchfail2": "konnte nichts in den Szenen gefunden werden."
     },
