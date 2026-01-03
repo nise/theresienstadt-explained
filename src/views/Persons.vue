@@ -62,7 +62,7 @@ Vue.use(BootstrapVue);
 import personcard from "@/components/PersonCard.vue";
 
 export default {
-  name: "home",
+  name: "persons",
   components: {
     personcard,
   },

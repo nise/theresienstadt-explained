@@ -11,7 +11,7 @@ import leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 export default {
-  name: "LeafletMap",
+  name: "leaflet-map",
   methods: {
     data() {
       return {
@@ -76,8 +76,8 @@ export default {
     },
     changeMarkerState(markerObj, colour = "black", active) {
       markerObj._icon.firstChild.style.backgroundColor = colour;
-      if (active) (this.showToolTip(markerObj._icon.baseid));
-      if (!active) (this.hideToolTip(markerObj._icon.baseid));
+      if (active) this.showToolTip(markerObj._icon.baseid);
+      if (!active) this.hideToolTip(markerObj._icon.baseid);
     },
 
     showToolTip(idnum) {

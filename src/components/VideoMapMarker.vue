@@ -18,7 +18,7 @@
  */
 
 export default {
-  name: "VideoMapMarker",
+  name: "video-map-marker",
   data() {
     return {
       activeCueArr: Array,

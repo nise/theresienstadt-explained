@@ -1,7 +1,7 @@
 <script>
 
 export default {
-  name: "VideoInfoMarker",
+  name: "Video-info-marker",
   props: {
     currentTime: Number,
     videoID: String,

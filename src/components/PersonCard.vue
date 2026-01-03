@@ -99,7 +99,7 @@
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import "bootstrap/dist/css/bootstrap.css";
 export default {
-  name: "personcard",
+  name: "person-card",
   props: ["person"],
   data: () => ({
     isopenbio: "block",
