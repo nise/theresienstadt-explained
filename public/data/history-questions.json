@@ -1,0 +1,247 @@
+[
+  {
+    "id": 1,
+    "difficulty": -1.2,
+    "question": "In welchem Jahr wurde Kurt Gerron nach Theresienstadt transportiert?",
+    "options": ["1942", "1943", "1944", "1945"],
+    "correct": 2,
+    "explanation": "Kurt Gerron wurde im Februar 1944 aus dem Internierungslager Westerbork nach Theresienstadt transportiert."
+  },
+  {
+    "id": 2,
+    "difficulty": -1.0,
+    "question": "Wer war Irena Dodalová?",
+    "options": [
+      "Eine SS-Offizierin",
+      "Eine Prager Filmemacherin",
+      "Eine niederländische Malerin",
+      "Eine Schweizer Diplomatin"
+    ],
+    "correct": 1,
+    "explanation": "Irena Dodalová war eine Prager Filmemacherin, die im Ghetto inhaftiert war und für die Organisation der Dreharbeiten zuständig war."
+  },
+  {
+    "id": 3,
+    "difficulty": -0.8,
+    "question": "Was geschah mit Kurt Gerron im Oktober 1944?",
+    "options": [
+      "Er wurde freigelassen",
+      "Er floh nach Berlin",
+      "Er wurde nach Auschwitz-Birkenau transportiert",
+      "Er drehte einen weiteren Film"
+    ],
+    "correct": 2,
+    "explanation": "Kurt Gerron wurde am 28. Oktober 1944 in einen der Herbsttransporte nach Auschwitz-Birkenau geschickt, wo er starb."
+  },
+  {
+    "id": 4,
+    "difficulty": -0.6,
+    "question": "Wann kam das Internationale Komitee des Roten Kreuzes nach Theresienstadt?",
+    "options": ["November 1942", "Juni 1944", "Februar 1945", "Mai 1945"],
+    "correct": 1,
+    "explanation": "Das Internationale Komitee des Roten Kreuzes besuchte Theresienstadt am 23. Juni 1944."
+  },
+  {
+    "id": 5,
+    "difficulty": -0.3,
+    "question": "Was tat Irena Dodalová heimlich im Dezember 1942?",
+    "options": [
+      "Sie schrieb ein Tagebuch",
+      "Sie brachte Filmbilder heraus und verbarg sie",
+      "Sie floh aus dem Ghetto",
+      "Sie kontaktierte Berlin"
+    ],
+    "correct": 1,
+    "explanation": "Während der überwachten Bearbeitung des Films brachte Dodalová heimlich eine Schachtel mit Filmbildern heraus und verbarg sie im Ghetto."
+  },
+  {
+    "id": 6,
+    "difficulty": 0.0,
+    "question": "Welche Rolle spielte František Zelenka bei den Dreharbeiten?",
+    "options": [
+      "Kameramann",
+      "Regisseur",
+      "Architekt für die Ausstattung",
+      "Komponist"
+    ],
+    "correct": 2,
+    "explanation": "František Zelenka war Architekt und beteiligte sich an der Ausstattung der Dreharbeiten sowohl 1942 als auch 1944."
+  },
+  {
+    "id": 7,
+    "difficulty": 0.2,
+    "question": "Was war der ursprüngliche Titel des Films laut den Archiven von Yad Vashem?",
+    "options": [
+      "Der Führer schenkt den Juden eine Stadt",
+      "Theresienstadt. Ein Dokumentarfilm aus dem Jüdischen Siedlungsgebiet",
+      "Ghetto Theresienstadt",
+      "Die geschenkte Stadt"
+    ],
+    "correct": 1,
+    "explanation": "Der niederländische Historiker Karel Margry wies darauf hin, dass der überlieferte Name nicht original war. Der ursprüngliche Titel lautete 'Theresienstadt. Ein Dokumentarfilm aus dem Jüdischen Siedlungsgebiet'."
+  },
+  {
+    "id": 8,
+    "difficulty": 0.4,
+    "question": "Wer komponierte das musikalische Konzept für den Film 1945?",
+    "options": [
+      "Pavel Haas",
+      "Karel Ančerl",
+      "Peter Deutsch",
+      "Felix Mendelssohn-Bartholdy"
+    ],
+    "correct": 2,
+    "explanation": "Der deutsch-dänische Komponist und Dirigent Peter Deutsch wurde zum Komponisten des musikalischen Konzepts des Films."
+  },
+  {
+    "id": 9,
+    "difficulty": 0.7,
+    "question": "Welche technische Ausrüstung fehlte bei den Dreharbeiten im November 1942?",
+    "options": [
+      "Kamerawagen",
+      "Tonaufnahmegerät",
+      "Schneidetisch",
+      "Beleuchtung"
+    ],
+    "correct": 1,
+    "explanation": "Die Dreharbeiten erfolgten ohne Tonaufnahmegerät. Der Verlauf wurde von Kameramann Olaf Sigismund auf 16-mm-Film aufgenommen."
+  },
+  {
+    "id": 10,
+    "difficulty": 1.0,
+    "question": "Wie viele Juden wurden für die Revueshow im Drabschnitzer Kessel verwendet?",
+    "options": ["Etwa 500", "Etwa 1.000", "Etwa 1.800", "Etwa 3.000"],
+    "correct": 2,
+    "explanation": "Unter Überwachung wurden etwa 1.800 Juden aus dem Ghetto in den Drabschnitzer Kessel hinausgeführt, wo eine Revueshow gedreht wurde."
+  },
+  {
+    "id": 11,
+    "difficulty": 1.2,
+    "question": "Wer fand 1946/1947 Filmmaterial im ehemaligen Sitz der Zentralstelle?",
+    "options": [
+      "Přemysl Schönbach",
+      "Jiří Lauscher",
+      "Karel Margry",
+      "Vladimír Kressl"
+    ],
+    "correct": 1,
+    "explanation": "Jiří Lauscher fand im Rahmen der EZRA-Dokumentationsaktion Filmmaterial, das nach Jerusalem geschickt wurde."
+  },
+  {
+    "id": 12,
+    "difficulty": 1.4,
+    "question": "Welcher Betrag blieb laut Buchhaltungsunterlagen der Aktualita unbezahlt?",
+    "options": [
+      "150.000 Kronen",
+      "250.000 Kronen",
+      "350.000 Kronen",
+      "450.000 Kronen"
+    ],
+    "correct": 2,
+    "explanation": "Nach den Buchhaltungsunterlagen blieb das Zentralamt Pečený 350.000 tschechische Kronen schuldig, die als uneinbringliche Förderung eingestuft wurden."
+  },
+  {
+    "id": 13,
+    "difficulty": 1.6,
+    "question": "Wer übernahm das bei Mšeno gefundene Filmmaterial und identifizierte es?",
+    "options": [
+      "Ivan Frič",
+      "Vladimír Kressl",
+      "Karel Pečený",
+      "Lubor M. Dohnal"
+    ],
+    "correct": 1,
+    "explanation": "Das von Přemysl Schönbach gefundene Material wurde vom FAMU-Lehrer Vladimír Kressl übernommen, der das Fragment identifizierte."
+  },
+  {
+    "id": 14,
+    "difficulty": 1.8,
+    "question": "Welche drei Kompositionen wurden beim Konzert am 1. September 1944 aufgeführt?",
+    "options": [
+      "Nur von Pavel Haas und Felix Mendelssohn-Bartholdy",
+      "Von Karel Ančerl komponiert",
+      "Von Peter Deutsch und Pavel Haas",
+      "Details nicht im Text angegeben"
+    ],
+    "correct": 0,
+    "explanation": "Der Text erwähnt, dass beim Konzert unter der Leitung von Karel Ančerl Kompositionen von Pavel Haas und Felix Mendelssohn-Bartholdy erklangen."
+  },
+  {
+    "id": 15,
+    "difficulty": 2.0,
+    "question": "Wer war X.E. Lampl im Kontext der Filmproduktion?",
+    "options": [
+      "Ein Kameramann der Aktualita",
+      "Autor der Erläuterungen und deren deutscher Sprecher",
+      "Ein SS-Offizier",
+      "Ein jüdischer Häftling"
+    ],
+    "correct": 1,
+    "explanation": "X.E. Lampl war beauftragter Angestellter für die Überwachung der Aktualita und sowohl Autor der Erläuterungen als auch derjenige, der sie auf Deutsch aufnahm."
+  },
+  {
+    "id": 16,
+    "difficulty": 2.2,
+    "question": "An welchen Daten übergab Karel Pečený Hans Günther Materialien zum Film?",
+    "options": [
+      "21. und 24. März 1945",
+      "21. und 24. April 1945",
+      "21. und 24. Mai 1945",
+      "Datum nicht angegeben"
+    ],
+    "correct": 1,
+    "explanation": "Karel Pečený überreichte Hans Günther die Filmmaterialien am 21. und 24. April 1945."
+  },
+  {
+    "id": 17,
+    "difficulty": 2.5,
+    "question": "Welches spezifische historische Detail dokumentiert die rechtliche Verfolgung von Přemysl Schönbach?",
+    "options": [
+      "Er wurde wegen Diebstahl angeklagt",
+      "Er verlieh den Film gegen Entgelt an Paul Michael Bornkamp, der ihn illegal ausführte",
+      "Er wurde für das Kopieren des Films verhaftet",
+      "Er verlor den Film bei einem Unfall"
+    ],
+    "correct": 1,
+    "explanation": "Přemysl Schönbach verlieh den Film gegen Entgelt an den westdeutschen Journalisten Paul Michael Bornkamp, der ihn ohne Erlaubnis ausführte und kopieren ließ, was zu einer gerichtlichen Ermittlung bis Anfang 1966 führte."
+  },
+  {
+    "id": 18,
+    "difficulty": 2.7,
+    "question": "Welche unterschiedlichen Versionen des Skripts wurden 1942 erstellt?",
+    "options": [
+      "Nur eine Version von Irena Dodalová",
+      "Eine Synopsis von Dodalová et al., die abgelehnt wurde, dann eine überarbeitete Version und eine Version von Petr Kien mit der Familie Holländer",
+      "Zwei Versionen von Jindřich Weil",
+      "Eine Version von Kurt Gerron"
+    ],
+    "correct": 1,
+    "explanation": "Die Synopsis 'Rohentwurf einer Filmreportage. Ghetto Theresienstadt' wurde in Berlin abgelehnt, dann überarbeitet, und Petr Kien erarbeitete eine andere Version, die den Transfer durch die Geschichte der Familie Holländer zeigte."
+  },
+  {
+    "id": 19,
+    "difficulty": 2.8,
+    "question": "Wo identifizierte Eva Strusková 2004 die von Irena Dodalová herausgetragenen Ausschnitte?",
+    "options": [
+      "Im Yad Vashem Archiv",
+      "Im Nationalfilmarchiv (NFA) in Prag, wo sie bei Professor Lubor M. Dohnal endeten",
+      "Im Archiv der Sicherheitskräfte",
+      "In Westerbork"
+    ],
+    "correct": 1,
+    "explanation": "Eva Strusková identifizierte die Ausschnitte im Nationalfilmarchiv (NFA) in Prag, wo sie ihre Reise bei Lubor M. Dohnal, Professor an der Prager FAMU, beendet hatten. Sie sind unter 'Terezín 1942 (Ausschnitte)' eingeordnet."
+  },
+  {
+    "id": 20,
+    "difficulty": 3.0,
+    "question": "Welcher methodologische Beitrag leistete Karel Margry zur Filmforschung?",
+    "options": [
+      "Er fand das vollständige Filmnegativ",
+      "Er korrigierte den überlieferten Filmtitel und identifizierte eine unbekannte Filmaufnahme von 1942 in einem polnischen Archiv",
+      "Er interviewte alle Überlebenden",
+      "Er restaurierte den Film digital"
+    ],
+    "correct": 1,
+    "explanation": "Karel Margry wies darauf hin, dass der überlieferte Name des Films nicht original war, fand das Initialfragment mit der ursprünglichen Überschrift in Yad Vashem und identifizierte eine bis dahin unbekannte Filmaufnahme über die Dreharbeiten von 1942 in einem polnischen Archiv unter dem Namen 'Obóz koncentracyjny w Teresinie'."
+  }
+]
