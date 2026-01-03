@@ -61,13 +61,13 @@ Siehe Web-Anwendung: https://nise.github.io/theresienstadt-explained/#/
 - upgrade to vue3
 - use strapi as CMS: https://strapi.io/
 
-## License and Citation
+## Licenses and Citation
 
-Software: MIT license
+Software: [MIT license](https://mit-license.org/)
 
-Content except the Theresienstadt film: Creative Commons CC-BY
+Content except the Theresienstadt film: Creative Commons [CC-BY](https://creativecommons.org/licenses/by/4.0/)
 
-Theresienstadt film: all rights reserved
+Theresienstadt film: all rights reserved, tba.
 
 ```bibtex
 @misc{theresienstadt2025,
