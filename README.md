@@ -32,6 +32,9 @@ Siehe Web-Anwendung: https://nise.github.io/theresienstadt-explained/#/
 - Interactive video player
   - table of contents
   - annotated timeline
+  - subtitling
+  - interactive video annotations
+  - synchronized maps
 - Collaborative video annotation
 
 **Rich Educational Use Cases**
@@ -49,14 +52,14 @@ Siehe Web-Anwendung: https://nise.github.io/theresienstadt-explained/#/
 **Get into devlopment**
 
 - Hot reloading during development: `npm run serve`
-- Build code to run as stand-alone app: `npm run build`
+- Build code to run as stand-alone app that is stored in the 'dist' folder: `npm run build`
 
 **Roadmap**
 
 - complete content
 - implement learning tasks
 - upgrade to vue3
-- use strapi as LMS https://strapi.io/
+- use strapi as CMS: https://strapi.io/
 
 ## License and Citation
 
@@ -67,7 +70,20 @@ Content except the Theresienstadt film: Creative Commons CC-BY
 Theresienstadt film: all rights reserved
 
 ```bibtex
-tba.
+@misc{theresienstadt2025,
+  author       = {Seidel, Niels and
+                  Schaumlöffel, Benedikt and
+                  Schäfer, Dennis and
+                  Pietsch, Armin and
+                  Friedrich, Konstantin and
+                  Hüsni, Marcel and
+                  Baumann, Janick},
+  title        = {Theresienstadt Explained},
+  year         = {2025},
+  howpublished = {https://nise.github.io/theresienstadt-explained/#/},
+  organization = {CATALPA, FernUniversität in Hagen},
+  note         = {Software for historical education. Development: N. Seidel, K. Friedrich (CATALPA, FernUniversität in Hagen); Design: M. Hüsni (dioptrin); Video Restoration: N. Seidel (CATALPA); Content Production: B. Schaumlöffel (Institute of History, Universität Bonn), D. Schäfer (Princeton German Department), A. Pietsch, J. Baumann (Freundeskreis Theresienstadt e.V.)}
+}
 ```
 
 ## Contributors
@@ -79,7 +95,7 @@ tba.
 
 **Design**
 
-- Marcel Hüsni (dioptrin)
+- Marcel Hüsni ([dioptrin](https://dioptrinde))
 
 **Video Restauration**
 
@@ -87,7 +103,7 @@ tba.
 
 **Content Production**
 
-- Benedikt Schaumlöffel (University Bonn)
-- Dennis Schäfer (Princton)
+- Benedikt Schaumlöffel (Institut of Historical Science, Universität Bonn)
+- Dennis Schäfer (Princeton German Department)
 - Armin Pietsch (Freundeskreis Theresienstadt e.V.)
 - Janick Baumann (Freundeskreis Theresienstadt e.V.)
