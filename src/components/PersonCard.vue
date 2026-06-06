@@ -41,7 +41,7 @@
               bottom: 0px;
             "
             :style="{ display: this.isopenbio }"
-            >Mehr ...
+            >{{$t('personcard.button_more')}}
           </b-button>
         </b-row>
       </b-col>
@@ -86,7 +86,7 @@
               bottom: 0px;
               right: 0px;
             "
-            >Weniger...
+            >{{$t('personcard.button_less')}}
           </b-button>
         </b-collapse>
       </b-col>

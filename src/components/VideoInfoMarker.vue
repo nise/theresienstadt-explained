@@ -111,16 +111,20 @@ export default {
       if (this.clickedTimeline == true){
         this.$emit("ackclickTimeline");
         let cuelist = document.getElementById("infomarkertrack").track.activeCues;
-        for (let i = 0; i < cuelist.length; i++){
-          document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+        if (cuelist) {
+          for (let i = 0; i < cuelist.length; i++){
+            document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+          }
         }
       }
     },
     paused: function(){
       if (this.paused == false){
         let cuelist = document.getElementById("infomarkertrack").track.activeCues;
-        for (let i = 0; i < cuelist.length; i++){
-          document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+        if (cuelist) {
+          for (let i = 0; i < cuelist.length; i++){
+            document.getElementById(cuelist[i].id+"textbox").style.display = "none";
+          }
         }
       }
     },

@@ -7,7 +7,6 @@
       <div class="logo-intro">
         <img class="logo" src="../assets/logo-white-big.png" />
         <div class="intro-box">
-          
           {{ $t("home.introbox") }}
         </div>
       </div>
@@ -62,9 +61,7 @@
       </div>
     </div>
 
-    <router-link hidden to="/film/player">{{
-      $t("home.linktomovie")
-    }}</router-link>
+    <router-link to="/film/player">{{ $t("home.linktomovie") }}</router-link>
 
     <div class="container-fluid page-apps">
       <div class="container">
@@ -289,7 +286,6 @@ export default {
   min-width: 100%;
   min-height: 100%;
 }
-
 
 .intro .logo-intro {
   z-index: 3;

@@ -1,14 +1,9 @@
 /* eslint-disable */ /* eslint-disable no-else-return */ /* eslint-disable
 import/no-amd */ /* eslint-disable no-unused-vars */ /* eslint-disable */
 <script>
-// import Video from '../js/Video.js';
-// const videovue = new Video(store);
-// const video = videovue.video;
-
 import Vue from "vue";
 import BootstrapVue from "bootstrap-vue";
 import store from "../store";
-// import Vi2 from '../js/vi2.main';
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
@@ -280,24 +275,6 @@ export default {
           }
         }
       }
-      /*
-  var annoLength = this.annotations.length;
-              for (var i = 0; i < annoLength; i++) {
-                  var oAnn = this.annotations[i];
-                  if (iTime >= oAnn.displayPosition.t1 && iTime < (Number(oAnn.displayPosition.t1) + Number(oAnn.displayPosition.t2))) {
-                      if (!oAnn.active) {
-                          oAnn.active = true;
-                          $(vi2.observer.player).trigger('annotation.begin.' + oAnn.type, [i, oAnn]);
-                      }
-                  } else {
-                      oAnn.active = false;
-                      $(vi2.observer.player).trigger('annotation.end.' + oAnn.type, [i, oAnn]);
-                  }
-              }
-  */
-      //return moment.duration(num, 'minutes');
-      //num = num/60;
-      //this.formatedTime = ('0' + Math.floor(num) % 24).slice(-2) + ':' + ((num % 1)*60 + '0').slice(0, 2);//moment(currentTime).format('mm:ss');
     },
   },
 };
@@ -403,6 +380,7 @@ export default {
         <Video-TOC
           v-if="isModusFeatures('toc') && videoElement"
           :videoElementduration="videoElement.duration"
+          :currentTime="currentTime"
           @gotoTimerequest="gotoTime"
         ></Video-TOC>
         <Video-Annotations

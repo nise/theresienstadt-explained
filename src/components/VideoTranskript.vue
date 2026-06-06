@@ -22,42 +22,31 @@ export default {
   props: {
     videoCtrlActive: Boolean,
   },
-  methods: {
-    initFirstCue() {
-      let firstCue = document.getElementById("Vidtranskript").track.cues[0];
-      firstCue.snapToLines = false;
-      firstCue.line = 85;
-    },
-  },
   watch: {
-    videoCtrlActive: function () {
-      let activeCueList =
-        document.getElementById("Vidtranskript").track.activeCues;
-      let track = document.getElementById("Vidtranskript").track;
+    videoCtrlActive: {
+      immediate: true,
+      handler(active) {
+        this.$nextTick(() => {
+          const trackEl = document.getElementById("Vidtranskript");
+          if (!trackEl) return;
+          const track = trackEl.track;
+          const line = active ? 75 : "auto";
 
-      if (this.videoCtrlActive) {
-        for (let i = 0; i < activeCueList.length; i++) {
-          activeCueList[i].snapToLines = false;
-          activeCueList[i].line = 85;
-        }
-        track.oncuechange = function () {
-          for (let i = 0; i < this.activeCues.length; i++) {
-            this.activeCues[i].snapToLines = false;
-            this.activeCues[i].line = 85;
-          }
-        };
-      } else {
-        for (let i = 0; i < activeCueList.length; i++) {
-          activeCueList[i].snapToLines = false;
-          activeCueList[i].line = "auto";
-        }
-        track.oncuechange = function () {
-          for (let i = 0; i < this.activeCues.length; i++) {
-            this.activeCues[i].snapToLines = false;
-            this.activeCues[i].line = "auto";
-          }
-        };
-      }
+          const applyLine = (cues) => {
+            if (!cues) return;
+            for (let i = 0; i < cues.length; i++) {
+              cues[i].snapToLines = false;
+              cues[i].line = line;
+            }
+          };
+
+          applyLine(track.activeCues);
+
+          track.oncuechange = function () {
+            applyLine(this.activeCues);
+          };
+        });
+      },
     },
   },
 };
