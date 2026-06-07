@@ -60,6 +60,7 @@ export default {
       timerCursor: null,
       videoPanel: null,
       showVideoControls: true,
+      videoUrl: process.env.VUE_APP_VIDEO_URL,
     };
   },
   methods: {
@@ -309,7 +310,7 @@ export default {
           disablepictureinpicture
           controlslist="nodownload"
         >
-          <source src="../assets/videos/theresienstadt.mp4" type="video/mp4" />
+          <source :src="videoUrl" type="video/mp4" />
           <Video-Transcript
             v-if="isModusFeatures('transcript')"
             :videoCtrlActive="showVideoControls"
