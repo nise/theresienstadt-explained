@@ -28,6 +28,16 @@ export default {
     gotoTime(time) {
       this.$emit("gotoTimerequest", time);
     },
+    gotoNextScene() {
+      const sorted = this.scenes.filter(s => s.start >= 0).sort((a, b) => a.start - b.start);
+      const idx = sorted.findIndex(s => s.number === this.activeSceneNumber);
+      if (idx !== -1 && idx < sorted.length - 1) this.gotoTime(sorted[idx + 1].start);
+    },
+    gotoPrevScene() {
+      const sorted = this.scenes.filter(s => s.start >= 0).sort((a, b) => a.start - b.start);
+      const idx = sorted.findIndex(s => s.number === this.activeSceneNumber);
+      if (idx > 0) this.gotoTime(sorted[idx - 1].start);
+    },
     sortScenes() {
       this.scenes = this.scenes.sort((a, b) => {
         a.number = parseInt(a.number, 10);

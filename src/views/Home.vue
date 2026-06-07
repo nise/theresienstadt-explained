@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="container-fluid intro">
-      <video v-if="introVideoUrl" class="intro-video" autoplay muted loop>
+      <video v-if="introVideoUrl" ref="introVideo" class="intro-video" autoplay muted loop disablepictureinpicture controlslist="nodownload nofullscreen">
         <source :src="introVideoUrl" type="video/mp4" />
       </video>
       <div class="logo-intro">
@@ -257,6 +257,12 @@ export default {
       .then((result) => {
         this.message = result
       }) */
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.$refs.introVideo) {
+      this.$refs.introVideo.pause();
+    }
+    next();
   },
   methods: {},
   watch: {

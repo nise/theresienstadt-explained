@@ -148,8 +148,12 @@ export default {
       clearInterval(this.timer);
       this.stopCountdown();
     },
-    forward() {},
-    backward() {},
+    forward() {
+      if (this.$refs.toc) this.$refs.toc.gotoNextScene();
+    },
+    backward() {
+      if (this.$refs.toc) this.$refs.toc.gotoPrevScene();
+    },
     updateAnnotaions() {
       this.currentTime = this.videoElement.currentTime;
     },
@@ -243,6 +247,12 @@ export default {
     playing() {
       return !this.paused;
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.videoElement) {
+      this.videoElement.pause();
+    }
+    next();
   },
   // eslint-disable-next-line object-shorthand
   mounted: function () {
@@ -380,6 +390,7 @@ export default {
       <div class="col-4 pt-1 left-bar">
         <Video-TOC
           v-if="isModusFeatures('toc') && videoElement"
+          ref="toc"
           :videoElementduration="videoElement.duration"
           :currentTime="currentTime"
           @gotoTimerequest="gotoTime"
