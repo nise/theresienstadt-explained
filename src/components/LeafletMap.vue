@@ -116,7 +116,7 @@ export default {
     this.leafletmap = leaflet.map("leaflet-map");
     leaflet
       .tileLayer(
-        "https://api.mapbox.com/styles/v1/followerofnux/ckkfkh0wz038c17pc28efm6l7/tiles/256/{z}/{x}/{y}@2x?access_token=MAPBOX_TOKEN_REMOVED",
+        `https://api.mapbox.com/styles/v1/followerofnux/ckkfkh0wz038c17pc28efm6l7/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.VUE_APP_MAPBOX_TOKEN}`,
         {
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
