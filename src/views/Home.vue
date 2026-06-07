@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <div class="container-fluid intro">
-      <video class="intro-video" autoplay muted loop>
-        <source src="../assets/intro.mp4" type="video/mp4" />
+      <video v-if="introVideoUrl" class="intro-video" autoplay muted loop>
+        <source :src="introVideoUrl" type="video/mp4" />
       </video>
       <div class="logo-intro">
         <img class="logo" src="../assets/logo-white-big.png" />
@@ -248,6 +248,7 @@ export default {
   data: () => ({
     error: "",
     message: "",
+    introVideoUrl: process.env.VUE_APP_INTRO_VIDEO_URL || "",
   }),
 
   mounted() {

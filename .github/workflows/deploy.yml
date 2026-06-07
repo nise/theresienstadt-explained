@@ -32,6 +32,7 @@ jobs:
       run: npm run build
       env:
         VUE_APP_VIDEO_URL: https://nise81.com/theresienstadt.mp4
+        VUE_APP_INTRO_VIDEO_URL: https://nise81.com/intro.mp4
         VUE_APP_MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
 
     - uses: actions/upload-pages-artifact@v3
