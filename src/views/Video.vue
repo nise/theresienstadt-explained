@@ -133,6 +133,8 @@ export default {
       this.paused = event.target.paused;
     },
     play() {
+      if (!this.videoElement) this.videoElement = this.$refs.video;
+      if (!this.videoElement) return;
       this.timer = setInterval(this.updateAnnotaions, 500);
       this.paused = false;
       this.updateCountdown();
@@ -143,6 +145,7 @@ export default {
      * however this change on "paused" comes in too late when stopCountdown() is called, so its already changed here
      */
     pause() {
+      if (!this.videoElement) return;
       this.videoElement.pause();
       this.paused = true;
       clearInterval(this.timer);
@@ -155,6 +158,7 @@ export default {
       if (this.$refs.toc) this.$refs.toc.gotoPrevScene();
     },
     updateAnnotaions() {
+      if (!this.videoElement) return;
       this.currentTime = this.videoElement.currentTime;
     },
     momenwwwt: function () {
