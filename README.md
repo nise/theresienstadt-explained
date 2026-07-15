@@ -11,7 +11,7 @@ The project's goal is to expose the propaganda techniques in the film while maki
 The web application enables interactive exploration of the film, recognition of propaganda mechanisms, and understanding of historical contexts.
 
 See the web application: [https://theresienstadt-film.net/](https://theresienstadt-film.net/) respectively
-[https://nise.github.io/theresienstadt-explained/#/](https://nise.github.io/theresienstadt-explained/#/)
+[https://nise.github.io/theresienstadt-explained/#/](https://nise.github.io/theresienstadt-explained/)
 
 **German**
 Theresienstadt Explained ist eine Initiative zur mediendidaktischen Aufbereitung des NS-Propagandafilms »Theresienstadt. Ein Dokumentarfilm aus dem jüdischen Siedlungsgebiet«. Der Film entstand 1944/45 im Ghetto Theresienstadt und ist eines der wenigen filmischen Zeugnisse aus einem nationalsozialistischen Konzentrationslager. Er zeigt jedoch nicht die grausame Realität des Lagers, sondern eine inszenierte, geschönte Scheinwelt, die es so niemals gab.
@@ -24,7 +24,7 @@ Ziel des Projekts ist es, die Propagandatechniken im Film offenzulegen und gleic
 Die Web-Anwendung ermöglicht es, den Film interaktiv zu erkunden, Propaganda-Mechanismen zu erkennen und historische Kontexte zu erschließen.
 
 Siehe Web-Anwendung: [https://theresienstadt-film.net/](https://theresienstadt-film.net/) bzw.
-[https://nise.github.io/theresienstadt-explained/#/](https://nise.github.io/theresienstadt-explained/#/)
+[https://nise.github.io/theresienstadt-explained/#/](https://nise.github.io/theresienstadt-explained/)
 
 ## Features
 
