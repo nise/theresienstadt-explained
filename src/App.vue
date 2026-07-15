@@ -63,7 +63,7 @@
           <img class="logo-img mr-3" src="./assets/icons/logo-catalpa.jpg" />
           <img class="logo-img" src="./assets/icons/logo-fuh.jpg" />
         </div>
-        © 2020 Copyright:
+        © 2026 Copyright:
         <a href="https://jugendbegegnung.de/dresden/">{{
           $t("app.copyright")
         }}</a>
