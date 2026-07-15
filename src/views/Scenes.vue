@@ -1,7 +1,7 @@
 <template>
   <div class="container text-left">
     <h1 class="mt-5 mb-4 ml-4 text-left">{{ $t("scenes.h1") }}</h1>
-    <div class="col-3 mb-3 ml-3">
+    <div class="col-3 mb-3 ml-1">
       <input v-model="searchterm" :placeholder="$t('scenes.search')" />
     </div>
     <div class="row" v-if="scenes.length > 0">
@@ -12,7 +12,7 @@
       >
         <div class="row">
           <div class="col-3">
-            <img src="../assets/dummy.png" />
+            <img :src="sceneImage(scene.number)" />
           </div>
           <div class="col-9 pl-2 pt-2 pr-2 scene-content">
             <div class="body mb-2">
@@ -53,7 +53,15 @@
                 </div>
               </div>
             </div>
-            <div class="foot mt-2">
+            <div class="foot mt-2 ml-0">
+              <button
+                v-if="scene.start >= 0"
+                @click="playScene(scene.start)"
+                class="btn btn-sm btn-play mr-1 ml-0"
+                :title="$t('scenes.play')"
+              >
+                <font-awesome-icon icon="play" />
+              </button>
               <div
                 v-if="scene.category"
                 class="btn btn-sm btn-secondary category"
@@ -90,12 +98,17 @@
 <script>
 import Vue from "vue";
 import BootstrapVue from "bootstrap-vue";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import axios from "axios";
 
 Vue.use(BootstrapVue);
+library.add(faPlay);
+Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 export default {
   name: "scenes",
@@ -104,11 +117,14 @@ export default {
     searchterm: "",
     message: "",
     scenes: [],
+    stills: {},
   }),
 
   mounted() {
-    console.log("mounted");
     this.getData();
+    axios.get("./data/scene-stills.json").then((r) => {
+      this.stills = r.data;
+    });
   },
   created() {
     /*this.search().forEach(function (val) {
@@ -139,6 +155,15 @@ export default {
       } else {
         scene.expanded = !scene.expanded;
       }
+    },
+    sceneImage(number) {
+      return this.stills[number] || require("../assets/dummy.png");
+    },
+    playScene(start) {
+      this.$router.push({
+        name: "film",
+        params: { modus: "player", timejump: start },
+      });
     },
     getScenebyId(id) {
       if (!this.scenes || this.scenes.length === 0) {
@@ -223,8 +248,10 @@ export default {
 }
 
 .scene-box img {
+  width: 100%;
   height: 100%;
-  max-width: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .scene-box .desc {
@@ -264,6 +291,11 @@ export default {
   color: #fff;
   position: absolute;
   right: 10px;
+}
+.scene-box button.btn-play {
+  position: static;
+  background: #c10000;
+  margin-left: 6px;
 }
 
 .scene-box button:hover {
