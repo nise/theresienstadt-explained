@@ -81,8 +81,7 @@ Theresienstadt film: all rights reserved, tba.
   title        = {Theresienstadt Explained},
   year         = {2025},
   howpublished = {https://nise.github.io/theresienstadt-explained/#/},
-  organization = {CATALPA, FernUniversität in Hagen},
-  note         = {Software for historical education. Development: N. Seidel, K. Friedrich (CATALPA, FernUniversität in Hagen); Design: M. Hüsni (dioptrin); Video Restoration: N. Seidel (CATALPA); Content Production: B. Schaumlöffel (Institute of History, Universität Bonn), D. Schäfer (Princeton German Department), A. Pietsch, J. Baumann (Freundeskreis Theresienstadt e.V.)}
+  doi: {https://doi.org/10.17605/OSF.IO/SZCQG },
 }
 ```
 
