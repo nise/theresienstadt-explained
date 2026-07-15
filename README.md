@@ -67,7 +67,7 @@ Software: [MIT license](https://mit-license.org/)
 
 Content except the Theresienstadt film: Creative Commons [CC-BY](https://creativecommons.org/licenses/by/4.0/)
 
-Theresienstadt film: all rights reserved, tba.
+Theresienstadt film: all rights reserved, by the Federal Archives Germany (Bundesarchiv).
 
 ```bibtex
 @misc{theresienstadt2025,
